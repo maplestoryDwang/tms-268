@@ -11,6 +11,7 @@ import Config.configs.Config;
 import Config.constants.GameConstants;
 import Config.constants.SkillConstants;
 import Opcode.Headler.OutHeader;
+import SwordieX.enums.SoulType;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import tools.HexTool;
@@ -56,6 +57,7 @@ public class PacketErrorHandler {
             String pHeaderStr = Integer.toHexString(pHeader).toUpperCase();
             pHeaderStr = StringUtil.getLeftPaddedStr(pHeaderStr, '0', 4);
             OutHeader op = lookupSend(pHeader);
+            System.err.println(op + " error!");
             if (!Config.isDevelop() && op != OutHeader.UNKNOWN) {
                 if (alreadyLoggedOpcode.contains(op)) {
                     return;

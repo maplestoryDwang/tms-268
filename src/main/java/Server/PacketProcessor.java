@@ -27,8 +27,6 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
-import static Handler.warpToGameHandler.getChr;
-import static Handler.warpToGameHandler.is墨玄招式lock;
 import static Server.cashshop.handler.CashShopOperation.keyUI;
 
 public final class PacketProcessor {
@@ -292,8 +290,7 @@ public final class PacketProcessor {
                 useAttack(c);
                 break;
             ///-------------------------{Attack END}-------------------------------
-            case CP_SkillLoadRunTime:
-                break;
+            case CP_UserSkillUseRequest_II:
             case CP_UserSkillUseRequest: {
                 UserSkillUseHandler.userSkillUseRequest(slea, c, c.getPlayer());
                 break;
@@ -680,7 +677,6 @@ public final class PacketProcessor {
             case CP_UserScriptMessageAnswer:
                 NPCHandler.userScriptMessageAnswer(slea, c);
                 break;
-            case CP_Field_Npc_Move:
             case CP_Field_Npc_Action:
                 NPCHandler.NPCAnimation(slea, c);
                 break;
@@ -792,7 +788,7 @@ public final class PacketProcessor {
             case CP_MakeEnterFieldPacketForQuickMove:
                 NPCHandler.OpenQuickMoveNpc(slea, c, c.getPlayer());
                 break;
-            case USER_OPNE_DAMAGE_SKIN_UI:
+            case CP_USER_OPNE_DAMAGE_SKIN_UI:
                 c.announce(InventoryPacket.UserDamageSkinSaveResult(3, 1, c.getPlayer()));
                 break;
             case CP_UserQuickMoveScript:

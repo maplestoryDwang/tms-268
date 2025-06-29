@@ -1273,7 +1273,7 @@ public class AdminCommand {
             }
             c.getPlayer().getStat().setInfo(c.getPlayer().getStat().getMaxHp(false), Integer.parseInt(splitted[1]), c.getPlayer().getStat().getHp(), Integer.parseInt(splitted[1]));
             c.getPlayer().updateSingleStat(MapleStat.MP, Integer.parseInt(splitted[1]));
-            c.getPlayer().updateSingleStat(MapleStat.MAXMP, Integer.parseInt(splitted[1]));
+            c.getPlayer().updateSingleStat(MapleStat.MAX_MP, Integer.parseInt(splitted[1]));
             c.getPlayer().getStat().recalcLocalStats(c.getPlayer());
             return 1;
         }
@@ -1294,7 +1294,7 @@ public class AdminCommand {
             }
             c.getPlayer().getStat().setInfo(Integer.parseInt(splitted[1]), c.getPlayer().getStat().getMaxMp(false), Integer.parseInt(splitted[1]), c.getPlayer().getStat().getMp());
             c.getPlayer().updateSingleStat(MapleStat.HP, Integer.parseInt(splitted[1]));
-            c.getPlayer().updateSingleStat(MapleStat.MAXHP, Integer.parseInt(splitted[1]));
+            c.getPlayer().updateSingleStat(MapleStat.MAX_HP, Integer.parseInt(splitted[1]));
             c.getPlayer().getStat().recalcLocalStats(c.getPlayer());
             return 1;
         }

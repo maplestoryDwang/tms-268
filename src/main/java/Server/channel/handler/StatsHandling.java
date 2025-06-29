@@ -39,28 +39,28 @@ public class StatsHandling {
                         return;
                     }
                     stat.setStr((short) (stat.getStr() + 1), chr);
-                    statupdate.put(MapleStat.力量, (long) stat.getStr());
+                    statupdate.put(MapleStat.STR, (long) stat.getStr());
                     break;
                 case 128: // 敏捷
                     if (stat.getDex() >= statLimit) {
                         return;
                     }
                     stat.setDex((short) (stat.getDex() + 1), chr);
-                    statupdate.put(MapleStat.敏捷, (long) stat.getDex());
+                    statupdate.put(MapleStat.DEX, (long) stat.getDex());
                     break;
                 case 256: // 智力
                     if (stat.getInt() >= statLimit) {
                         return;
                     }
                     stat.setInt((short) (stat.getInt() + 1), chr);
-                    statupdate.put(MapleStat.智力, (long) stat.getInt());
+                    statupdate.put(MapleStat.INT, (long) stat.getInt());
                     break;
                 case 512: // 幸運
                     if (stat.getLuk() >= statLimit) {
                         return;
                     }
                     stat.setLuk((short) (stat.getLuk() + 1), chr);
-                    statupdate.put(MapleStat.幸運, (long) stat.getLuk());
+                    statupdate.put(MapleStat.LUK, (long) stat.getLuk());
                     break;
                 case 2048: // HP
                     if (chr.getHpApUsed() >= 10000 || stat.getMaxHp() >= ServerConfig.CHANNEL_PLAYER_MAXHP) {
@@ -83,7 +83,7 @@ public class StatsHandling {
                     return;
             }
             chr.setRemainingAp((short) (chr.getRemainingAp() - 1));
-            statupdate.put(MapleStat.AVAILABLEAP, (long) chr.getRemainingAp());
+            statupdate.put(MapleStat.AVAILABLE_AP, (long) chr.getRemainingAp());
             c.announce(MaplePacketCreator.updatePlayerStats(statupdate, true, chr));
         }
     }
@@ -186,7 +186,7 @@ public class StatsHandling {
                 int skillbook = JobConstants.getSkillBookBySkill(skillid);
                 chr.setRemainingSp(chr.getRemainingSp(skillbook) - amount, skillbook);
             }
-            chr.updateSingleStat(MapleStat.AVAILABLESP, 0);
+            chr.updateSingleStat(MapleStat.AVAILABLE_SP, 0);
             chr.changeSingleSkillLevel(skill, (byte) (curLevel + amount), chr.getMasterLevel(skill));
         } else {
             if (chr.isAdmin()) {
@@ -235,28 +235,28 @@ public class StatsHandling {
                         return;
                     }
                     playerst.setStr((short) (playerst.getStr() + amount), chr);
-                    statupdate.put(MapleStat.力量, (long) playerst.getStr());
+                    statupdate.put(MapleStat.STR, (long) playerst.getStr());
                     break;
                 case 128: // 敏捷
                     if (playerst.getDex() + amount > statLimit) {
                         return;
                     }
                     playerst.setDex((short) (playerst.getDex() + amount), chr);
-                    statupdate.put(MapleStat.敏捷, (long) playerst.getDex());
+                    statupdate.put(MapleStat.DEX, (long) playerst.getDex());
                     break;
                 case 256: // 智力
                     if (playerst.getInt() + amount > statLimit) {
                         return;
                     }
                     playerst.setInt((short) (playerst.getInt() + amount), chr);
-                    statupdate.put(MapleStat.智力, (long) playerst.getInt());
+                    statupdate.put(MapleStat.INT, (long) playerst.getInt());
                     break;
                 case 512: // 幸運
                     if (playerst.getLuk() + amount > statLimit) {
                         return;
                     }
                     playerst.setLuk((short) (playerst.getLuk() + amount), chr);
-                    statupdate.put(MapleStat.幸運, (long) playerst.getLuk());
+                    statupdate.put(MapleStat.LUK, (long) playerst.getLuk());
                     break;
                 case 2048: //最大HP
                     if (chr.getHpApUsed() >= 10000 || playerst.getMaxHp() >= ServerConfig.CHANNEL_PLAYER_MAXHP || !JobConstants.is惡魔復仇者(chr.getJob())) {
@@ -274,28 +274,28 @@ public class StatsHandling {
                         return;
                     }
                     playerst.setStr((short) (playerst.getStr() + amount2), chr);
-                    statupdate.put(MapleStat.力量, (long) playerst.getStr());
+                    statupdate.put(MapleStat.STR, (long) playerst.getStr());
                     break;
                 case 128: // 敏捷
                     if (playerst.getDex() + amount2 > statLimit) {
                         return;
                     }
                     playerst.setDex((short) (playerst.getDex() + amount2), chr);
-                    statupdate.put(MapleStat.敏捷, (long) playerst.getDex());
+                    statupdate.put(MapleStat.DEX, (long) playerst.getDex());
                     break;
                 case 256: // 智力
                     if (playerst.getInt() + amount2 > statLimit) {
                         return;
                     }
                     playerst.setInt((short) (playerst.getInt() + amount2), chr);
-                    statupdate.put(MapleStat.智力, (long) playerst.getInt());
+                    statupdate.put(MapleStat.INT, (long) playerst.getInt());
                     break;
                 case 512: // 幸運
                     if (playerst.getLuk() + amount2 > statLimit) {
                         return;
                     }
                     playerst.setLuk((short) (playerst.getLuk() + amount2), chr);
-                    statupdate.put(MapleStat.幸運, (long) playerst.getLuk());
+                    statupdate.put(MapleStat.LUK, (long) playerst.getLuk());
                     break;
                 default:
                     usedAp2 = false;
@@ -305,7 +305,7 @@ public class StatsHandling {
                 chr.dropMessage(5, "自動分配能力點 - 主要: " + usedAp1 + " 次要: " + usedAp2);
             }
             chr.setRemainingAp((short) (chr.getRemainingAp() - ((usedAp1 ? amount : 0) + (usedAp2 ? amount2 : 0))));
-            statupdate.put(MapleStat.AVAILABLEAP, (long) chr.getRemainingAp());
+            statupdate.put(MapleStat.AVAILABLE_AP, (long) chr.getRemainingAp());
             c.announce(MaplePacketCreator.updatePlayerStats(statupdate, true, chr));
         }
     }

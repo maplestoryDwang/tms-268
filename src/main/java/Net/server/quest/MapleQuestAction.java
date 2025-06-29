@@ -334,7 +334,7 @@ public class MapleQuestAction {
                 }
                 int fameGain = (int) intStore;
                 chr.addFame(fameGain);
-                chr.updateSingleStat(MapleStat.人氣, chr.getFame());
+                chr.updateSingleStat(MapleStat.POPULARITY, chr.getFame());
                 chr.send(MaplePacketCreator.getShowFameGain(fameGain));
                 break;
             case buffItemID:
@@ -619,7 +619,7 @@ public class MapleQuestAction {
             case pop: {
                 int fameGain = (int) intStore;
                 chr.addFame(fameGain);
-                chr.updateSingleStat(MapleStat.人氣, chr.getFame());
+                chr.updateSingleStat(MapleStat.POPULARITY, chr.getFame());
                 chr.send(MaplePacketCreator.getShowFameGain(fameGain));
                 break;
             }

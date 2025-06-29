@@ -3008,7 +3008,8 @@ public class PlayerHandler {
                     effect.applyTo(player, p);
                     break;
             }
-            c.announce(MaplePacketCreator.VSkillObjectAction(skillid, display, infoList));
+            int skillLevel = player.getSkillLevel(skillid);
+            c.announce(MaplePacketCreator.VSkillObjectAction(skillid, skillLevel, display, infoList.get(0)));
             if (JobConstants.is伊利恩(player.getJob())) {
                 final MapleStatEffect eff = SkillFactory.getSkill(伊利恩.祝福標誌_1).getEffect(Math.min(10, player.getBuffedIntValue(SecondaryStat.LefBuffMastery) + 1));
                 if (eff != null) {
@@ -3932,6 +3933,7 @@ public class PlayerHandler {
                 player.getInnerSkills()[ise.getPosition() - 1] = ise;
             }
             c.announce(MaplePacketCreator.updateInnerSkill(c.getPlayer(),
+                    (byte)0,
                     player.getInnerSkills()[0],
                     player.getInnerSkills()[1],
                     player.getInnerSkills()[2]
@@ -4618,7 +4620,7 @@ public class PlayerHandler {
                                 }
                             } else {
                                 chr.setSkinColor((byte) value);
-                                chr.updateSingleStat(MapleStat.皮膚, value);
+                                chr.updateSingleStat(MapleStat.SKIN, value);
                             }
                         } else if (base == 2) {
                             if (isSecond) {
@@ -4630,7 +4632,7 @@ public class PlayerHandler {
                                 }
                             } else {
                                 chr.setFace(value);
-                                chr.updateSingleStat(MapleStat.臉型, value);
+                                chr.updateSingleStat(MapleStat.FACE, value);
                             }
                         } else if (base == 3) {
                             if (isSecond) {
@@ -4642,7 +4644,7 @@ public class PlayerHandler {
                                 }
                             } else {
                                 chr.setHair(value);
-                                chr.updateSingleStat(MapleStat.髮型, value);
+                                chr.updateSingleStat(MapleStat.HAIR, value);
                             }
                         }
                         combingRoomInventorys.get(base).remove(pos);

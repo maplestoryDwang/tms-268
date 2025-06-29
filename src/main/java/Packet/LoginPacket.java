@@ -18,6 +18,7 @@ import tools.Pair;
 import tools.StringUtil;
 import tools.data.MaplePacketLittleEndianWriter;
 
+import java.util.Iterator;
 import java.util.List;
 
 public class LoginPacket {
@@ -181,104 +182,117 @@ public class LoginPacket {
     public static byte[] getCharList(List<MapleCharacter> chars, int charslots, MapleClient c) {
         MaplePacketLittleEndianWriter mplew = new MaplePacketLittleEndianWriter();
         mplew.writeShort(OutHeader.LP_SelectWorldResult.getValue());
-        if(chars.isEmpty()){
+        if (chars.isEmpty()) {
             mplew.write(0);
             mplew.write(0);
             mplew.write(0);
             mplew.writeLong(PacketHelper.getTime(System.currentTimeMillis()));
-            mplew.writeInt(c.getWorldId()); // 0 = 艾麗亞
+            mplew.writeInt(c.getWorldId());
             mplew.writeInt(c.getChannel() - 1);
             mplew.writeBool(false);
-            mplew.writeInt(2);
-            mplew.writeInt(2);
-            mplew.writeInt(2);
-            mplew.writeInt(48); // can creat
-            mplew.writeZeroBytes(13);
+            mplew.writeInt(1);
+            mplew.writeInt(1);
+            mplew.writeInt(charslots);
+            mplew.writeInt(0);
+            mplew.writeInt(0);
+            mplew.writeInt(0);
+            mplew.write(0);
             mplew.write(1);
-            mplew.writeInt(53); // all slot
+            mplew.writeInt(charslots);
             mplew.writeInt(0);
             mplew.writeInt(-1);
-            mplew.writeZeroBytes(41);
-            mplew.writeLong(199); // test key then change
+            mplew.writeInt(0);
+            mplew.writeInt(0);
+            mplew.writeShort(0);
+            mplew.writeBool(false);
+            mplew.writeInt(0);
+            mplew.writeInt(0);
+            mplew.writeInt(0);
+            mplew.writeInt(0);
+            mplew.writeInt(5);
+            mplew.writeInt(0);
+            mplew.writeInt(0);
+            mplew.writeShort(0);
+            mplew.writeLong(199L);
         } else {
             int v6 = 0;
             mplew.write(v6);
             mplew.writeMapleAsciiString("");
             if (v6 == 61) {
                 mplew.write(0);
-                // recv 148
             }
+
             if (v6 == 131) {
                 mplew.writeInt(0);
                 mplew.writeInt(0);
             }
+
             mplew.writeLong(PacketHelper.getTime(System.currentTimeMillis()));
             mplew.writeInt(c.getWorldId());
             mplew.writeInt(c.getChannel() - 1);
-            mplew.write(false); // if ture client send 222
-            mplew.writeInt(1);  // 具有角色就會是1 否則 2
-            mplew.writeInt(1);  // 具有角色就會是1 否則 2
-            mplew.writeInt(1);  // 具有角色就會是1 否則 2
+            mplew.write(false);
+            mplew.writeInt(2);
+            mplew.writeInt(2);
             mplew.writeInt(charslots);
             mplew.write(0);
             mplew.write(0);
-
             List<Pair<Integer, Long>> deleteChrs = AccountDao.getPendingDeleteChrId(c.getAccID(), c.getWorldId());
             mplew.writeInt(deleteChrs.size());
-            for (Pair<Integer, Long> delChr : deleteChrs) {
-                mplew.writeInt(delChr.getLeft());
-                long delTime = delChr.getRight();
+
+            long delTime;
+            for(Iterator var6 = deleteChrs.iterator(); var6.hasNext(); mplew.writeLong(PacketHelper.getTime(delTime))) {
+                Pair<Integer, Long> delChr = (Pair)var6.next();
+                mplew.writeInt((Integer)delChr.getLeft());
+                delTime = (Long)delChr.getRight();
                 if (c.isGm()) {
-                    delTime -= 2 * 24 * 60 * 60 * 1000L;
+                    delTime -= 172800000L;
                 }
-                mplew.writeLong(PacketHelper.getTime(delTime));//刪除角色的時間，兩天後可以徹底刪除
             }
 
-            // 排序的角色個數
             mplew.writeInt(chars.size());
-            // 排序的角色ID
-            chars.forEach(chr -> mplew.writeInt(chr.getId()));
-            // 角色外觀個數
+            chars.forEach((chr) -> {
+                mplew.writeInt(chr.getId());
+            });
             mplew.write(chars.size());
-            // 角色外觀訊息
-            chars.forEach(chr -> chr.getAvatarData().encode(mplew));
+            chars.forEach((chr) -> {
+                chr.getAvatarData().encode(mplew);
+            });
             mplew.write(0);
             mplew.write(0);
             mplew.write(1);
-            mplew.writeInt(charslots); //帳號當前可創建角色的總數
-            mplew.writeInt(0); // 50級角色卡角色數量
+            mplew.writeInt(charslots);
+            mplew.writeInt(0);
             mplew.writeInt(-1);
-            boolean fireAndice = false; // 變更角色名稱開關(在角色上方的)
-            mplew.write(fireAndice); // 變更角色名稱開關(在角色上方的)
+            boolean fireAndice = false;
+            mplew.write(fireAndice);
             if (fireAndice) {
-                mplew.writeLong(130977216000000000L); // 開始
-                mplew.writeLong(130990175990000000L); // 結束
+                mplew.writeLong(130977216000000000L);
+                mplew.writeLong(130990175990000000L);
                 int c_size = 0;
                 mplew.writeInt(c_size);
                 if (c_size > 0) {
-                    mplew.writeInt(0); // 無法更名的角色ID
+                    mplew.writeInt(0);
                 }
             }
-            mplew.write(0); // nRenameCount
+
             mplew.write(0);
-
+            mplew.write(0);
             mplew.writeInt(0);
             mplew.writeInt(0);
             mplew.writeInt(0);
             mplew.writeInt(0);
             mplew.writeInt(0);
-
             mplew.writeInt(0);
             mplew.writeInt(0);
-
             mplew.writeInt(0);
             mplew.writeInt(0);
             mplew.write(false);
             mplew.write(false);
             mplew.writeInt(0);
             mplew.writeInt(0);
-            mplew.writeLong(199); // test key then change
+            mplew.writeLong(199L);
         }
+
         return mplew.getPacket();
     }
 

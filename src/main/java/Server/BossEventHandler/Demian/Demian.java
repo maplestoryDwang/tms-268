@@ -140,7 +140,7 @@ public class Demian {
 
     public static byte[] StigmaTime(int ms) {
         MaplePacketLittleEndianWriter mplew = new MaplePacketLittleEndianWriter();
-        mplew.writeShort(OutHeader.STIGMA_TIME.getValue());
+        mplew.writeShort(OutHeader.BOSS_DEMIAN_STIGMA_TIME.getValue());
         mplew.writeInt(ms);
         return mplew.getPacket();
     }

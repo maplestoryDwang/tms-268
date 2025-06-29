@@ -872,7 +872,7 @@ public class InventoryHandler {
                     //if (c.getPlayer().getGender() == 1) {
                     int hair = 32150 + (c.getPlayer().getHair() % 10);
                     c.getPlayer().setHair(hair);
-                    c.getPlayer().updateSingleStat(MapleStat.髮型, hair);
+                    c.getPlayer().updateSingleStat(MapleStat.HAIR, hair);
                     MapleInventoryManipulator.removeFromSlot(c, MapleInventoryType.CASH, slot, (byte) 1, false);
                     //}
                     break;
@@ -881,7 +881,7 @@ public class InventoryHandler {
                     //if (c.getPlayer().getGender() == 0) {
                     int hair = 32160 + (c.getPlayer().getHair() % 10);
                     c.getPlayer().setHair(hair);
-                    c.getPlayer().updateSingleStat(MapleStat.髮型, hair);
+                    c.getPlayer().updateSingleStat(MapleStat.HAIR, hair);
                     MapleInventoryManipulator.removeFromSlot(c, MapleInventoryType.CASH, slot, (byte) 1, false);
                     //}
                     break;

@@ -15,7 +15,7 @@ import java.util.regex.Pattern;
 public class ServerConstants {
 
     // 伺服器版本號
-    public static final short MapleMajor = 267;
+    public static final short MapleMajor = 268;
     // 伺服器區域
     public static final String DIR = System.getProperty("user.dir");
     public static final String WZ_DIR = DIR + "/Data";

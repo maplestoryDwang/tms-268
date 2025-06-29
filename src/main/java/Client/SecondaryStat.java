@@ -1,982 +1,1005 @@
+//
+// Source code recreated from a .class file by IntelliJ IDEA
+// (powered by FernFlower decompiler)
+//
+
 package Client;
 
 import Server.Buffstat;
-import tools.Pair;
-
+import java.io.PrintStream;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
+import tools.Pair;
 
 public enum SecondaryStat implements Buffstat {
-    IndiePAD(true),              // 增加角色的物理攻击力
-    IndieMAD(true),              // 增加角色的魔法攻击力
-    IndiePDD(true),              // 增加角色的物理防御力
-    IndieMHP(true),              // 增加角色的最大生命值
-    IndieMHPR(true),             // 增加角色的最大生命值恢复率
-    IndieMMP(true),              // 增加角色的最大魔法值
-    IndieMMPR(true),             // 增加角色的最大魔法值恢复率
-    IndieACC(true),              // 增加角色的命中率
-    IndieEVA(true),              // 增加角色的闪避率
-    IndieJump(true),             // 增加角色的跳跃力
-    IndieSpeed(true),           // 增加角色的移动速度
-    IndieAllStat(true),         // 增加角色的所有属性（力量、敏捷、智力、运气）
-    IndieStatRBasic(true),      // 增加角色的主要属性（力量、敏捷、智力、运气）百分比
-    IndieDodgeCriticalTime(true), // 减少角色遭受暴击和命中的时间
-    IndieEXP(true),             // 增加角色获得的经验值
-    IndieBooster(true),         // 增加使用技能后的连续攻击速度
-    IndieFixedDamageR(true),    // 减少受到的固定伤害
-    PyramidStunBuff(true),      // 角色在金字塔地图中受到的眩晕效果
-    PyramidFrozenBuff(true),    // 角色在金字塔地图中受到的冰冻效果
-    PyramidFireBuff(true),      // 角色在金字塔地图中受到的火焰效果
-    PyramidBonusDamageBuff(true), // 增加角色在金字塔地图中造成的伤害
-    IndieRelaxEXP(true),        // 增加角色的休息时获得的经验值
-    IndieSTR(true),             // 增加角色的力量属性
-    IndieDEX(true),             // 增加角色的敏捷属性
-    IndieINT(true),             // 增加角色的智力属性
-    IndieLUK(true),             // 增加角色的运气属性
-    IndieDamR(true),            // 增加角色对怪物造成的伤害
-    IndieScriptBuff(true),      // 触发特定脚本的角色增益效果
-    IndieMDF(true),             // 增加角色的魔法防御力
-    IndieAsrR(true),            // 增加角色的所有属性抗性
-    IndieTerR(true),            // 增加角色的状态异常抗性
-    IndieCr(true),              // 增加角色的暴击率
-    IndiePDDR(true),            // 增加角色的物理防御力无视率
-    IndieCD(true),              // 增加角色技能的冷却速度
-    IndieBDR(true),             // 增加角色的爆击伤害
-    IndieStatR(true),           // 增加角色的所有属性百分比
-    IndieStance(true),          // 角色进入霸体状态，免疫部分控制效果
-    IndieIgnoreMobpdpR(true),   // 增加角色对怪物防御力无视率
-    IndieEmpty(true),           // 一个空的操作码，可能是为了占位或其他用途
-    IndiePADR(true),            // 增加角色的物理攻击力无视率
-    IndieMADR(true),            // 增加角色的魔法攻击力无视率
-    IndieEVAR(true),            // 增加角色的所有属性抗性无视率
-    IndieDrainHP(true),
-    //    IndiePartyExpRate(true),
-//    IndieCrMin(true),
-    IndiePMdR(true),            // 增加角色的物理和魔法防御力百分比
-    IndieForceJump(true),          // 强制增加角色的跳跃力
-    IndieForceSpeed(true),         // 强制增加角色的移动速度
-    IndieQrPointTerm(true),
-    //    IndieWaterSmashBuff(true),
-    IndieLoopEffect(true),
-    IndiePeriodicalSkillActivation(true),
-    IndieEventForSkill(true),
-    IndieItemDropRate(true),   // 增加角色的掉落率提升效果
-    IndieBuffIcon(true),           // 角色召唤效果，可能是召唤出其他单位进行战斗 // old
-    IndieCooltimeReduce(true),          // 减少角色技能的冷却时间
-    IndieNotDamaged(true),         // 使角色处于无敌状态，免疫伤害和控制效果
-    IndieKeydown(true),            // 未知效果的生成怪物增益效果
-    IndieDamReduceR(true),    // 减少角色受到的所有伤害
-    IndieSpecificSkill(true),
-    IndieEVARReduceR(true), // 減少總迴避率
-    IndieHitDamR(true), // 受擊傷增加
-    IndieApplySuperStance(true),
-    IndieFlyAcc(true),
-    IndieAllHitDamR(true), // 减少角色受到的伤害
-    IndieArc(true),
-    IndieAut(true),
-    IndiePowerGuard(true), // 角色使用技能时反弹部分伤害给攻击者
-    IndieDropPer(true),
-    IndieMesoAmountRate(true),
-    IndieCheckTimeByClient(true), // 减少角色受到的诅咒类效果的影响
-    IndieDotHealHP(true),
-    IndieDotHealMP(true),
-    IndieNormalDamReduceR(true),
-    IndieIgnorePCounter(true),  // 角色的攻击无视敌人的反击效果
-    IndieBarrier(true), // 角色获得一个护盾，吸收一定量的伤害
-    IndieStarForce(true),
-    IndieNBDR(true),
-    IndieMonsterCollectionR(true),
-    IndieMPConReduceR(true),
-    IndieAntiMagicShell(true),
-    IndieDecDamTargetMob(true),
-    IndieStatCount(true),    // 统计角色属性增益效果的数量
-    PAD,                      // 增加物理攻击力
-    PDD,                      // 增加物理防御力
-    MAD,                      // 增加魔法攻击力
-    ACC,                      // 增加命中率
-    EVA,                      // 增加闪避率
-    Craft,                    // 角色的制作技能效果
-    Speed,                    // 增加移动速度
-    Jump,                     // 增加跳跃力
-    MagicGuard,               // 角色使用技能时，将部分伤害转化为魔法消耗
-    DarkSight,                // 角色进入隐身状态
-    Booster,                  // 增加使用技能后的攻击速度
-    PowerGuard,               // 角色使用技能时反弹部分伤害给攻击者
-    MaxHP,                    // 增加最大生命值
-    MaxMP,                    // 增加最大魔法值
-    Invincible,               // 角色进入无敌状态，免疫伤害和控制效果
-    SoulArrow,                // 角色增加魔法箭效果，使普通攻击变为远程攻击
-    Stun,                     // 角色受到眩晕效果
-    Poison,                   // 角色受到中毒效果
-    Seal,                     // 角色受到封印效果
-    Darkness,                 // 角色受到黑暗效果
-    ComboCounter,              // 鬥氣集中
-    BlessedHammer,
-    BlessedHammerActive,
-    WeaponCharge,      // 角色武器充能，提高一段时间内的攻击力
-    HolySymbol,        // 角色使用神圣之符技能，提高经验掉落率
-    MesoUp,            // 角色获得金币掉落率提升效果
-    ShadowPartner,      // 角色使用暗影伙伴技能，生成一个分身协助战斗
-    ThiefSteal,
-    PickPocket,        // 角色使用扒窃技能，偷取怪物身上的金币
-    BloodyExplosion,         // 角色使用金币保护技能，消耗金币抵挡一定伤害
-    Thaw,              // 解除角色冰冻状态
-    Weakness,          // 角色受到虚弱效果
-    Curse,             // 角色受到诅咒效果
-    Slow,              // 角色受到减速效果
-    Morph,             // 角色受到形变效果
-    Regen,             // 角色生命和魔法值恢复速度增加
-    BasicStatUp,       // 楓葉祝福
-    Stance,            // 角色进入霸体状态，免疫部分控制效果
-    SharpEyes,         // 角色使用鹰眼技能，增加暴击率和命中率
-    ManaReflection,   // 角色使用魔法反射技能，将部分伤害反射给攻击者
-    Attract,           // 角色使用引诱技能，吸引怪物攻击
-    NoBulletConsume,   // 角色使用技能时不消耗弹药
-    Infinity,          // 角色使用无限技能，消耗魔法值增加攻击力
-    AdvancedBless,     // 角色受到高级祝福效果
-    IllusionStep,       // 角色使用幻影步技能，获得一定的回避率
-    Blind,
-    Concentration,        // 角色使用专注技能，增加攻击力和魔法力
-    BanMap,               // 禁止角色进入特定地图
-    MaxLevelBuff,         // 限制角色获得等级上限提升的效果
-    MesoUpByItem,         // 角色使用物品增加金币掉落率
-    MesoAmountRate,               // 未知效果的角色增益效果
-    MesoAmountRateRune,               // 未知效果的角色增益效果
-    Ghost,                // 角色进入幽灵状态，无法被怪物攻击
-    Barrier,              // 角色进入防御状态，减少受到的伤害
-    ReverseInput,         // 反转角色的输入控制
-    ItemUpByItem,         // 角色使用物品提升物品效果
-    RespectPImmune,       // 角色免疫物理伤害
-    RespectMImmune,       // 角色免疫魔法伤害
-    DefenseAtt,           // 角色攻击时进行防御
-    DefenseState,         // 角色进入防御状态
-    DojangBerserk,        // 角色进入道馆狂暴状态
-    DojangInvincible,     // 角色进入道馆无敌状态
-    DojangShield,         // 角色在道馆获得护盾效果
-    SoulMasterFinal,      // 战神职业的终极技能效果
-    WindBreakerFinal,     // 箭神职业的终极技能效果
-    KarmaBlade,
-    ElementalReset,       // 角色使用元素重置技能，恢复冷却技能
-    HideAttack,           // 角色隐藏状态下使用技能攻击
-    EventRate,             // 增加角色获得事件物品的掉落率
-    ComboAbilityBuff,     // 狂狼勇士COMBO
-    ComboDrain, /* 連擊組合 */
-    ComboBarrier, /* 連擊屏障*/
-    BodyPressure,            // 角色受到压迫状态，无法移动和使用技能
-    RepeatEffect,            // 重复播放角色效果，可能是一些特殊状态的持续效果
-    ExpBuffRate,             // 增加角色获得的经验值
-    StopPortion,             // 停止角色的部分能力效果
-    StopMotion,              // 停止角色的动作
-    Fear,                   // 角色受到致盲效果
-    HiddenPieceOn,           // 角色使用隐藏碎片技能，获得一些效果
-    MagicShield,             // 角色使用魔法护盾技能，吸收一定量的伤害
-    MagicResistance,         // 增加角色魔法属性抗性
-    SoulStone,               // 角色使用灵魂石技能，增加攻击力
-    Flying,                  // 角色进入飞行状态
-    Frozen,                  // 角色进入冰冻状态，无法移动和使用技能
-    AssistCharge,            // 角色使用辅助充能技能，获得辅助技能的效果
-    Enrage,                  // 角色进入愤怒状态，增加攻击力
-    DrawBack,                // 角色受到后退效果
-    NotDamaged,              // 角色进入不受伤害状态
-    FinalCut,                // 角色使用最后一击技能，造成额外伤害
-    HowlingAttackDamage,     // 角色使用嚎叫技能，增加攻击力
-    BeastForm,       // 角色变身为野兽状态，增加攻击力
-    Dance,                   // 角色进入舞蹈状态，增加移动速度
-    EMHP,                    // 增加角色的最大生命值百分比
-    EMMP,                    // 增加角色的最大魔法值百分比
-    EPAD,                    // 增加角色的物理攻击力百分比
-    EMAD,                    // 增加角色的魔法攻击力百分比
-    EPDD,                    // 增加角色的物理防御力百分比
-    Guard,                   // 角色进入保护状态，减少受到的伤害
-    Cyclone,                  // 未知效果的角色增益效果
-    MorphAvatar,                  // 未知效果的角色增益效果
-    RidingExpireInfoSave,                  // 未知效果的角色增益效果
-    NextSpecificSkillDamageUp,           // 角色使用标枪技能，增加伤害
-    PinkbeanMinibeenMove,    // 皮卡啾迷你移動   KMS 362 BY HERTZ.
-    GravityConstraint,
-    Sneak,                   // 角色使用潜行技能，进入潜行状态
-    Mechanic,                // 角色进入机械状态，可能是职业特有状态
-    BeastFormMaxHP,          // 野兽形态下增加角色的最大生命值
-    Dice,                    // 角色使用骰子技能，获得随机效果
-    BlessingArmor,           // 角色使用护身符技能，增加防御力
-    DamR,                    // 增加角色造成的伤害
-    TeleportMasteryOn,       // 角色使用瞬移技能，增加瞬移效果
-    CombatOrders,            // 增加角色技能的效果
-    Beholder,                // 角色使用魔眼技能，生成一个魔眼辅助战斗
-    DispelItemOption,        // 角色使用物品消除装备的选项效果
-    Inflation,               // 角色使用通货膨胀技能，消耗金币增加攻击力
-    OnixDivineProtection,    // 角色使用石盾技能，增加防御力
-    Web,                     // 角色使用网技能，将怪物固定在地方
-    Bless,                   // 角色受到祝福效果
-    TimeBomb,                // 角色使用定时炸弹技能，延时爆炸造成伤害
-    DisOrder,                // 角色受到混乱效果
-    Thread,                  // 角色受到缠绕效果
-    Team,                    // 角色受到团队效果
-    Explosion,               // 角色使用爆炸技能，造成范围伤害
-    BuffLimit,               // 角色获得增益效果的上限
-    STR,                     // 增加角色力量属性
-    INT,                     // 增加角色智力属性
-    DEX,                     // 增加角色敏捷属性
-    LUK,                     // 增加角色运气属性
-    DispelItemOptionByField, // 地图上消除装备的选项效果
-    DarkTornado,             // 角色使用黑暗龙卷风技能，造成范围伤害
-    PVPDamage,               // 角色在PvP中造成伤害增加
-    PvPScoreBonus,           // 角色在PvP中得分奖励增加
-    PvPInvincible,           // 角色在PvP中进入无敌状态
-    PvPRaceEffect,            // 角色在PvP中获得种族效果
-    WeaknessMdamage,         // 弱点物理伤害，增加对怪物的物理伤害
-    Frozen2,                 // 角色进入冰冻状态，无法移动和使用技能
-    PVPDamageSkill,          // 角色在PvP中造成技能伤害增加
-    AmplifyDamage,           // 增加角色造成的所有伤害
-    Shock,                   // 角色受到震动效果
-    InfinityForce,           // 角色使用无限技能，增加攻击力和魔法力
-    IncMaxHP,                // 增加角色最大生命值
-    IncMaxMP,                // 增加角色最大魔法值
-    HolyMagicShell,          // 角色受到圣洁魔法盾效果
-    KeyDownTimeIgnore,       // 忽略角色技能按键持续时间
-    ArcaneAim,               // 角色使用奥秘瞄准技能，增加命中率
-    MasterMagicOn,           // 角色进入主魔法状态，增加魔法攻击力
-    AsrR,                    // 减少角色受到的所有伤害
-    TerR,                    // 减少角色受到的特定类型伤害
-    DamAbsorbShield,         // 吸收一定量的伤害，转化为魔法消耗
-    DevilishPower,           // 角色进入恶魔力量状态，增加攻击力和魔法力
-    Roulette,                // 角色使用轮盘技能，获得随机效果
-    RouletteStack,
-    SpiritLink,              // 角色使用灵魂链接技能，将伤害分担给其他角色
-    AsrRByItem,              // 通过物品减少角色受到的所有伤害
-    Event,                   // 角色获得活动效果
-    CriticalBuff,            // 角色暴击率增加效果
-    DropRate,                // 增加物品掉落率
-    PlusExpRate,             // 增加经验值获取率
-    ItemInvincible,          // 角色使用物品获得无敌效果
-    Awake,                   // 觉醒技能效果
-    ItemCritical,            // 物品的暴击率效果
-    ItemEvade,               // 物品的闪避率效果
-    Event2,                  // 角色获得活动效果
-    VampiricTouch,           // 角色使用吸血之触技能，将伤害转化为生命回复
-    DDR,                     // 减少角色受到的所有伤害
-    IncTerR,                 // 增加角色受到的特定类型伤害
-    IncAsrR,                 // 增加角色受到的所有伤害
-    DeathMark,               // 角色被标记为死亡状态
-    UsefulAdvancedBless,     // 有效的高级祝福效果
-    Lapidification,          // 角色被石化效果影响
-    VenomSnake,              // 角色受到毒蛇效果影响
-    CarnivalAttack,          // 角色在嘉年华中获得攻击增益效果
-    CarnivalDefence,         // 角色在嘉年华中获得防御增益效果
-    CarnivalExp,             // 角色在嘉年华中获得经验值增益效果
-    SlowAttack,              // 角色的攻击速度减缓
-    PyramidEffect,           // 角色受到金字塔效果影响
-    HollowPointBullet,       // 角色使用空心子弹技能，造成额外伤害
-    KeyDownMoving,           // 角色持续按键移动
-    IgnoreTargetDEF,         // 忽略目标的防御
-    StrikerElectricUsed,
-    ReviveOnce,              // 角色可以复活一次
-    Invisible,               // 角色进入隐形状态
-    EnrageCr,                // 愤怒状态的爆击率增加效果
-    EnrageCrDamMin,          // 愤怒状态的爆击伤害增加效果
-    Judgement,               // 角色受到审判效果影响
-    DojangLuckyBonus,        // 角色在道馆中获得幸运奖励
-    PainMark,                // 角色被痛苦标记效果影响
-    Magnet,                  // 角色受到磁铁效果影响
-    MagnetArea,               // 角色受到磁铁区域效果影响
-    GuidedArrow,
-    StraightForceAtomTargets,
-    LefBuffMastery,
-    TempSecondaryStat,
-    CoalitionSupportSoldierStorm,
-    LefMageLinkSkill,
-    SixthJavelinStack,
-    SixthGloryWingJavelinStack,
-    SixthCrystalStack,
-    ShadowMomentum,
-    GrandCross,
-    YetiCook,
-    PinkbeanCheer,
-    DropPer,
-    VampDeath,
-    BlessingArmorIncPAD,
-    KeyDownAreaMoving,
-    Larkness,
-    StackBuff,
-    AntiMagicShell,
-    LifeTidal,
-    HitCriDamR,
-    SmashStack,
-    PartyBarrier,
-    ReshuffleSwitch,
-    SpecialAction,
-    VampDeathSummon,
-    StopForceAtomInfo,
-    SoulGazeCriDamR,
-    SoulRageCount,
-    PowerTransferGauge,
-    AffinitySlug,
-    Trinity,
-    IncMaxDamage,
-    BossShield,
-    MobZoneState,
-    GiveMeHeal,
-    TouchMe,
-    Contagion,
-    ComboUnlimited,
-    SoulExalt,
-    IgnoreAllCounter,
-    IgnorePImmune,
-    IgnoreAllImmune,
-    IgnoreAllAbout,
-    FinalJudgement,
-    FireAura,
-    VengeanceOfAngel,
-    HeavensDoor,
-    Preparation,
-    BullsEye,
-    IncEffectHPPotion,
-    IncEffectMPPotion,
-    BleedingToxin,
-    IgnoreMobDamR,
-    Asura,
-    MegaSmasher,
-    FlipTheCoin,
-    UnityOfPower,
-    Stimulate,
-    ReturnTeleport,
-    DropRIncrease,
-    IgnoreMobpdpR,
-    BdR,
-    CapDebuff,
-    Exceed,
-    DiabolikRecovery,
-    FinalAttackProp,
-    ExceedOverload,
-    OverloadCount,
-    BuckShot,
-    FireBomb,
-    HalfstatByDebuff,
-    SurplusSupply,
-    SetBaseDamage,
-    EVAR,
-    NewFlying,
-    AmaranthGenerator,
-    CygnusElementSkill,
-    StrikerHyperElectric,
-    EventPointAbsorb,
-    EventAssemble,
-    StormBringer,
-    ACCR,
-    DEXR,
-    Translucence,
-    PoseType,
-    CosmicForge,
-    ElementSoul,
-    CosmicOrb,
-    //GlimmeringTime,
-    //TrueSight,
-    SoulExplosion,
-
-    SoulMP,
-    FullSoulMP,
-    SoulSkillDamageUp,
-    ElementalCharge,
-    Restoration,
-    CrossOverChain,
-    Reincarnation,
-    ReincarnationMission,
-    ReincarnationOnOff,
-    ChillingStep,
-    DotBasedBuff,
-    SixthDotBasedBuff,
-    BlessEnsenble,
-    ComboCostInc,
-    NaviFlying,
-    Holding,
-    QuiverCatridge,
-    UserControlMob,
-    ImmuneBarrier,
-    CriticalGrowing,
-    LastUseSkillAttr,
-    QuickDraw,
-    BowMasterConcentration,
-    TimeFastABuff,
-    TimeFastBBuff,
-    GatherDropR,
-    AimBox2D,
-    CursorSniping,
-    DebuffTolerance,
-    TearsOfFairy,
-    DotHealHPPerSecond,
-    DotHealMPPerSecond,
-    SpiritGuard,
-    PreReviveOnce,
-    SetBaseDamageByBuff,
-    LimitMP,
-    ReflectDamR,
-    ComboTempest,
-    MHPCutR,
-    MMPCutR,
-    SelfWeakness,
-    ElementDarkness,
-    FlareTrick, /* 耀班 */
-    FlameDischarge,
-    Dominion, /* 道米尼歐 */
-    SiphonVitality,
-    DarknessAscension,
-    BossWaitingLinesBuff,
-    DamageReduce, /* 減少傷害 */
-    ShadowServant,
-    ShadowIllusion,
-    KnockBack,
-    AddAttackCount,
-    ComplusionSlant,
-    JaguarSummoned, /* 美洲虎召喚 */
-    JaguarCount,
-    SSFShootingAttack,
-    DevilCry,
-    ShieldAttack,
-    DarkLighting,
-    AttackCountX,
-    BMageDeath,
-    BombTime,
-    NoDebuff,
-    BattlePvP_Mike_Shield,
-    BattlePvP_Mike_Bugle,
-    XenonAegisSystem,
-    AngelicBursterSoulSeeker,
-    HiddenPossession,
-    NightWalkerBat,
-    NightLordMark,
-    WizardIgnite,
-    FireBarrier,
-    ChangeFoxMan,
-    PairingUser,
-    Frenzy,
-    ShadowSpear,
-    PvPFlag,
-    BladeStanceMode,
-    BladeStancePower,
-    KenjiCounter,
-    EvasionMaster,
-    SelfHyperBodyIncPAD,
-    SelfHyperBodyMaxHP,
-    SelfHyperBodyMaxMP,
-    BladeStanceBooster,
-    UNK449,
-    UNK450,
-    EvasionUpgrade,
-    CriticalBuffAdd,
-    FoxBless,
-    BossDamageRate,
-    RepeatEffect2,
-    AntiEvilShield,
-    TotalDAMr,
-    GiantBossDeathCnt,
-    UNK462,
-    AntiDebuff,
-    UNK464,
-    MastemaGuard,
-    Elysion,
-    QuiverFullBurst,
-    SwordBaptism,
-    WildGrenade,
-    ChainMantisADV,
-    FieldGimmickFear,
-    ImmuneStun,
-    BattlePvP_Helena_Mark,
-    BattlePvP_Darklord_Explosion,
-    BattlePvP_Helena_WindSpirit,
-    BattlePvP_LangE_Protection,
-    BattlePvP_LeeMalNyun_ScaleUp,
-    BattlePvP_Revive,
-    PinkbeanAttackBuff,
-    PinkbeanRelax,
-    PinkbeanRollingGrade,
-    PinkbeanYoYoStack,
-    RandAreaAttack,
-    RandAreaAttack2,
-    ShineRuneAttack,
-    NextAttackEnhance,
-    AranBeyonderDamAbsorb,
-    PirateDesire,
-    AranCombotempastOption,
-    ViperTimeLeap,
-    RoyalGuardState,
-    BodyRectGuardPrepare,
-    MichaelSoulLink,
-    MichaelStanceLink,
-    TriflingWhimOnOff,
-    AddRangeOnOff,
-    KinesisPsychicPoint,
-    KinesisPsychicOver,
-    KinesisIncMastery,
-    KinesisPsychicEnergeShield,
-    BladeStance,
-    DebuffActiveSkillHPCon,
-    DebuffIncHP,
-    BowMasterMortalBlow,
-    AngelicBursterSoulResonance,
-    Fever,
-    RpSiksin,
-    TeleportMasteryRange,
-    FixCoolTime,
-    IncMobRateDummy,
-    AdrenalinBoost,
-    AranDrain,
-    AranBoostEndHunt,
-    HiddenHyperLinkMaximization,
-    RWCylinder,
-    RWCombination,
-    RWVulkanPunch,
-    RWMagnumBlow,
-    RWBarrier,
-    RWBarrierHeal,
-    RWMaximizeCannon,
-    RWOverHeat,
-    UsingScouter,
-    RWMovingEvar,
-    Stigma,
-    MahaInstall,
-    HeavensDoorNotTime,
-    RuneStoneNoTime,
-    XenonRoketRunch,
-    TransformOverMan,
-    EnergyBust,
-    LightningUnion,
-    BulletParty,
-    LoadedDice,
-    BishopPray,
-    ChainArtsFury,
-    MichaelFixDamDecTime,
-    PinkbeanYoYoAddDamR,
-    Warrior_AuraWeapon,
-    Warrior_AuraWeaponStack,
-    Wizard_OverloadMana,
-    Michael_RhoAias,
-    Kinesis_DustTornado,
-    NightLord_SpreadThrow,
-    HowlingGaleStack,
-    CannonShooter_BFCannonBall,
-    CannonShooter_MiniCannonBall,
-    Shadower_ShadowAssault,
-    CreateEventMeso,
-    MesoRanger_MesoDizerX,
-    DawnShield_ExHP,
-    DawnShield_WillCare,
-    SkillDeployment,
-    InnerStorm,
-    Wet,
-    SpecialTombPL,
-    GrabbedByMob,
-    SummonProp,
-    ReduceMP,
-    KenjiShadowAttackBuff,
-    UNK498,
-    WorldExpBuff,
-    WorldDropBuff,
-    CurseRingBuff,
-    EXP_CARD,
-    GhostLiberationStack,
-    KannaSiksinAutoAttack,
-    CoronaBuffOverlap,
-    FifthAdvWarriorShield,
-    SplitArrow,
-    FreudBlessing,
-    OverloadMode,
-    FifthSpotLight,
-    OutSide,
-    WeaponVariety,
-    LefGloryWing,
-    Shadower_Assassination,
-    ConvertAD,
-    EtherealForm,
-    ReadyToDie,
-    Oblivion,
-    Cr2CriDamR,
-    BlackMageCreate,
-    BlackMageDestroy,  // <--- 尚未處理
-    BlackMageMonochrome,  // <--- 尚未處理
-    HitStackDamR,
-    BuffControlDebuff, // KMS 帕普爾·庫斯  // <--- 尚未處理
-    DispersionDamage, // KMS 帕普爾·炸彈  // <--- 尚未處理
-    HarmonyLink,
-    LefFastCharge,
-    BuffIconNoShadow,
-    CrystalChargeBuffIcon,
-    LioMachinaCombineBuffIcon, // KMS 神狀態  // <--- 尚未處理
-    CoalitionSupportWarplaneBuffIcon,
-    BattlePvP_Ryude_Frozen,
-    BattlePvP_Ryude_Buff,
-    AntiMagicShellByJewelMaking,
-    DamageRateSetUpForApc,
-    SpecterGauge,
-    SpecterMode,
-    SpellBullet_Plain,
-    SpellBullet_Scarlet,
-    SpellBullet_Gust,
-    SpellBullet_Abyss,
-    ComingDeath,
-    GreatOldAbyss,
-    SixthPhoenix,
-    HolyAdvent,
-    ZodiacBurst,
-    CombatFrenzy,
-    LPSpellAmplification,
-    LPInfinitySpell,
-    LPMagicCircuitFullDrive,
-    LPMagicCircuitFullDriveStack,
-    LPBattleMode, // 亞克連結技能 548
-    LPHoldSpecterGauge, //記憶來源  // <--- 尚未處理
-    DiscoveryWeather,
-    BossWill_Infection, // Will座標施法  // <--- 尚未處理
-    PvpApcTeam,
-    HolyMagicShellReUse,
-    StrikerComboStack,
-    HeroComboInstinct,
-    KhaliUltimatum,
-    WindBreakerStormGuard,
-    FlameWizardInfiniteFlame,
-    MichaelSwordOfLight,
-    PhantomMarkOfPhantomOwner,
-    PhantomMarkOfPhantomTarget,
-    RescuedSoldierBuffIcon1,
-    RescuedSoldierBuffIcon2,
-    FireBirdSupport,
-    FireBirdSupportActive,
-    AuraOfLife,
-    MemoryOfJourney,
-    MiracleTime,
-    ItemUpgradeR,
-    BufftimeRforActive,
-    DecBaseDamageDebuff,
-    LimitConsumeDebuff,
-    LimitEquipStatDebuff,
-    BlackMageWeaponDestruction,
-    BlackMageWeaponCreation,
-    BattlePvP_LangE_LiverStack,
-    BattlePvP_Mike_Amor,
-    SiphonVitalityBarrier,
-    PathFinderAncientGuidance,
-    BattlePvP_KeyDown,
-    BattlePvP_Wongki_FlyingCharge,
-    BattlePvP_Wongki_AwesomeFairy,
-    BattlePvP_Mugong_PandaZone,
-    BattleSurvivalDefence,
-    BattleSurvivalInvincible,
-    EventPvPDefence,
-    EventPvPInvincible,
-    EventSoccerBall,
-    EventSoccerMomentBuff,
-    ZeroDamageDebuff,
-    FifthGoddessBless,
-    FifthGoddessBlessStack,
-    CommonItemSkillContinuous,
-    PinkbeanMatryoshka,
-    NewtroWarriors,
-    SilverMane,
-    SilverManeBuff,
-    BattlePVPAttBuff,
-    MinigameStat,
-    LuckyPapylus,
-    AnimaThiefTaoistType,
-    AnimaThiefTaoistGauge,
-    AnimaThiefCloneAttack,
-    AnimaThiefFifthCloneAttack,
-    AnimaThiefButterfly,
-    MiracleDrug,
-    AnimaThiefMetaphysics,
-    NoviceMagicianLink,
-    NerotaPower,
-    LibraryMissionGuard,
-    XenonHoloGramGraffiti,
-    KeyDownEnable,
-    DracoSlasherNoCooltime,
-    WillOfSword,
-    LWSwordGauge,
-    LWCreation,
-    LWDike,
-    LWWonder,
-    LWRestore,
-    LefWarriorNobility,
-    LWResonanceBuff, /* 魔劍共鳴 */
-    RunePurification, /* 淨化符文 */
-    RuneContagion, /* 傳輸符文 */
-    DebuffHallucination, /* 戴斯克黑暗 */
-    BMageAuraYellow, /* 黃色光環 */
-    BMageAuraDrain, /* 紅色光環 */
-    BMageAuraBlue, /* 藍色光環 */
-    BMageAuraDark, /* 黑色光環 */
-    BMageAuraDebuff, /* DEBUFF光環 */
-    BMageAuraUnion, /* 聯盟光環 */
-    IceAura, /* 騎士光環 不明所以是甚麼? */
-    KnightsAura, /* 騎士光環 不明所以是甚麼? */
-    ZeroAuraStr,
-    NovaArcherIncanation,
-    AnimaThiefMetaphysicsBuff,
-    RevenantGauge,
-    DeathDance,
-    ShadowShield,
-    AranComboTempestAura,
-    XenonBursterLaser,
-    BMageAbyssalLightning,
-    StrikerThunderChain,
-    MercedesRoyalKnight,
-    PhantomDefyingFate,
-    FWSalamanderMischiefAttack,
-    KinesisLawOfGravity,
-    RepeatinCartrige,
-    LefMageCrystalGate,
-    ThrowBlasting,
-    AnimaThiefIllusion,
-    DarknessAura,
-    WeaponVarietyFinale,
-    Equinox,
-    EquinoxActive,
-    ZeroEgoWeaponAlpha,
-    RelicUnboundD,
-    EvanSpiralOfMana,
+    IndiePAD(0, true),
+    IndieMAD(1, true),
+    IndiePDD(2, true),
+    IndieMHP(3, true),
+    IndieMHPR(4, true),
+    IndieMMP(5, true),
+    IndieMMPR(6, true),
+    IndieACC(7, true),
+    IndieEVA(8, true),
+    IndieJump(9, true),
+    IndieSpeed(10, true),
+    IndieAllStat(11, true),
+    IndieStatRBasic(12, true),
+    IndieDodgeCriticalTime(13, true),
+    IndieEXP(14, true),
+    IndieBooster(15, true),
+    IndieFixedDamageR(16, true),
+    PyramidStunBuff(17, true),
+    PyramidFrozenBuff(18, true),
+    PyramidFireBuff(19, true),
+    PyramidBonusDamageBuff(20, true),
+    IndieRelaxEXP(21, true),
+    IndieSTR(22, true),
+    IndieDEX(23, true),
+    IndieINT(24, true),
+    IndieLUK(25, true),
+    IndieDamR(26, true),
+    IndieScriptBuff(27, true),
+    IndieMDF(28, true),
+    IndieAsrR(29, true),
+    IndieTerR(30, true),
+    IndieCr(31, true),
+    IndiePDDR(32, true),
+    IndieCD(33, true),
+    IndieBDR(34, true),
+    BasicStatUp(35, true),
+    IndieStance(36, true),
+    IndieIgnoreMobpdpR(37, true),
+    IndieEmpty(38, true),
+    IndiePADR(39, true),
+    IndieMADR(40, true),
+    IndieEVAR(41, true),
+    IndieDrainHP(42, true),
+    IndiePMdR(43, true),
+    IndieForceJump(44, true),
+    IndieForceSpeed(45, true),
+    IndieQrPointTerm(46, true),
+    IndieLoopEffect(47, true),
+    IndiePeriodicalSkillActivation(48, true),
+    IndieEventForSkill(49, true),
+    IndieItemDropRate(50, true),
+    IndieBuffIcon(51, true),
+    IndieCooltimeReduce(52, true),
+    IndieNotDamaged(53, true),
+    IndieKeydown(54, true),
+    IndieDamReduceR(55, true),
+    IndieSpecificSkill(56, true),
+    IndieEVARReduceR(57, true),
+    IndieHitDamR(58, true),
+    IndieApplySuperStance(59, true),
+    IndieFlyAcc(60, true),
+    IndieAllHitDamR(61, true),
+    IndieArc(62, true),
+    IndieAut(63, true),
+    IndiePowerGuard(64, true),
+    IndieDropPer(65, true),
+    IndieMesoAmountRate(66, true),
+    IndieCheckTimeByClient(67, true),
+    IndieDotHealHP(68, true),
+    IndieDotHealMP(69, true),
+    IndieNormalDamReduceR(70, true),
+    IndieIgnorePCounter(71, true),
+    IndieBarrier(72, true),
+    IndieStarForce(73, true),
+    IndieNBDR(74, true),
+    IndieMonsterCollectionR(75, true),
+    IndieMPConReduceR(76, true),
+    IndieAntiMagicShell(77, true),
+    IndieDecDamTargetMob(78, true),
+    IndieStatCount(79, true),
+    PAD(80),
+    PDD(81),
+    MAD(82),
+    ACC(83),
+    EVA(84),
+    Craft(85),
+    Speed(86),
+    Jump(87),
+    MagicGuard(88),
+    DarkSight(89),
+    Booster(90),
+    PowerGuard(91),
+    MaxHP(92),
+    MaxMP(93),
+    Invincible(94),
+    SoulArrow(95),
+    Stun(96),
+    Poison(97),
+    Seal(98),
+    Darkness(99),
+    ComboCounter(100),
+    BlessedHammer(101),
+    BlessedHammerActive(102),
+    WeaponCharge(103),
+    HolySymbol(104),
+    MesoUp(105),
+    ShadowPartner(106),
+    ThiefSteal(107),
+    PickPocket(108),
+    BloodyExplosion(109),
+    Thaw(110),
+    Weakness(111),
+    Curse(112),
+    Slow(113),
+    Morph(114),
+    Regen(115),
+    UNK_116(116),
+    Stance(117),
+    SharpEyes(118),
+    ManaReflection(119),
+    Attract(120),
+    NoBulletConsume(121),
+    Infinity(122),
+    AdvancedBless(123),
+    IllusionStep(124),
+    Blind(125),
+    Concentration(126),
+    BanMap(127),
+    MaxLevelBuff(128),
+    MesoUpByItem(129),
+    MesoAmountRate(130),
+    MesoAmountRateRune(131),
+    Ghost(132),
+    Barrier(133),
+    ReverseInput(134),
+    ItemUpByItem(135),
+    RespectPImmune(136),
+    RespectMImmune(137),
+    DefenseAtt(138),
+    DefenseState(139),
+    DojangBerserk(140),
+    DojangInvincible(141),
+    DojangShield(142),
+    SoulMasterFinal(143),
+    WindBreakerFinal(144),
+    KarmaBlade(145),
+    ElementalReset(167),
+    HideAttack(147),
+    EventRate(148),
+    ComboAbilityBuff(149),
+    ComboDrain(150),
+    RepeatEffect(151),
+    ExpBuffRate(152),
+    StopPortion(153),
+    StopMotion(154),
+    Fear(155),
+    HiddenPieceOn(156),
+    MagicShield(157),
+    MagicResistance(158),
+    SoulStone(159),
+    Flying(160),
+    Frozen(161),
+    AssistCharge(162),
+    Enrage(163),
+    DrawBack(164),
+    NotDamaged(165),
+    FinalCut(166),
+    HowlingAttackDamage(167),
+    BeastForm(168),
+    Dance(169),
+    EMHP(170),
+    EMMP(171),
+    EPAD(172),
+    EMAD(173),
+    EPDD(174),
+    Guard(175),
+    Cyclone(176),
+    MorphAvatar(177),
+    RidingExpireInfoSave(178),
+    NextSpecificSkillDamageUp(179),
+    PinkbeanMinibeenMove(180),
+    GravityConstraint(181),
+    Sneak(182),
+    Mechanic(183),
+    BeastFormMaxHP(184),
+    Dice(185),
+    BlessingArmor(186),
+    DamR(187),
+    TeleportMasteryOn(188),
+    CombatOrders(189),
+    Beholder(190),
+    DispelItemOption(191),
+    Inflation(192),
+    OnixDivineProtection(193),
+    Web(194),
+    Bless(195),
+    TimeBomb(196),
+    DisOrder(197),
+    Thread(198),
+    Team(199),
+    Explosion(200),
+    BuffLimit(201),
+    STR(202),
+    INT(203),
+    DEX(204),
+    LUK(205),
+    DispelItemOptionByField(206),
+    DarkTornado(207),
+    PVPDamage(208),
+    PvPScoreBonus(209),
+    PvPInvincible(210),
+    PvPRaceEffect(211),
+    WeaknessMdamage(212),
+    Frozen2(213),
+    PVPDamageSkill(214),
+    AmplifyDamage(215),
+    Shock(216),
+    InfinityForce(217),
+    IncMaxHP(218),
+    IncMaxMP(219),
+    HolyMagicShell(220),
+    KeyDownTimeIgnore(221),
+    ArcaneAim(222),
+    MasterMagicOn(223),
+    AsrR(224),
+    TerR(225),
+    DamAbsorbShield(226),
+    DevilishPower(227),
+    Roulette(228),
+    RouletteStack(229),
+    SpiritLink(230),
+    AsrRByItem(231),
+    Event(232),
+    CriticalBuff(233),
+    DropRate(234),
+    PlusExpRate(235),
+    ItemInvincible(236),
+    Awake(237),
+    ItemCritical(238),
+    ItemEvade(239),
+    Event2(240),
+    VampiricTouch(241),
+    DDR(242),
+    IncTerR(243),
+    IncAsrR(244),
+    DeathMark(245),
+    UsefulAdvancedBless(246),
+    Lapidification(247),
+    VenomSnake(248),
+    CarnivalAttack(249),
+    CarnivalDefence(250),
+    CarnivalExp(251),
+    SlowAttack(252),
+    PyramidEffect(253),
+    HollowPointBullet(254),
+    KeyDownMoving(255),
+    IgnoreTargetDEF(256),
+    StrikerElectricUsed(257),
+    ReviveOnce(258),
+    Invisible(259),
+    EnrageCr(260),
+    EnrageCrDamMin(261),
+    Judgement(262),
+    DojangLuckyBonus(263),
+    PainMark(264),
+    Magnet(265),
+    MagnetArea(266),
+    GuidedArrow(267),
+    StraightForceAtomTargets(268),
+    LefBuffMastery(269),
+    TempSecondaryStat(270),
+    CoalitionSupportSoldierStorm(271),
+    LefMageLinkSkill(272),
+    SixthJavelinStack(273),
+    SixthGloryWingJavelinStack(274),
+    SixthCrystalStack(275),
+    ShadowMomentum(276),
+    GrandCross(277),
+    YetiCook(278),
+    PinkbeanCheer(279),
+    DropPer(280),
+    VampDeath(281),
+    BlessingArmorIncPAD(282),
+    KeyDownAreaMoving(283),
+    Larkness(284),
+    StackBuff(285),
+    AntiMagicShell(286),
+    LifeTidal(287),
+    HitCriDamR(288),
+    SmashStack(289),
+    PartyBarrier(290),
+    ReshuffleSwitch(291),
+    SpecialAction(292),
+    VampDeathSummon(293),
+    StopForceAtomInfo(294),
+    SoulGazeCriDamR(295),
+    SoulRageCount(296),
+    PowerTransferGauge(297),
+    AffinitySlug(298),
+    Trinity(299),
+    IncMaxDamage(300),
+    BossShield(301),
+    MobZoneState(302),
+    GiveMeHeal(303),
+    TouchMe(304),
+    Contagion(305),
+    SoulExalt(306),
+    IgnoreAllCounter(307),
+    IgnorePImmune(308),
+    IgnoreAllImmune(309),
+    IgnoreAllAbout(310),
+    FinalJudgement(311),
+    FireAura(312),
+    VengeanceOfAngel(313),
+    HeavensDoor(314),
+    Preparation(315),
+    BullsEye(316),
+    IncEffectHPPotion(317),
+    IncEffectMPPotion(318),
+    BleedingToxin(319),
+    IgnoreMobDamR(320),
+    Asura(321),
+    MegaSmasher(322),
+    FlipTheCoin(323),
+    UnityOfPower(324),
+    Stimulate(325),
+    ReturnTeleport(326),
+    DropRIncrease(327),
+    IgnoreMobpdpR(328),
+    BdR(329),
+    CapDebuff(330),
+    Exceed(331),
+    DiabolikRecovery(332),
+    SurpassLimit(333),
+    FinalAttackProp(334),
+    ExceedOverload(335),
+    OverloadCount(336),
+    BuckShot(337),
+    FireBomb(338),
+    HalfstatByDebuff(339),
+    SurplusSupply(340),
+    SetBaseDamage(341),
+    EVAR(342),
+    NewFlying(343),
+    AmaranthGenerator(344),
+    CygnusElementSkill(345),
+    StrikerHyperElectric(346),
+    EventPointAbsorb(347),
+    EventAssemble(348),
+    StormBringer(349),
+    ACCR(350),
+    DEXR(351),
+    Translucence(352),
+    PoseType(353),
+    CosmicForge(354),
+    ElementSoul(355),
+    CosmicOrb(356),
+    GlimmeringTime(357),
+    TrueSight(358),
+    SoulExplosion(359),
+    SoulMP(360),
+    FullSoulMP(361),
+    SoulSkillDamageUp(362),
+    ElementalCharge(363),
+    Restoration(364),
+    CrossOverChain(365),
+    Reincarnation(366),
+    ReincarnationMission(367),
+    ReincarnationOnOff(368),
+    ChillingStep(369),
+    DotBasedBuff(370),
+    SixthDotBasedBuff(371),
+    BlessEnsenble(372),
+    ComboCostInc(373),
+    NaviFlying(374),
+    Holding(375),
+    QuiverCatridge(376),
+    UserControlMob(377),
+    ImmuneBarrier(378),
+    CriticalGrowing(379),
+    LastUseSkillAttr(380),
+    QuickDraw(381),
+    BowMasterConcentration(382),
+    TimeFastABuff(383),
+    TimeFastBBuff(384),
+    GatherDropR(385),
+    AimBox2D(386),
+    CursorSniping(387),
+    DebuffTolerance(388),
+    TearsOfFairy(389),
+    DotHealHPPerSecond(390),
+    DotHealMPPerSecond(391),
+    SpiritGuard(392),
+    EunwolUnleashFoxOrb(393),
+    PreReviveOnce(394),
+    SetBaseDamageByBuff(395),
+    LimitMP(396),
+    ReflectDamR(397),
+    ComboTempest(398),
+    MHPCutR(399),
+    MMPCutR(400),
+    SelfWeakness(401),
+    ElementDarkness(402),
+    FlareTrick(403),
+    FlameDischarge(404),
+    Dominion(405),
+    SiphonVitality(406),
+    DarknessAscension(407),
+    BossWaitingLinesBuff(408),
+    DamageReduce(409),
+    ShadowServant(410),
+    ShadowIllusion(411),
+    KnockBack(412),
+    AddAttackCount(413),
+    ComplusionSlant(414),
+    JaguarSummoned(415),
+    JaguarCount(416),
+    SSFShootingAttack(417),
+    DevilCry(418),
+    ShieldAttack(419),
+    DarkLighting(420),
+    AttackCountX(421),
+    BMageDeath(422),
+    BombTime(423),
+    NoDebuff(424),
+    BattlePvP_Mike_Shield(425),
+    BattlePvP_Mike_Bugle(426),
+    XenonAegisSystem(427),
+    AngelicBursterSoulSeeker(428),
+    HiddenPossession(429),
+    NightWalkerBat(430),
+    NightLordMark(431),
+    WizardIgnite(432),
+    FireBarrier(433),
+    ChangeFoxMan(434),
+    PairingUser(435),
+    Frenzy(436),
+    ShadowSpear(437),
+    PvPFlag(438),
+    BladeStanceMode(439),
+    BladeStancePower(440),
+    KenjiCounter(441),
+    EvasionMaster(442),
+    SelfHyperBodyIncPAD(443),
+    SelfHyperBodyMaxHP(444),
+    SelfHyperBodyMaxMP(445),
+    BladeStanceBooster(446),
+    UNK447(447),
+    UNK448(448),
+    EvasionUpgrade(449),
+    CriticalBuffAdd(450),
+    FoxBless(451),
+    BossDamageRate(452),
+    RepeatEffect2(453),
+    AntiEvilShield(454),
+    TotalDAMr(455),
+    GiantBossDeathCnt(456),
+    UNK457(457),
+    AntiDebuff(458),
+    UNK459(459),
+    MastemaGuard(460),
+    Elysion(461),
+    QuiverFullBurst(462),
+    SwordBaptism(463),
+    WildGrenade(464),
+    ChainMantisADV(465),
+    FieldGimmickFear(466),
+    ImmuneStun(467),
+    BattlePvP_Helena_Mark(468),
+    BattlePvP_Darklord_Explosion(469),
+    BattlePvP_Helena_WindSpirit(470),
+    BattlePvP_LangE_Protection(471),
+    BattlePvP_LeeMalNyun_ScaleUp(472),
+    BattlePvP_Revive(473),
+    PinkbeanAttackBuff(474),
+    PinkbeanRelax(475),
+    PinkbeanRollingGrade(476),
+    PinkbeanYoYoStack(477),
+    RandAreaAttack(478),
+    RandAreaAttack2(479),
+    ShineRuneAttack(480),
+    NextAttackEnhance(481),
+    PirateDesire(482),
+    AranCombotempastOption(483),
+    ViperTimeLeap(484),
+    RoyalGuardState(485),
+    BodyRectGuardPrepare(486),
+    MichaelSoulLink(487),
+    MichaelStanceLink(488),
+    TriflingWhimOnOff(489),
+    AddRangeOnOff(490),
+    KinesisPsychicPoint(491),
+    KinesisPsychicOver(492),
+    KinesisIncMastery(493),
+    KinesisPsychicEnergeShield(494),
+    BladeStance(495),
+    DebuffActiveSkillHPCon(496),
+    DebuffIncHP(497),
+    BowMasterMortalBlow(498),
+    AngelicBursterSoulResonance(499),
+    Fever(500),
+    RpSiksin(501),
+    TeleportMasteryRange(502),
+    FixCoolTime(503),
+    IncMobRateDummy(504),
+    AdrenalinBoost(505),
+    AranDrain(506),
+    AranBoostEndHunt(507),
+    RWCylinder(508),
+    RWCombination(509),
+    RWVulkanPunch(510),
+    RWMagnumBlow(511),
+    RWBarrier(512),
+    RWBarrierHeal(513),
+    RWMaximizeCannon(514),
+    RWOverHeat(515),
+    UsingScouter(516),
+    RWMovingEvar(517),
+    Stigma(518),
+    MahaInstall(519),
+    HeavensDoorNotTime(520),
+    RuneStoneNoTime(521),
+    XenonRoketRunch(522),
+    TransformOverMan(523),
+    EnergyBust(524),
+    LightningUnion(525),
+    BulletParty(526),
+    LoadedDice(527),
+    BishopPray(528),
+    ChainArtsFury(529),
+    MichaelFixDamDecTime(530),
+    PinkbeanYoYoAddDamR(531),
+    Warrior_AuraWeapon(532),
+    Warrior_AuraWeaponStack(533),
+    Wizard_OverloadMana(534),
+    Michael_RhoAias(535),
+    Kinesis_DustTornado(536),
+    NightLord_SpreadThrow(537),
+    HowlingGaleStack(538),
+    CannonShooter_BFCannonBall(539),
+    CannonShooter_MiniCannonBall(540),
+    Shadower_ShadowAssault(541),
+    CreateEventMeso(542),
+    MesoRanger_MesoDizerX(543),
+    DawnShield_ExHP(544),
+    DawnShield_WillCare(545),
+    SkillDeployment(546),
+    InnerStorm(547),
+    Wet(548),
+    SpecialTombPL(549),
+    GrabbedByMob(550),
+    SummonProp(551),
+    ReduceMP(552),
+    KenjiShadowAttackBuff(553),
+    EXP_CARD(554),
+    WorldExpBuff(555),
+    WorldDropBuff(556),
+    CurseRingBuff(557),
+    Unk558(558),
+    GhostLiberationStack(559),
+    KannaSiksinAutoAttack(560),
+    FifthAdvWarriorShield(561),
+    SplitArrow(562),
+    FreudBlessing(563),
+    OverloadMode(564),
+    FifthSpotLight(565),
+    OutSide(566),
+    WeaponVariety(567),
+    LefGloryWing(568),
+    Shadower_Assassination(569),
+    ConvertAD(570),
+    EtherealForm(571),
+    ReadyToDie(572),
+    Oblivion(573),
+    Cr2CriDamR(574),
+    BlackMageCreate(575),
+    BlackMageDestroy(576),
+    BlackMageMonochrome(577),
+    HitStackDamR(578),
+    BuffControlDebuff(579),
+    DispersionDamage(580),
+    HarmonyLink(581),
+    LefFastCharge(582),
+    BuffIconNoShadow(583),
+    CrystalChargeBuffIcon(584),
+    LioMachinaCombineBuffIcon(585),
+    CoalitionSupportWarplaneBuffIcon(586),
+    BattlePvP_Ryude_Frozen(587),
+    BattlePvP_Ryude_Buff(588),
+    AntiMagicShellByJewelMaking(589),
+    DamageRateSetUpForApc(590),
+    SpecterGauge(591),
+    SpecterMode(592),
+    SpellBullet_Plain(593),
+    SpellBullet_Scarlet(594),
+    SpellBullet_Gust(595),
+    SpellBullet_Abyss(596),
+    ComingDeath(597),
+    GreatOldAbyss(598),
+    SixthPhoenix(599),
+    HolyAdvent(600),
+    ZodiacBurst(601),
+    CombatFrenzy(602),
+    LPSpellAmplification(603),
+    LPInfinitySpell(604),
+    LPMagicCircuitFullDrive(605),
+    LPMagicCircuitFullDriveStack(606),
+    LPBattleMode(606),
+    LPHoldSpecterGauge(607),
+    DiscoveryWeather(608),
+    BossWill_Infection(609),
+    PvpApcTeam(610),
+    UNK_611(611),
+    HolyMagicShellReUse(612),
+    StrikerComboStack(613),
+    HeroComboInstinct(614),
+    KhaliUltimatum(615),
+    WindBreakerStormGuard(616),
+    FlameWizardInfiniteFlame(617),
+    MichaelSwordOfLight(618),
+    PhantomMarkOfPhantomOwner(619),
+    PhantomMarkOfPhantomTarget(620),
+    RescuedSoldierBuffIcon1(621),
+    RescuedSoldierBuffIcon2(622),
+    FireBirdSupport(623),
+    FireBirdSupportActive(624),
+    AuraOfLife(625),
+    MemoryOfJourney(626),
+    MiracleTime(627),
+    ItemUpgradeR(628),
+    BufftimeRforActive(629),
+    DecBaseDamageDebuff(630),
+    LimitConsumeDebuff(631),
+    LimitEquipStatDebuff(632),
+    BlackMageWeaponDestruction(633),
+    BlackMageWeaponCreation(634),
+    BattlePvP_LangE_LiverStack(635),
+    BattlePvP_Mike_Amor(636),
+    SiphonVitalityBarrier(637),
+    PathFinderAncientGuidance(638),
+    BattlePvP_KeyDown(639),
+    BattlePvP_Wongki_FlyingCharge(640),
+    BattlePvP_Wongki_AwesomeFairy(641),
+    BattlePvP_Mugong_PandaZone(642),
+    BattleSurvivalDefence(643),
+    BattleSurvivalInvincible(644),
+    EventPvPDefence(645),
+    EventPvPInvincible(646),
+    EventSoccerBall(647),
+    EventSoccerMomentBuff(648),
+    ZeroDamageDebuff(649),
+    FifthGoddessBless(650),
+    CommonItemSkillContinuous(651),
+    PinkbeanMatryoshka(652),
+    NewtroWarriors(653),
+    SilverMane(654),
+    SilverManeBuff(655),
+    BattlePVPAttBuff(656),
+    MinigameStat(657),
+    LuckyPapylus(658),
+    AnimaThiefTaoistType(659),
+    AnimaThiefTaoistGauge(660),
+    AnimaThiefCloneAttack(661),
+    AnimaThiefFifthCloneAttack(662),
+    AnimaThiefButterfly(663),
+    MiracleDrug(664),
+    MiracleDrugNoCon(665),
+    AnimaThiefMetaphysics(666),
+    NoviceMagicianLink(667),
+    NerotaPower(668),
+    ChampionDoubleUp(669),
+    LibraryMissionGuard(670),
+    XenonHoloGramGraffiti(671),
+    KeyDownEnable(672),
+    DracoSlasherNoCooltime(673),
+    WillOfSword(674),
+    LWSwordGauge(675),
+    LWCreation(676),
+    LWDike(677),
+    LWWonder(678),
+    LWRestore(679),
+    LefWarriorNobility(680),
+    LWResonanceBuff(681),
+    RunePurification(682),
+    RuneContagion(683),
+    DebuffHallucination(684),
+    BMageAuraYellow(685),
+    BMageAuraDrain(686),
+    BMageAuraBlue(687),
+    BMageAuraDark(688),
+    BMageAuraDebuff(689),
+    BMageAuraUnion(690),
+    IceAura(691),
+    KnightsAura(692),
+    ZeroAuraStr(693),
+    NovaArcherIncanation(694),
+    AnimaThiefMetaphysicsBuff(695),
+    RevenantGauge(696),
+    DeathDance(697),
+    ShadowShield(698),
+    AranComboTempestAura(699),
+    XenonBursterLaser(700),
+    BMageAbyssalLightning(701),
+    StrikerThunderChain(702),
+    MercedesRoyalKnight(703),
+    PhantomDefyingFate(704),
+    FWSalamanderMischiefAttack(705),
+    KinesisLawOfGravity(706),
+    RepeatinCartrige(707),
+    LefMageCrystalGate(708),
+    ThrowBlasting(709),
+    AnimaThiefIllusion(710),
+    DarknessAura(711),
+    WeaponVarietyFinale(712),
+    Equinox(713),
+    EquinoxActive(714),
+    ZeroEgoWeaponAlpha(715),
+    RelicUnboundD(716),
+    EvanSpiralOfMana(717),
     RWAfterImage,
-    NADragonGauge,
-    NADragonEnchant,
-    NADeathBlessing,
-    NAThanatosDescent,
-    NAAnnihilation,
-    NARemainIncense,
-    NAOminousStream,
-    NABrutalPang,
-    MobFlashBang, // 賽蓮 -
-    IgnorePriestDispel, // 賽蓮 -
-    LimitRecovery, // 賽蓮 -
-    NALinkSkill,
-    StrikerChainReaction,
-    LimitHealFactor,
-    AdminCritical,
-    AdminCriticalDam,
-    AdminIgnoreTargetDEF,
-    AdminBDR,
-    AdminBuffTimeR,
-    AdminActionSpeed,
-    AdrenalinActivate, // <---- 尚未處理
-    ATScrollPassive,
-    YetiFuryGauge, // <---- 尚未處理
-    YetiFuryMode, // <---- 尚未處理
-    YetiMushroom, // <---- 尚未處理
-    YetiMyFriendPepe, // <---- 尚未處理
-    PinkbeanShowTime, // <---- 尚未處理
-    DecFinalDamageDebuff,
-    AMEarthVeinOnOff,
-    AMPlanting,
-    AMStoneShield,
-    AMAbsorptionRiver,
-    AMAbsorptionWind,
-    AMAbsorptionSun,
-    AMArtificialEarthVein,
-    IgnoreFrictionOnOff,
-    AnimaLotus,
-    AMLinkSkill,
-    AMEVTeleport,
-    BossFieldFinalDamR,
-    StormWhim,
-    SeaSerpent,
-    SerpentStone,
-    SerpentScrew,
-    FlameSweep,
-    Cosmos,
-    EnhancePiercing,
-    EnhanceSniping,
-    //UltimateSniping,
-    //UltimatePiercing,
-    //EnhanceQuadrupleThrow,
-    UnwearyingRun,
-    CrusaderPanic, // 傷痕之劍
-    IceAuraZone,
-    HolyWater,
-    EpicDungeonGauge,
-    TriumphFeather,
-    SixthAngelsRay,
-    GrandFinale,
-    WarInTheShade,
-    FlashMirage,
-    HolyBlood,
-    OrbitalExplosion,
-    DragonSlave,
-    LimitBreakFinalAttack,
-    TranscendentLight,
-    SixthAssassination,
-    SixthAssassinationDarkSight,
-    ArtificialEvolution,
-    SixthFrozenLightning,
-    KinesisUltimateBPM,
-    ElementalKnight,
-    LarknessStop,
-    SummonChakri,
-    ShadowAcceleration,
-    ShadowBurst,
-    DeceivingBlade,
-    KaringGoongiAdvantage,
-    KaringDoolAdvantage,
-    BossAggro,
-    Confinement,
-    GrabAndThrow,
-    DarkCloud,
-    UserAroundAttackDebuff,
-    UserTrackingAreaWarning,
-    RPEventStat,
-    FlameOrbMultiAttack,
-    SixthStormArrowEx,
-    SuperFistEnrageStack,
-    WildVulcanAdv,
-    WildVulcanAdvStack,
-    NaturesBelief,
-    AdrenalinSurge,
-    LifeDeathControl,
-    MissileBarrage,
-    ForsakenRelic,
-    Nightmare,
-    LefPirateSpecterMark,
-    RapidFire,
-    SacredBastion,
-    PathFinderForceCompulsion,
-    AnimaThiefTaoistUpgrade,
-    AnimaThiefFlameStrike,
-    BlasterFileBunker,
-    HowlingOfNature,
-    KannaFifthAttract,
-    KannaHakuHide,
-    NeoTokyoBossThesis,
-    NeoTokyoBossAntiThesis,
-    NeoTokyoBossBomb,
-    NeoTokyoBossPowOfLife,
-    SixthHakuman,
-    SixthShinBatto,
-    EnergyCharged,
-    DashSpeed,
-    DashJump,
-    RideVehicle,
-    PartyBooster,
-    GuidedBullet,
-    Undead,
-    RideVehicleExpire,
-    RelicGauge,
-    SecondAtomLockOn,
-    ErdaStack,
-    ErdaRevert,
-    DescentOfSunRingType,
-    MukHyunChosic,
-    MukHyunDivine,
-    MukHyunSingongCycle,
-    MukHyun_SEON_PUNG_GAG,
-    MukHyun_HO_SIN_GANG_GI,
-    MukHyunNoDivineDec,
-    MukhyunLinkSkill,
-
-
+    NADragonGauge(718),
+    NADragonEnchant(719),
+    NADeathBlessing(720),
+    NAThanatosDescent(721),
+    NAAnnihilation(722),
+    NARemainIncense(723),
+    NAOminousStream(724),
+    NABrutalPang(725),
+    MobFlashBang(726),
+    IgnorePriestDispel(727),
+    LimitRecovery(728),
+    NALinkSkill(729),
+    StrikerChainReaction(730),
+    LimitHealFactor(731),
+    AdminCritical(732),
+    AdminCriticalDam(733),
+    AdminIgnoreTargetDEF(734),
+    AdminBDR(735),
+    AdminBuffTimeR(736),
+    AdminActionSpeed(737),
+    AdrenalinActivate(738),
+    ATScrollPassive(739),
+    YetiFuryGauge(740),
+    YetiFuryMode(741),
+    YetiMushroom(742),
+    YetiMyFriendPepe(743),
+    PinkbeanShowTime(744),
+    DecFinalDamageDebuff(745),
+    AMEarthVeinOnOff(746),
+    AMPlanting(747),
+    AMStoneShield(748),
+    AMAbsorptionRiver(749),
+    AMAbsorptionWind(750),
+    AMAbsorptionSun(751),
+    AMArtificialEarthVein(752),
+    IgnoreFrictionOnOff(753),
+    AnimaLotus(754),
+    AMLinkSkill(755),
+    AMEVTeleport(756),
+    BossFieldFinalDamR(757),
+    StormWhim(758),
+    SeaSerpent(759),
+    SerpentStone(760),
+    SerpentScrew(761),
+    FlameSweep(762),
+    Cosmos(763),
+    EnhancePiercing(764),
+    EnhanceSniping(765),
+    UltimateSniping(766),
+    UltimatePiercing(767),
+    EnhanceQuadrupleThrow(768),
+    UnwearyingRun(769),
+    CrusaderPanic(770),
+    IceAuraZone(771),
+    HolyWater(772),
+    EpicDungeonGauge(773),
+    EpicDungeonMiddleBossBarrier(774),
+    TriumphFeather(775),
+    SixthAngelsRay(776),
+    GrandFinale(777),
+    WarInTheShade(778),
+    FlashMirage(779),
+    HolyBlood(780),
+    OrbitalExplosion(781),
+    DragonSlave(782),
+    LimitBreakFinalAttack(783),
+    TranscendentLight(784),
+    SixthAssassination(785),
+    SixthAssassinationDarkSight(786),
+    ArtificialEvolution(787),
+    SixthFrozenLightning(788),
+    KinesisUltimateBPM(789),
+    ElementalKnight(790),
+    LarknessStop(791),
+    SummonChakri(792),
+    ShadowAcceleration(793),
+    ShadowBurst(794),
+    DeceivingBlade(795),
+    KaringGoongiAdvantage(796),
+    KaringDoolAdvantage(797),
+    BossAggro(798),
+    Confinement(799),
+    GrabAndThrow(800),
+    DarkCloud(801),
+    FixedSpeedAndJump(802),
+    UserAroundAttackDebuff(803),
+    UserTrackingAreaWarning(804),
+    RPEventStat(805),
+    FlameOrbMultiAttack(806),
+    SixthStormArrowEx(807),
+    SuperFistEnrageStack(808),
+    WildVulcanAdv(809),
+    WildVulcanAdvStack(810),
+    NaturesBelief(811),
+    AdrenalinSurge(812),
+    LifeDeathControl(813),
+    MissileBarrage(814),
+    ForsakenRelic(815),
+    Nightmare(816),
+    LefPirateSpecterMark(817),
+    RapidFire(818),
+    ElementalFocus(819),
+    SacredBastion(820),
+    PathFinderForceCompulsion(821),
+    AnimaThiefTaoistUpgrade(822),
+    AnimaThiefFlameStrike(823),
+    BlasterFileBunker(824),
+    HowlingOfNature(825),
+    KannaFifthAttract(826),
+    KannaHakuHide(827),
+    NeoTokyoBossThesis(828),
+    NeoTokyoBossAntiThesis(829),
+    NeoTokyoBossBomb(830),
+    NeoTokyoBossPowOfLife(831),
+    SixthHakuman(832),
+    SixthShinBatto(833),
+    DashSpeed(834, true),
+    DashJump(835, true),
+    RideVehicle(836, true),
+    PartyBooster(837, true),
+    GuidedBullet(838, true),
+    Undead(839, true),
+    RideVehicleExpire(840, true),
+    UNK_841(841, true),
+    RelicGauge(842, true),
+    SecondAtomLockOn(843, true),
+    ErdaStack(844),
+    ErdaRevert(845),
+    DescentOfSunRingType(846),
+    MukHyunChosic(847),
+    MukHyunDivine(848),
+    MukHyunSingongCycle(849),
+    MukHyun_SEON_PUNG_GAG(850),
+    MukHyun_HO_SIN_GANG_GI(851),
+    MukHyunNoDivineDec(852),
+    MukhyunLinkSkill(853),
     None,
-    /////////////取代
     MukHyunAwakeMushin,
     MukHyunRepeat,
     MukHyun_IM_GI_EUNG_BYEON,
-    Unk176_466, // BlackMageCreate
-    Unk200_527, // BlackMageDestroy
-    BattlePvPHelenaMark, // BattlePvP_Helena_Mark
-    BattlePvPLangEProtection, // BattlePvP_LangE_Protection
-    DivineEcho, // PairingUser
-    RhoAias, // Michael_RhoAias
-    WingsOfGlory, // LefGloryWing
-    LucentBrand, // LefBuffMastery
-    Unk199_528, // BattlePvP_Ryude_Frozen
-    Unk202_580, // BattlePvP_LangE_LiverStack
-    Unk205_587, // BattlePvP_KeyDown
-    Unk205_589, // BattlePvP_Wongki_AwesomeFairy
-    Unk188_500, // OutSide
-    Unk199_545, // BossWill_Infection
-    WillowDodge, //
-    EyeForEye, //
-    Jinsoku, //
-    HayatoBooster, //
-    HayatoCr, //
-    HayatoBoss, //
-    HayatoPAD, //
-    HayatoHPR, //
-    IaijutsuBlade, //
-    HayatoMPR, //
-    HayatoStance, //
-    BattoujutsuAdvance, //
-    MastemasMark, //
-    IgnorePCounter, //
-    PrimalGrenade, //
-    HowlingCritical, //
-    HowlingMaxMP, //
-    HowlingDefence, //
-    HowlingEvasion, //
-    BeastFormDamageUp, //
-    ExtraSkillCTS, //
-    ZeroAuraSpd, //
-    RelicEmblem, //
-    AncientGuidance, //
-    Unk188_492, //
-    TridentStrike, //
-    LightningCascade, //
-    ComboInstinct, //
-    LightOfSpirit, //
-    RiftOfDamnation, //
-    MahasFury, //
-    SpreadThrow, //
-    WindEnergy, //
-    GaleBarrier, //
-    Albatross, //
-    DEF, //
-    AbyssalCast, //
-    GustCast, //
-    ScarletCast, //
-    BasicCast, //
-    SpecterState, //
-    SpecterEnergy, //
-    AbyssalRecall, //
-    InfinitySpell, //
-    ImpendingDeath, //
-    ChargeSpellAmplifier, //
-    PhantomMarkMobStat, //
-    PhantomMark, //
-    Benediction, //
-    QuiverBarrage, //
-    AdvancedQuiver, //
-    MeltDown, //
-    Ember, //
-    OmegaBlaster, //
-    VoidStrike, //
-    MuscleMemory, //
-    KillingPoint, //
-    TrickBladeMobStat, //
-    MesoGuard, //
-    ShadowAssault, //
-    ;
+    Unk176_466,
+    Unk200_527,
+    BattlePvPHelenaMark,
+    BattlePvPLangEProtection,
+    DivineEcho,
+    RhoAias,
+    WingsOfGlory,
+    LucentBrand,
+    Unk199_528,
+    Unk202_580,
+    Unk205_587,
+    Unk205_589,
+    Unk188_500,
+    Unk199_545,
+    WillowDodge,
+    EyeForEye,
+    Jinsoku,
+    HayatoBooster,
+    HayatoCr,
+    HayatoBoss,
+    HayatoPAD,
+    HayatoHPR,
+    IaijutsuBlade,
+    HayatoMPR,
+    HayatoStance,
+    BattoujutsuAdvance,
+    MastemasMark,
+    IgnorePCounter,
+    PrimalGrenade,
+    HowlingCritical,
+    HowlingMaxMP,
+    HowlingDefence,
+    HowlingEvasion,
+    BeastFormDamageUp,
+    ExtraSkillCTS,
+    ZeroAuraSpd,
+    RelicEmblem,
+    AncientGuidance,
+    Unk188_492,
+    TridentStrike,
+    LightningCascade,
+    ComboInstinct,
+    LightOfSpirit,
+    RiftOfDamnation,
+    MahasFury,
+    SpreadThrow,
+    WindEnergy,
+    GaleBarrier,
+    Albatross,
+    DEF,
+    AbyssalCast,
+    GustCast,
+    ScarletCast,
+    BasicCast,
+    SpecterState,
+    SpecterEnergy,
+    AbyssalRecall,
+    InfinitySpell,
+    ImpendingDeath,
+    ChargeSpellAmplifier,
+    PhantomMarkMobStat,
+    PhantomMark,
+    Benediction,
+    QuiverBarrage,
+    AdvancedQuiver,
+    MeltDown,
+    Ember,
+    OmegaBlaster,
+    VoidStrike,
+    MuscleMemory,
+    KillingPoint,
+    TrickBladeMobStat,
+    MesoGuard,
+    ShadowAssault,
+    EnergyCharged,
+    FifthGoddessBlessStack,
+    IndieWaterSmashBuff,
+    IndiePartyExpRate,
+    IndieCrMin,
+    ComboBarrier,
+    BodyPressure,
+    ComboUnlimited,
+    HiddenHyperLinkMaximization,
+    CoronaBuffOverlap;
 
     private final int value;
     private final int pos;
     public int stat;
     private boolean stacked = false;
+    public static final SecondaryStat[] isAuraCTS = new SecondaryStat[]{BMageAuraYellow, BMageAuraBlue, BMageAuraDark, BMageAuraDebuff, KnightsAura, MichaelSoulLink};
+    private int flag;
+    private int x;
 
-    SecondaryStat() {
+    private SecondaryStat() {
         this.stat = this.ordinal();
         this.value = 1 << 31 - this.ordinal() % 32;
-        this.pos = (int) Math.floor(this.ordinal() / 32);
+        this.pos = (int)Math.floor((double)(this.ordinal() / 32));
     }
 
-    SecondaryStat(boolean stacked) {
+    private SecondaryStat(boolean stacked) {
         this.stat = this.ordinal();
         this.value = 1 << 31 - this.ordinal() % 32;
-        this.pos = (int) Math.floor(this.ordinal() / 32);
+        this.pos = (int)Math.floor((double)(this.ordinal() / 32));
+        this.stacked = stacked;
+    }
+
+    private SecondaryStat(int id) {
+        this.stat = id;
+        this.value = 1 << 31 - id % 32;
+        this.pos = id / 32;
+    }
+
+    private SecondaryStat(int id, boolean stacked) {
+        this.stat = id;
+        this.value = 1 << 31 - id % 32;
+        this.pos = id / 32;
         this.stacked = stacked;
     }
 
     public static Map<SecondaryStat, Integer> getSpawnList() {
-        HashMap<SecondaryStat, Integer> SpawnStatsList = new HashMap<>();
+        HashMap<SecondaryStat, Integer> SpawnStatsList = new HashMap();
         SpawnStatsList.put(IndieForceSpeed, 0);
         SpawnStatsList.put(IndieLoopEffect, 0);
         SpawnStatsList.put(IndieBuffIcon, 0);
         SpawnStatsList.put(IndieNotDamaged, 0);
         SpawnStatsList.put(IndieKeydown, 0);
         SpawnStatsList.put(IndieSpecificSkill, 0);
-        SpawnStatsList.put(IndieFlyAcc, 0);
         SpawnStatsList.put(IndieAllHitDamR, 0);
         SpawnStatsList.put(IndieBarrier, 0);
         SpawnStatsList.put(IndieStarForce, 0);
@@ -1007,168 +1030,140 @@ public enum SecondaryStat implements Buffstat {
         return SpawnStatsList;
     }
 
-    public static final SecondaryStat[] isAuraCTS = new SecondaryStat[] {
-            BMageAuraYellow,
-            BMageAuraBlue,
-            BMageAuraDark,
-            BMageAuraDebuff,
-            KnightsAura,
-            MichaelSoulLink,
-    };
-
-    @Override
     public int getPosition() {
-        return pos;
+        return this.pos;
     }
 
-    @Override
     public int getValue() {
-        return value;
+        return this.value;
     }
 
     public boolean canStack() {
-        return stacked;
+        return this.stacked;
     }
 
-    @Override
     public String toString() {
-        return name() + "(" + stat + ")";
+        String var10000 = this.name();
+        return var10000 + "(" + this.stat + ")";
     }
 
     public static SecondaryStat getByValue(int value) {
-        return Arrays.stream(values()).filter(it -> it.stat == value).findFirst().orElse(null);
+        return (SecondaryStat)Arrays.stream(values()).filter((it) -> {
+            return it.stat == value;
+        }).findFirst().orElse((SecondaryStat) null);
     }
-
-    private int flag;
-    private int x;
 
     public int getFlag() {
         return this.flag;
     }
 
-
     public boolean isNormalDebuff() {
-        switch (this) {
-            case Seal:
-            case Darkness:
-            case Weakness:
-            case Curse:
-            case Poison:
-            case Slow:
-            case StopPortion:
-            case DispelItemOption:
-            case Fear:
-            case IndieJump:
+        switch (this.ordinal()) {
+            case 9:
+            case 97:
+            case 98:
+            case 99:
+            case 111:
+            case 112:
+            case 113:
+            case 153:
+            case 155:
+            case 191:
                 return true;
+            default:
+                return false;
         }
-        return false;
     }
 
     public boolean isCriticalDebuff() {
-        switch (this) {
-            case Stun:
-            case Attract:
-            case ReverseInput:
-            case BanMap:
-            case Lapidification:
-            case Morph:
-            case DarkTornado:
-            case Frozen:
+        switch (this.ordinal()) {
+            case 96:
+            case 114:
+            case 120:
+            case 127:
+            case 134:
+            case 161:
+            case 207:
+            case 247:
                 return true;
+            default:
+                return false;
         }
-        return false;
     }
 
     public boolean isSpecialBuff() {
-        switch (this) {
-            case EnergyCharged:
-            case DashSpeed:
-            case DashJump:
-            case RideVehicle:
-            case PartyBooster:
-            case GuidedBullet:
-            case Undead:
-            case RideVehicleExpire:
-            case RelicGauge:
-            case SecondAtomLockOn: {
-                return true;
-            }
-            default: {
-                return false;
-            }
+        boolean var10000;
+        switch (this.ordinal()) {
+            case 836:
+            case 837:
+            case 838:
+            case 839:
+            case 840:
+            case 841:
+            case 842:
+            case 844:
+            case 845:
+                var10000 = true;
+                break;
+            case 843:
+            default:
+                var10000 = false;
         }
-    }
 
+        return var10000;
+    }
 
     public int getX() {
         return this.x;
     }
 
+    public static boolean isEncode4Byte(Map<SecondaryStat, Pair<Integer, Integer>> statups) {
+        SecondaryStat[] array = new SecondaryStat[]{CarnivalDefence, SpiritLink, DojangLuckyBonus, SoulGazeCriDamR, PowerTransferGauge, ReturnTeleport, ShadowPartner, SetBaseDamage, QuiverCatridge, ImmuneBarrier, NaviFlying, Dance, SetBaseDamageByBuff, DotHealHPPerSecond, DotHealMPPerSecond, IncMaxDamage, Cyclone, GrabbedByMob, MagnetArea, PairingUser, MegaSmasher, VampDeath, FifthAdvWarriorShield, RidingExpireInfoSave, RWBarrier, SiphonVitalityBarrier};
+        SecondaryStat[] var2 = array;
+        int var3 = array.length;
 
-    public static boolean isEncode4Byte(final Map<SecondaryStat, Pair<Integer, Integer>> statups) {
-        final SecondaryStat[] array = new SecondaryStat[]{
-                SecondaryStat.CarnivalDefence,
-                SecondaryStat.SpiritLink,
-                SecondaryStat.DojangLuckyBonus,
-                SecondaryStat.SoulGazeCriDamR,
-                SecondaryStat.PowerTransferGauge,
-                SecondaryStat.ReturnTeleport,
-                SecondaryStat.ShadowPartner,
-                SecondaryStat.SetBaseDamage,
-                SecondaryStat.QuiverCatridge,
-                SecondaryStat.ImmuneBarrier,
-                SecondaryStat.NaviFlying,
-                SecondaryStat.Dance,
-                SecondaryStat.SetBaseDamageByBuff,
-                SecondaryStat.DotHealHPPerSecond,
-                SecondaryStat.DotHealMPPerSecond,
-                SecondaryStat.IncMaxDamage,
-                SecondaryStat.Cyclone,
-                SecondaryStat.GrabbedByMob,
-                SecondaryStat.MagnetArea,
-                SecondaryStat.PairingUser,
-                SecondaryStat.MegaSmasher,
-                SecondaryStat.VampDeath,
-                SecondaryStat.FifthAdvWarriorShield,
-                SecondaryStat.RidingExpireInfoSave,
-                SecondaryStat.RWBarrier,
-                SecondaryStat.SiphonVitalityBarrier,
-        };
-        for (final SecondaryStat stat : array) {
+        for(int var4 = 0; var4 < var3; ++var4) {
+            SecondaryStat stat = var2[var4];
             if (statups.containsKey(stat)) {
                 return true;
             }
         }
+
         return false;
     }
 
-
     public static void main(String[] args) {
-        //设置迁移量
-        for (SecondaryStat stat : values()) {
+        SecondaryStat[] var1 = values();
+        int var2 = var1.length;
+
+        for(int var3 = 0; var3 < var2; ++var3) {
+            SecondaryStat stat = var1[var3];
             stat.change();
         }
-        //打印
-        for (int i = 0; i <= values()[values().length - 1].stat; i++) {
+
+        for(int i = 0; i <= values()[values().length - 1].stat; ++i) {
             SecondaryStat stat = getByValue(i);
             if (stat != null) {
-                System.out.println(stat.name() + " = " + stat.stat + ",");
+                PrintStream var10000 = System.out;
+                String var10001 = stat.name();
+                var10000.println(var10001 + " = " + stat.stat + ",");
             } else {
                 System.out.println("\t// " + i);
             }
         }
+
     }
 
     private void change() {
         int change = 0;
-        if (stat >= 64 && stat <= 690) {
+        if (this.stat >= 64 && this.stat <= 690) {
             change = 1;
-        } else if (stat >= 691 && stat <= 718) {
+        } else if (this.stat >= 691 && this.stat <= 718) {
             change = 2;
-        } else if (stat >= 719) {
+        } else if (this.stat >= 719) {
             change = 13;
         }
 
-        stat += change;
+        this.stat += change;
     }
 }

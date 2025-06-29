@@ -65,6 +65,34 @@ public class MapleDailyGift {
             this.commodityid = commodityid;
             this.term = term;
         }
+
+        public int getId() {
+            return id;
+        }
+
+        public int getMonth() {
+            return month;
+        }
+
+        public int getDay() {
+            return day;
+        }
+
+        public int getItemid() {
+            return itemid;
+        }
+
+        public int getCount() {
+            return count;
+        }
+
+        public int getCommodityid() {
+            return commodityid;
+        }
+
+        public int getTerm() {
+            return term;
+        }
     }
 
     public static byte[] dailyGiftResult(final int n, final int n2, final int n3, final int n4) {

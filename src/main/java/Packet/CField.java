@@ -539,7 +539,7 @@ public class CField {
 
     public static byte[] StigmaTime(int i) {
         MaplePacketLittleEndianWriter mplew = new MaplePacketLittleEndianWriter();
-        mplew.writeShort(OutHeader.STIGMA_TIME.getValue());
+        mplew.writeShort(OutHeader.BOSS_DEMIAN_STIGMA_TIME.getValue());
         mplew.writeInt(i);
         return mplew.getPacket();
     }

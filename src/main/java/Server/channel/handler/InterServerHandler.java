@@ -33,6 +33,7 @@ import tools.data.MaplePacketReader;
 
 import java.io.IOException;
 import java.util.Date;
+import java.util.Iterator;
 import java.util.List;
 
 
@@ -120,145 +121,157 @@ public class InterServerHandler {
     public static void Loggedin(MaplePacketReader slea, MapleClient c, ServerType type) {
         if (ShutdownServer.getInstance().isShutdown()) {
             c.getSession().close();
-            return;
-        }
-        slea.readInt();
-        int accountId = slea.readInt();
-        int playerid = slea.readInt();
-        byte[] code = slea.read(24);
-        CharacterTransfer transfer = null;
-        try {
-            transfer = CashShopServer.getPlayerStorage().getPendingCharacter(playerid);
-        } catch (IOException e) {
-            log.error("讀取臨時角色失敗", e);
-        }
+        } else {
+            slea.readInt();
+            int accountId = slea.readInt();
+            int playerid = slea.readInt();
+            byte[] code = slea.read(24);
+            CharacterTransfer transfer = null;
 
-        if (ServerConstants.MapleMajor > 198 && ServerConstants.MapleMajor < 215) {
-            final byte[] desKey = new byte[24];
-            byte[] bCharacterID = String.valueOf(playerid).getBytes();
-            System.arraycopy(bCharacterID, 0, desKey, 0, Math.min(desKey.length, bCharacterID.length));
-            if (bCharacterID.length < desKey.length) {
-                System.arraycopy(code, 0, desKey, bCharacterID.length, desKey.length - bCharacterID.length);
-            }
-            c.announce(c.getEncryptOpcodesData(desKey));
-        }
-        if (type.equals(ServerType.CashShopServer)) {
-            if (transfer != null) {
-                CashShopOperation.EnterCS(transfer, c);
-            }
-            return;
-        }
-        if (type.equals(ServerType.AuctionServer)) {
+            IOException e;
             try {
-                transfer = AuctionServer.getInstance().getPlayerStorage().getPendingCharacter(playerid);
-            } catch (IOException e) {
+                transfer = CashShopServer.getPlayerStorage().getPendingCharacter(playerid);
+            } catch (IOException var22) {
+                e = var22;
                 log.error("讀取臨時角色失敗", e);
             }
-            if (transfer != null) {
-                AuctionHandler.EnterAuction(transfer, c);
-            }
-            return;
-        }
 
-        for (ChannelServer cserv : ChannelServer.getAllInstances()) {
-            try {
-                transfer = cserv.getPlayerStorage().getPendingCharacter(playerid);
-            } catch (IOException e) {
-                log.error("讀取臨時角色失敗", e);
-            }
-            if (transfer != null) {
-                c.setChannel(cserv.getChannel());
-                break;
-            }
-        }
+            if (type.equals(ServerType.CashShopServer)) {
+                if (transfer != null) {
+                    CashShopOperation.EnterCS(transfer, c);
+                }
 
-        MapleCharacter player = null;
-        int[] bytes = new int[6];
-        for (int i = 0; i < bytes.length; i++) {
-            bytes[i] = code[i];
-        }
-        StringBuilder sps = new StringBuilder();
-        for (int aByte : bytes) {
-            sps.append(StringUtil.getLeftPaddedStr(Integer.toHexString(aByte).toUpperCase(), '0', 2));
-            sps.append("-");
-        }
-        String macData = sps.toString();
-        macData = macData.substring(0, macData.length() - 1);
-        boolean firstLoggedIn = true; //設置只有第1次登錄的提示開關
-        if (transfer == null) { // Player isn't in storage, probably isn't CC
-            Quadruple<String, String, Integer, String> ip = LoginServer.getLoginAuth(playerid);
-            String s = c.getSessionIPAddress();
-            if (ip == null || (!s.substring(s.indexOf('/') + 1).equals(ip.one) && !c.getMac().equals(macData))) {
-                if (ip != null) {
-                    LoginServer.putLoginAuth(playerid, ip.one, ip.two, ip.three, ip.four);
+            } else if (type.equals(ServerType.AuctionServer)) {
+                try {
+                    transfer = AuctionServer.getInstance().getPlayerStorage().getPendingCharacter(playerid);
+                } catch (IOException var19) {
+                    e = var19;
+                    log.error("讀取臨時角色失敗", e);
+                }
+
+                if (transfer != null) {
+                    AuctionHandler.EnterAuction(transfer, c);
+                }
+
+            } else {
+                Iterator var23 = ChannelServer.getAllInstances().iterator();
+
+                while(var23.hasNext()) {
+                    ChannelServer cserv = (ChannelServer)var23.next();
+
+                    try {
+                        transfer = cserv.getPlayerStorage().getPendingCharacter(playerid);
+                    } catch (IOException var21) {
+                        log.error("讀取臨時角色失敗", var21);
+                    }
+
+                    if (transfer != null) {
+                        c.setChannel(cserv.getChannel());
+                        break;
+                    }
+                }
+
+                MapleCharacter player = null;
+                int[] bytes = new int[6];
+
+                for(int i = 0; i < bytes.length; ++i) {
+                    bytes[i] = code[i];
+                }
+
+                StringBuilder sps = new StringBuilder();
+                int[] var10 = bytes;
+                int var11 = bytes.length;
+
+                for(int var12 = 0; var12 < var11; ++var12) {
+                    int aByte = var10[var12];
+                    sps.append(StringUtil.getLeftPaddedStr(Integer.toHexString(aByte).toUpperCase(), '0', 2));
+                    sps.append("-");
+                }
+
+                String macData = sps.toString();
+                macData = macData.substring(0, macData.length() - 1);
+                boolean firstLoggedIn = true;
+                if (transfer == null) {
+                    Quadruple<String, String, Integer, String> ip = LoginServer.getLoginAuth(playerid);
+                    String s = c.getSessionIPAddress();
+                    if (ip == null || !s.substring(s.indexOf(47) + 1).equals(ip.one) && !c.getMac().equals(macData)) {
+                        if (ip == null) {
+                            c.getSession().close();
+                            return;
+                        }
+
+                        LoginServer.putLoginAuth(playerid, (String)ip.one, (String)ip.two, (Integer)ip.three, (String)ip.four);
+                    }
+
+                    c.setTempIP((String)ip.two);
+                    c.setChannel((Integer)ip.three);
+
+                    try {
+                        player = MapleCharacter.loadCharFromDB(playerid, c, true);
+                        player.setLogintime(System.currentTimeMillis());
+                    } catch (Exception var20) {
+                        c.dropMessage("加載角色數據出錯，角色ID:" + playerid + ", 請聯繫管理員解決問題。");
+                        log.error("加載角色數據出錯，角色ID:" + playerid, var20);
+                    }
                 } else {
+                    player = MapleCharacter.ReconstructChr(transfer, c, true);
+                    firstLoggedIn = false;
+                }
+
+                if (player == null) {
+                    c.dropMessage("加載角色出錯，角色為空");
                     c.getSession().close();
-                    return;
+                } else {
+                    long sessionId = slea.readLong();
+                    ChannelServer channelServer = c.getChannelServer();
+                    c.setPlayer(player);
+                    c.setSessionId(sessionId);
+                    if (sessionId != c.getSessionId()) {
+                        c.disconnect(true, false);
+                    } else {
+                        c.setAccID(player.getAccountID());
+                        int var10000;
+                        if (!c.CheckIPAddress()) {
+                            var10000 = player.getId();
+                            String msg = "檢測連接地址不合法 服務端斷開這個連接 [角色ID: " + var10000 + " 名字: " + player.getName() + " ]";
+                            c.getSession().close();
+                            log.info(msg);
+                        } else {
+                            if (!player.getMap().canEnterField(player.getId())) {
+                                player.dropMessage(1, "親愛滴玩家：地圖已經開啟防搶圖模式，現在無法進入。");
+                                if (!player.isIntern()) {
+                                    c.getSession().close();
+                                    return;
+                                }
+                            }
+
+                            int state = c.getLoginState();
+                            boolean allowLogin = false;
+                            String allowLoginTip = null;
+                            if (state == 1 || state == 3 || state == 0) {
+                                List<String> charNames = c.loadCharacterNames(c.getWorldId());
+                                allowLogin = !World.isCharacterListConnected(charNames);
+                                if (!allowLogin) {
+                                    allowLoginTip = World.getAllowLoginTip(charNames);
+                                }
+                            }
+
+                            if (!allowLogin) {
+                                var10000 = player.getId();
+                                String msg = "檢測賬號下已有角色登陸遊戲 服務端斷開這個連接 [角色ID: " + var10000 + " 名字: " + player.getName() + " ]\r\n" + allowLoginTip;
+                                c.setPlayer((MapleCharacter)null);
+                                c.getSession().close();
+                                log.info(msg);
+                            } else {
+                                c.updateLoginState(2, c.getSessionIPAddress());
+                                channelServer.addPlayer(player);
+                                warpToGameHandler.Start(c);
+                            }
+                        }
+                    }
                 }
             }
-            c.setTempIP(ip.two);
-            c.setChannel(ip.three);
-            try {
-                player = MapleCharacter.loadCharFromDB(playerid, c, true);
-                player.setLogintime(System.currentTimeMillis());
-            } catch (Exception e) {
-                c.dropMessage("加載角色數據出錯，角色ID:" + playerid + ", 請聯繫管理員解決問題。");
-                log.error("加載角色數據出錯，角色ID:" + playerid, e);
-            }
-        } else {
-            player = MapleCharacter.ReconstructChr(transfer, c, true);
-            firstLoggedIn = false;
         }
-        if (player == null) {
-            c.dropMessage("加載角色出錯，角色為空");
-            c.getSession().close();
-            return;
-        }
-        long sessionId = slea.readLong();
-        ChannelServer channelServer = c.getChannelServer();
-        c.setPlayer(player);
-        c.setSessionId(sessionId);
-        if (sessionId != c.getSessionId()) {
-            c.disconnect(true, false);
-            return;
-        }
-        c.setAccID(player.getAccountID());
-        if (!c.CheckIPAddress()) { // Remote hack
-            String msg = "檢測連接地址不合法 服務端斷開這個連接 [角色ID: " + player.getId() + " 名字: " + player.getName() + " ]";
-            c.getSession().close();
-            log.info(msg);
-            return;
-        }
-        if (!player.getMap().canEnterField(player.getId())) {
-            player.dropMessage(1, "親愛滴玩家：地圖已經開啟防搶圖模式，現在無法進入。");
-            if (!player.isIntern()) {
-                c.getSession().close();
-                return;
-            }
-        }
-        int state = c.getLoginState();
-        boolean allowLogin = false;
-        String allowLoginTip = null;
-        if (state == MapleClient.LOGIN_SERVER_TRANSITION || state == MapleClient.CHANGE_CHANNEL || state == MapleClient.LOGIN_NOTLOGGEDIN) {
-            List<String> charNames = c.loadCharacterNames(c.getWorldId());
-            allowLogin = !World.isCharacterListConnected(charNames);
-            if (!allowLogin) {
-                allowLoginTip = World.getAllowLoginTip(charNames);
-            }
-        }
-        //返回為 True 角色才能進入遊戲
-        if (!allowLogin) {
-            String msg = "檢測賬號下已有角色登陸遊戲 服務端斷開這個連接 [角色ID: " + player.getId() + " 名字: " + player.getName() + " ]\r\n" + allowLoginTip;
-            c.setPlayer(null);
-            c.getSession().close();
-            log.info(msg);
-            return;
-        }
-        c.updateLoginState(MapleClient.LOGIN_LOGGEDIN, c.getSessionIPAddress());
-        channelServer.addPlayer(player);
-        warpToGameHandler.Start(c);
-        //TODO: 解進入遊戲先註解
-
     }
 
     public static void ChangeChannel(MaplePacketReader slea, MapleClient c, MapleCharacter chr) {

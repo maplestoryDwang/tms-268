@@ -129,7 +129,7 @@ public class GMCommand {
             }
             if (victim != null && player.allowedToTarget(victim)) {
                 victim.addFame(fame);
-                victim.updateSingleStat(MapleStat.人氣, victim.getFame());
+                victim.updateSingleStat(MapleStat.POPULARITY, victim.getFame());
                 log.info("[管理員指令]   " + player.getName() + " 給玩家 " + victim.getName() + " 加人氣 " + fame + " 點.");
             }
             return 1;
@@ -168,7 +168,7 @@ public class GMCommand {
         @Override
         public int execute(MapleClient c, String[] splitted) {
             c.getPlayer().setRemainingSp(CommandProcessorUtil.getOptionalIntArg(splitted, 1, 1), Math.max(CommandProcessorUtil.getOptionalIntArg(splitted, 2, !JobConstants.isSeparatedSpJob(c.getPlayer().getJob()) ? 1 : JobConstants.getJobGrade(c.getPlayer().getJob())) - 1, 0));
-            c.getPlayer().updateSingleStat(MapleStat.AVAILABLESP, 0);
+            c.getPlayer().updateSingleStat(MapleStat.AVAILABLE_SP, 0);
             return 1;
         }
     }

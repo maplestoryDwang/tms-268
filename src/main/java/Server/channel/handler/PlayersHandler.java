@@ -64,7 +64,7 @@ public class PlayersHandler {
             case 1:
                 if (Math.abs(target.getFame() + famechange) <= 99999) {
                     target.addFame(famechange);
-                    target.updateSingleStat(MapleStat.人氣, target.getFame());
+                    target.updateSingleStat(MapleStat.POPULARITY, target.getFame());
                 }
                 if (!chr.isGm()) {
                     chr.hasGivenFame(target);
@@ -663,7 +663,7 @@ public class PlayersHandler {
         }
         c.getPlayer().setGachExp(c.getPlayer().getGachExp() + MapleItemInformationProvider.getInstance().getItemEffect(item.getItemId()).getEXP());
         MapleInventoryManipulator.removeFromSlot(c, MapleInventoryType.USE, item.getPosition(), (short) 1, false);
-        c.getPlayer().updateSingleStat(MapleStat.疲勞, c.getPlayer().getGachExp());
+        c.getPlayer().updateSingleStat(MapleStat.FATIGUE, c.getPlayer().getGachExp());
     }
 
     public static void GachExp(MaplePacketReader slea, MapleClient c) {
@@ -674,7 +674,7 @@ public class PlayersHandler {
         }
         c.getPlayer().gainExp((long) c.getPlayer().getGachExp() * GameConstants.getExpRate_Quest(c.getPlayer().getLevel()), true, true, false);
         c.getPlayer().setGachExp(0);
-        c.getPlayer().updateSingleStat(MapleStat.疲勞, 0);
+        c.getPlayer().updateSingleStat(MapleStat.FATIGUE, 0);
     }
 
     public static void Report(MaplePacketReader slea, MapleClient c) {

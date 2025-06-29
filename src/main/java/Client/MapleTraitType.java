@@ -9,12 +9,12 @@ package Client;
  */
 public enum MapleTraitType {
 
-    charisma(500, MapleStat.領導力),//領袖
-    insight(500, MapleStat.洞察力),//洞察
-    will(500, MapleStat.意志),//意志
-    craft(500, MapleStat.手藝),//手技
-    sense(500, MapleStat.感性),//感性
-    charm(5000, MapleStat.魅力);//魅力
+    charisma(500, MapleStat.CHARISMA),//領袖
+    insight(500, MapleStat.INSIGHT),//洞察
+    will(500, MapleStat.WILL),//意志
+    craft(500, MapleStat.CRAFT),//手技
+    sense(500, MapleStat.SENSE),//感性
+    charm(5000, MapleStat.CHARM);//魅力
     private final int limit; //獲得的最大限度
     private final MapleStat stat;
 

@@ -55,43 +55,37 @@ public class NPCHandler {
     /*
      * NPC自己說話和移動效果
      */
+
     public static void NPCAnimation(MaplePacketReader slea, MapleClient c) {
-        if (c.getPlayer() == null || c.getPlayer().getMap() == null) {
-            return;
-        } else if (c.getPlayer().getLastChangeMapTime() > 0 && (System.currentTimeMillis() - c.getPlayer().getLastChangeMapTime()) < 1000) { // 換地圖後1秒內不會有此封包回傳，除非客戶端卡頓，進一步造成不同地圖相同的OID封包觸發並斷線
-            return;
-        }
-        MapleMap map = c.getPlayer().getMap();
-        int npcOid = slea.readInt();
-        MapleNPC npc = map.getNPCByOid(npcOid);
-        if (npc == null) {
-            return;
-        }
-        byte type1 = slea.readByte();
-        byte type2 = slea.readByte();
-        int n1 = slea.readInt();
+        if (c.getPlayer() != null && c.getPlayer().getMap() != null) {
+            if (c.getPlayer().getLastChangeMapTime() <= 0L || System.currentTimeMillis() - c.getPlayer().getLastChangeMapTime() >= 1000L) {
+                MapleMap map = c.getPlayer().getMap();
+                int npcOid = slea.readInt();
+                MapleNPC npc = map.getNPCByOid(npcOid);
+                if (npc != null) {
+                    byte type1 = slea.readByte();
+                    byte type2 = slea.readByte();
+                    int n1 = slea.readInt();
+                    MaplePacketLittleEndianWriter mplew = new MaplePacketLittleEndianWriter();
+                    mplew.writeShort(OutHeader.LP_FieldNpcAction.getValue());
+                    mplew.writeInt(npcOid);
+                    mplew.write(type1);
+                    mplew.write(type2);
+                    mplew.writeInt(n1);
+                    if (npc.isMove() && slea.available() >= 17L) {
+                        int gatherDuration = slea.readInt();
+                        int nVal1 = slea.readInt();
+                        Point mPos = slea.readPos();
+                        Point oPos = slea.readPos();
+                        List<LifeMovementFragment> res = MovementParse.parseMovement(slea, 10);
+                        MovementParse.updatePosition(res, npc, 0);
+                        PacketHelper.serializeMovementList(mplew, gatherDuration, nVal1, mPos, oPos, res, (int[])null);
+                    }
 
-        MaplePacketLittleEndianWriter mplew = new MaplePacketLittleEndianWriter();
-        mplew.writeShort(OutHeader.LP_NpcMove.getValue());
-        mplew.writeInt(npcOid);
-        mplew.write(type1);
-        mplew.write(type2);
-        mplew.writeInt(n1);
-
-        if (npc.isMove()) {
-            if (slea.available() >= 17) {
-                final int gatherDuration = slea.readInt();
-                final int nVal1 = slea.readInt();
-                final Point mPos = slea.readPos();
-                final Point oPos = slea.readPos();
-                List<LifeMovementFragment> res = MovementParse.parseMovement(slea, 10);
-                MovementParse.updatePosition(res, npc, 0);
-
-                PacketHelper.serializeMovementList(mplew, gatherDuration, nVal1, mPos, oPos, res, null);
+                    map.objectMove(-1, npc, mplew.getPacket());
+                }
             }
         }
-        mplew.write(0);
-        map.objectMove(-1, npc, mplew.getPacket());
     }
 
     /*

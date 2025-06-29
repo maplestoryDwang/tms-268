@@ -708,7 +708,7 @@ public class MTSCSPacket {
         MaplePacketLittleEndianWriter mplew = new MaplePacketLittleEndianWriter();
 
         mplew.writeShort(OutHeader.LP_CashShopCharStatChanged.getValue());
-        mplew.writeLong(MapleStat.楓幣.getValue());
+        mplew.writeLong(MapleStat.MONEY.getValue());
         mplew.writeLong(chr.getMeso());
 
         return mplew.getPacket();

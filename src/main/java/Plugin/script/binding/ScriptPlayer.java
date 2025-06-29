@@ -120,7 +120,7 @@ public class ScriptPlayer extends PlayerScriptInteraction {
      */
     public void setFace(int face) {
         getPlayer().setFace(face);
-        getPlayer().updateSingleStat(MapleStat.臉型, face);
+        getPlayer().updateSingleStat(MapleStat.FACE, face);
     }
 
     /**
@@ -128,7 +128,7 @@ public class ScriptPlayer extends PlayerScriptInteraction {
      */
     public void setHair(int hair) {
         getPlayer().setHair(hair);
-        getPlayer().updateSingleStat(MapleStat.髮型, hair);
+        getPlayer().updateSingleStat(MapleStat.HAIR, hair);
     }
 
     /**
@@ -136,7 +136,7 @@ public class ScriptPlayer extends PlayerScriptInteraction {
      */
     public void setSkin(int skin) {
         getPlayer().setSkinColor((byte) skin);
-        getPlayer().updateSingleStat(MapleStat.皮膚, skin);
+        getPlayer().updateSingleStat(MapleStat.SKIN, skin);
     }
 
 
@@ -223,7 +223,7 @@ public class ScriptPlayer extends PlayerScriptInteraction {
     public void setMaxHp(int hp) {
         getPlayer().getStat().setInfo(hp, getPlayer().getStat().getMaxMp(false), hp, getPlayer().getStat().getMp());
         getPlayer().updateSingleStat(MapleStat.HP, hp);
-        getPlayer().updateSingleStat(MapleStat.MAXHP, hp);
+        getPlayer().updateSingleStat(MapleStat.MAX_HP, hp);
         getPlayer().getStat().recalcLocalStats(getPlayer());
     }
 
@@ -233,7 +233,7 @@ public class ScriptPlayer extends PlayerScriptInteraction {
     public void setMaxMp(int hp) {
         getPlayer().getStat().setInfo(getPlayer().getStat().getMaxHp(false), hp, getPlayer().getStat().getHp(), hp);
         getPlayer().updateSingleStat(MapleStat.MP, hp);
-        getPlayer().updateSingleStat(MapleStat.MAXMP, hp);
+        getPlayer().updateSingleStat(MapleStat.MAX_MP, hp);
         getPlayer().getStat().recalcLocalStats(getPlayer());
     }
 
@@ -1160,14 +1160,14 @@ public class ScriptPlayer extends PlayerScriptInteraction {
     public void increaseMaxHp(int delta) {
         getPlayer().getStat().setInfo(getPlayer().getStat().getMaxHp(false) + delta, getPlayer().getStat().getMaxMp(false), getPlayer().getStat().getMaxHp(false) + delta, getPlayer().getStat().getMp());
         getPlayer().updateSingleStat(MapleStat.HP, getPlayer().getStat().getMaxHp(false) + delta);
-        getPlayer().updateSingleStat(MapleStat.MAXHP, getPlayer().getStat().getMaxHp(false) + delta);
+        getPlayer().updateSingleStat(MapleStat.MAX_HP, getPlayer().getStat().getMaxHp(false) + delta);
         getPlayer().getStat().recalcLocalStats(getPlayer());
     }
 
     public void increaseMaxMp(int delta) {
         getPlayer().getStat().setInfo(getPlayer().getStat().getMaxHp(false), getPlayer().getStat().getMaxMp(false) + delta, getPlayer().getStat().getHp(), getPlayer().getStat().getMaxMp(false) + delta);
         getPlayer().updateSingleStat(MapleStat.MP, getPlayer().getStat().getMaxMp(false) + delta);
-        getPlayer().updateSingleStat(MapleStat.MAXMP, getPlayer().getStat().getMaxMp(false) + delta);
+        getPlayer().updateSingleStat(MapleStat.MAX_MP, getPlayer().getStat().getMaxMp(false) + delta);
         getPlayer().getStat().recalcLocalStats(getPlayer());
     }
 

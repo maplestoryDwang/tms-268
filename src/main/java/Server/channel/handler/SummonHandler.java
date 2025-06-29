@@ -618,7 +618,9 @@ public class SummonHandler {
             list.add(sub.a1);
             smai.subSummon.add(sub);
         }
-        c.announce(MaplePacketCreator.VSkillObjectAction(smai.skillId, smai.skillLv, list));
+//        c.announce(MaplePacketCreator.VSkillObjectAction(smai.skillId, smai.skillLv, list));
+        c.announce(MaplePacketCreator.VSkillObjectAction(smai.skillId, smai.skillLv, 1, (Integer)list.getFirst()));
+
         player.getMap().broadcastMessage(player, SummonPacket.SummonedMagicAltar(player.getId(), oid, smai), false);
     }
 

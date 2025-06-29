@@ -1,27 +1,42 @@
+//
+// Source code recreated from a .class file by IntelliJ IDEA
+// (powered by FernFlower decompiler)
+//
+
 package Opcode.Headler;
 
 import Server.ExternalCodeTableGetter;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import tools.data.WritableIntValueHolder;
-
-import javax.crypto.Cipher;
-import javax.crypto.spec.SecretKeySpec;
-import java.io.*;
-import java.security.Key;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.IOException;
 import java.util.Properties;
 import java.util.Timer;
 import java.util.TimerTask;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import tools.data.WritableIntValueHolder;
 
 public enum OutHeader implements WritableIntValueHolder {
     LP_UserTrickOrTreatResult,
     LP_UNK_2114_V266,
     LP_SPIRT_WEAPON,
+    LP_UNK_OPCODE_541,
+    LP_UNK_OPCODE_550,
+    LP_UNK_ENTER_FIELD_458,
+    LP_UNK_ENTER_FIELD_600,
+    CHANGE_MIX_COLOR_BEAUTY_RESULT,
+    LP_SetDeathCoountMonster,
+    LP_UNK_ENTER_FIELD_1396,
+    LP_CRASH_RUNTIME,
+    LP_UNK_ENTER_FIELD_1426,
+    LP_UNK_ENTER_FIELD_1405,
+    LP_OPEN_UI_SP_JOB,
     LP_GAIN_UNION_WEAPON_POINT,
     LP_UNION_WEAPON_UNK,
     LP_SECURITY_REQUEST,
     LP_UNION_WEAPON_POINT,
     LP_UNK_2686_V266,
+    GET_CARRIAG_KET,
     LP_Enter_Field_UserChat,
     LP_HEXA_ACTION_UI_LOAD,
     LP_SelCharPotentialSetPath,
@@ -44,7 +59,7 @@ public enum OutHeader implements WritableIntValueHolder {
     MapleUnionCoinInfo,
     ShowMapleUnion,
     EXTRA_SYSTEM_RESULT,
-    LTX_HERO_Phantom_Spirit_Arms, // 幻靈武具
+    LTX_HERO_Phantom_Spirit_Arms,
     LP_REQUEST_STATUS_CHECK,
     CTX_AUTH_MOB_CRC_COUNT,
     LP_HEXA_REQUEST_INFO,
@@ -54,47 +69,21 @@ public enum OutHeader implements WritableIntValueHolder {
     CTX_JOB_GOD_4,
     CTX_JOB_GOD_5,
     CTX_JOB_GOD_6,
-    JOB_GOD_RESET_WEAPON_POT, // 2547
-    LP_AttachCube, // 可疑的附加方塊
-    /// //////////////////////////
-    //      Auth ->
-    LP_WzCheckList, // 53
-    LP_LOGIN_ACTION_CHECK, // 54
-    //
-    /////////////////////////////
-
-
-    /// //////////////////////////
-    //      IncHyper ->
-    CHAR_INFO_INC_HYPER, // 255
-    //
-    /////////////////////////////
-
-
-    /// //////////////////////////
-    //      CASH SHOP ->
-    ENTER_CASH_SHOP, // 2405
-    CASH_SHOP_ENTER_TYPE, // 2413
-    //
-    /////////////////////////////
-
-    /// //////////////////////////
-    //      BOSS - DEMIAN ->
-    STIGMA_TIME, // 1241
-    DEMIAN_STATS_SLOT_UI_SECONDS, // 1241
-    DEMIAN_SPAWN_DEAD_TOMBSTONE, // 1833
-    BOSS_DEMIAN_SWORD_ATTACk_NODE, // 1838
-    DEMIAN_STATS_SLOT_UI, // 1840
-    B_O_S_S__D_E_M_I_A_N__F_I_R_E__S_W_O_R_D, //1632
-    B_O_S_S__D_E_M_I_A_N__F_I_R_E__S_W_O_R_D__D_E_L, // 1634
-    //
-    /////////////////////////////
-
-    /// //////////////////////////
-    //      BOSS - LUCID ->
-    BOSS_LUCID_FLOWER_ATTACK, // 1848
-    //
-    /// //////////////////////////
+    JOB_GOD_RESET_WEAPON_POT,
+    LP_AttachCube,
+    LP_WzCheckList,
+    LP_LOGIN_ACTION_CHECK,
+    CHAR_INFO_INC_HYPER,
+    ENTER_CASH_SHOP,
+    CASH_SHOP_ENTER_TYPE,
+    BOSS_DEMIAN_STIGMA_TIME,
+    DEMIAN_STATS_SLOT_UI_SECONDS,
+    DEMIAN_SPAWN_DEAD_TOMBSTONE,
+    BOSS_DEMIAN_SWORD_ATTACk_NODE,
+    DEMIAN_STATS_SLOT_UI,
+    B_O_S_S__D_E_M_I_A_N__F_I_R_E__S_W_O_R_D,
+    B_O_S_S__D_E_M_I_A_N__F_I_R_E__S_W_O_R_D__D_E_L,
+    BOSS_LUCID_FLOWER_ATTACK,
     BOSS_CARNING_OUT_PACKET_1994,
     BOSS_CARNING_OUT_PACKET_1995,
     BOSS_CARNING_OUT_PACKET_1996,
@@ -102,8 +91,8 @@ public enum OutHeader implements WritableIntValueHolder {
     BOSS_CARNING_OUT_PACKET_1998,
     BOSS_CARNING_OUT_PACKET_1999,
     BOSS_CARNING_SEL_BOSS_FIRST,
-    BOSS_WILL_JUMP_POSCTION, // 1251
-    GUILD_BATTLE_POINT, // 1867
+    BOSS_WILL_JUMP_POSCTION,
+    GUILD_BATTLE_POINT,
     USE_ITEM_LOCK_V261_1376,
     LP_ENTER_GAME_UNK,
     LP_ClaimSvrStatusChanged_unk,
@@ -870,7 +859,7 @@ public enum OutHeader implements WritableIntValueHolder {
     LP_UserDamageSkinSaveResult,
     VSkillObjectAction,
     ThunderSkillAction,
-    USER_OPNE_DAMAGE_SKIN_UI,
+    LP_USER_OPNE_DAMAGE_SKIN_UI,
     LP_Shadowserver,
     UnstableMemory,
     LiftSkillAction,
@@ -994,12 +983,12 @@ public enum OutHeader implements WritableIntValueHolder {
     MONSTER_ATTACK,
     SEREN_CHANGE_PHASE,
     LP_MobCtrlNew,
-    CTX_Npc_Enter_Field,
+    LP_FieldNpcEnter,
     LP_NpcLeaveField,
     LP_NpcEnterFieldForQuickMove,
-    CTX_Npc_Change_Controller,
+    LP_NpcController,
     PLAYER_NPC,
-    LP_NpcMove,
+    LP_FieldNpcAction,
     LP_NpcSpecialAction,
     LP_NpcUpdateLimitedInfo,
     LP_NpcShowQuizScore,
@@ -1156,6 +1145,7 @@ public enum OutHeader implements WritableIntValueHolder {
     SCENE_UI,
     USE_SKILL_WITH_UI,
     START_EVENT_SHOT_POINT_UI,
+    LUCID_LOAD_FIELD_UNK,
     BOSS_DEMIAN_KEYMAP_SPACE,
     LP_ScriptMessage,
     LP_NULL_2116,
@@ -1282,8 +1272,7 @@ public enum OutHeader implements WritableIntValueHolder {
     CHANNEL_LOCK,
     CLIENT_IN_GAME_AUTH_LOCK,
     LP_HEXA_ACTION_RESULT,
-    //-----------------------
-    CASH_SHOP_EVENT_TIP, // 如果有想移動的現金道具，請利用布萊爾小姐的夢幻快遞。
+    CASH_SHOP_EVENT_TIP,
     CTX_UNK_2476,
     PING,
     INGAME_PING,
@@ -1695,7 +1684,8 @@ public enum OutHeader implements WritableIntValueHolder {
     REMOVE_SPECIAL_PORTAL,
     EGO_WEAPON,
     CHECK_LOGIN,
-    UNLOCK_SKILL, HYPER_PRESET,
+    UNLOCK_SKILL,
+    HYPER_PRESET,
     HYPER,
     BIND_MONSTER,
     RELOAD_CHAR,
@@ -2043,115 +2033,69 @@ public enum OutHeader implements WritableIntValueHolder {
     HEXA_STAT_ACTIVE,
     HEXA_SKILL_ACTIVE,
     LUCID_EVENT_DREAM_KILLCOUNT,
-    UNKNOWN, LP_ChangeMapCheckingPacket;
+    UNKNOWN,
+    LP_ChangeMapCheckingPacket;
 
     private static final Logger log = LoggerFactory.getLogger(OutHeader.class);
-    private short code;
-    private static long lastModifiedTime = 0;
-    private static final String ALGORITHM = "AES";
-    private static final byte[] KEY = "sAGlLlC3iCiIVnQ2".getBytes(); // 与加密时使用的密钥相同
+    private short code = -2;
+    private static long lastModifiedTime = 0L;
 
-    OutHeader() {
-        this.code = -2;
-    }
-
-    public static void main(String[] args) throws Exception {
-        // 调用加密文件生成的方法
-        File inputFile = new File("res/OutHeader.properties");
-        File encryptedFile = new File("res/OutHeader.encry");
-        encryptFile(KEY, inputFile, encryptedFile);
+    private OutHeader() {
     }
 
     public static void startCheck() {
         Timer timer = new Timer();
         timer.schedule(new TimerTask() {
-            @Override
             public void run() {
-                checkForChanges();
+                OutHeader.checkForChanges();
             }
-        }, 0, 5000); // 每5秒检查一次
+        }, 0L, 500L);
     }
 
     private static void checkForChanges() {
         try {
-            File encryptedFile = new File("res/OutHeader.encry");
-            File propertiesFile = new File("res/OutHeader.properties");
-
-            if (encryptedFile.exists()) {
-                //log.info("檢測到檔案:OutHeader.encry存在,優先加載內部包頭數據。");
-                Properties props = loadFromEncryptedFile(encryptedFile);
-                applyProperties(props);
-            } else if (propertiesFile.exists()) {
-                Properties props = getDefaultProperties();
-                applyProperties(props);
-            } else {
-                throw new FileNotFoundException("No valid configuration file found.");
+            File file = new File("res/OutHeader.properties");
+            long currentModifiedTime = file.lastModified();
+            if (currentModifiedTime > lastModifiedTime) {
+                reloadValues();
+                log.info("[OutHeader]已套用新的資訊。");
+                lastModifiedTime = currentModifiedTime;
             }
-        } catch (Exception e) {
-            log.error("Failed to load configuration", e);
-        }
-    }
 
-    private static Properties loadFromEncryptedFile(File encryptedFile) throws Exception {
-        Key secretKey = new SecretKeySpec(KEY, ALGORITHM);
-        Cipher cipher = Cipher.getInstance(ALGORITHM);
-        cipher.init(Cipher.DECRYPT_MODE, secretKey);
-
-        try (FileInputStream inputStream = new FileInputStream(encryptedFile)) {
-            byte[] encryptedBytes = inputStream.readAllBytes();
-            byte[] decryptedBytes = cipher.doFinal(encryptedBytes);
-
-            Properties props = new Properties();
-            try (ByteArrayInputStream byteStream = new ByteArrayInputStream(decryptedBytes)) {
-                props.load(byteStream);
-            }
-            return props;
-        }
-    }
-
-    static Properties getDefaultProperties() throws IOException {
-        final Properties props = new Properties();
-        try (FileInputStream fileInputStream = new FileInputStream("res/OutHeader.properties")) {
-            props.load(fileInputStream);
-        }
-        return props;
-    }
-
-    private static void applyProperties(Properties props) {
-        ExternalCodeTableGetter.populateValues(props, OutHeader.values());
-    }
-
-    // 加密文件生成方法
-    public static void encryptFile(byte[] key, File inputFile, File outputFile) throws Exception {
-        Key secretKey = new SecretKeySpec(key, ALGORITHM);
-        Cipher cipher = Cipher.getInstance(ALGORITHM);
-        cipher.init(Cipher.ENCRYPT_MODE, secretKey);
-
-        try (FileInputStream inputStream = new FileInputStream(inputFile);
-             FileOutputStream outputStream = new FileOutputStream(outputFile)) {
-
-            byte[] inputBytes = inputStream.readAllBytes();
-            byte[] outputBytes = cipher.doFinal(inputBytes);
-
-            outputStream.write(outputBytes);
-        }
-        log.info("Encrypted file generated at: {}", outputFile.getPath());
-    }
-
-    public static final void reloadValues() {
-        try {
-            ExternalCodeTableGetter.populateValues(getDefaultProperties(), OutHeader.values());
-        } catch (IOException e) {
+        } catch (Exception var3) {
+            Exception e = var3;
             throw new RuntimeException("Failed to load OutHeader", e);
         }
     }
 
-    public static String getOpcodeName(final int value) {
-        for (final OutHeader opcode : OutHeader.values()) {
+    public static Properties getDefaultProperties() throws IOException {
+        Properties props = new Properties();
+        FileInputStream fileInputStream = new FileInputStream("res/OutHeader.properties");
+        props.load(fileInputStream);
+        fileInputStream.close();
+        return props;
+    }
+
+    public static final void reloadValues() {
+        try {
+            ExternalCodeTableGetter.populateValues(getDefaultProperties(), values());
+        } catch (IOException var1) {
+            IOException e = var1;
+            throw new RuntimeException("Failed to load OutHeader", e);
+        }
+    }
+
+    public static String getOpcodeName(int value) {
+        OutHeader[] var1 = values();
+        int var2 = var1.length;
+
+        for(int var3 = 0; var3 < var2; ++var3) {
+            OutHeader opcode = var1[var3];
             if (opcode.getValue() == value) {
                 return opcode.name();
             }
         }
+
         return "UNKNOWN";
     }
 
@@ -2160,10 +2104,10 @@ public enum OutHeader implements WritableIntValueHolder {
     }
 
     public short getCode() {
-        return this.code;
+        return 0;
     }
 
-    public void setValue(final short code) {
+    public void setValue(short code) {
         this.code = code;
     }
 

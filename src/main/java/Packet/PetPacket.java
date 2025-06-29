@@ -168,7 +168,7 @@ public class PetPacket {
         mplew.write(0);
         mplew.write(0);
         mplew.write(1);
-        mplew.writeLong(MapleStat.寵物.getValue());
+        mplew.writeLong(MapleStat.PET_LOCKER_SN.getValue());
         MaplePet[] pets = chr.getSpawnPets();
         for (int i = 0; i < 3; i++) {
             if (pets[i] != null) {

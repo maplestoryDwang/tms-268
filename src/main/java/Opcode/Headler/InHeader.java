@@ -19,9 +19,13 @@ public enum InHeader implements WritableIntValueHolder {
     CP_SPIRT_WEAPON,
     BOSS_ANGEL_ONPACK,
     CP_EXTRA_REQUEST,
+    CP_Client_Crash_rep,
     CP_SECURITY_REQUEST,
+    CP_COMBO_TIME,
     CP_UNION_WEAPON_POINT,
     BOSS_KALOS_ONPACKET_SPC,
+    CP_OPEN_UI_SP_JOB,
+    CASH_SHOP_CHECK_BUY_REWARD_ITEM_KEY,
     CP_USE_VCORE_AMUNT,
     JIN_BLACK_HAND_RECV,
     BOSS_CARNING_PARTY_RECV,
@@ -312,7 +316,6 @@ public enum InHeader implements WritableIntValueHolder {
     ZERO_SCROLL_LUCKY,
     ZERO_SCROLL_START,
     ZERO_WEAPON_INFO,
-
     UI_OPEN,
     ZERO_WEAPON_UPGRADE,
     ZERO_TAG,
@@ -588,7 +591,6 @@ public enum InHeader implements WritableIntValueHolder {
     HIT_ERDA_SPECTRUM,
     ACT_ERDA_SPECTRUM,
     BALL_ERDA_SPECTRUM,
-
     INFINITY_FLAME_CIRCLE,
     AFTER_CANCEL2,
     SP_PORTAL_USE,
@@ -629,25 +631,15 @@ public enum InHeader implements WritableIntValueHolder {
     CTX_OPEN_CORE,
     CP_USER_POTENTIAL_SKILL_RAND_RAND_SET_UI,
     CTX_SPAWN_ATTACK,
-    /// //////////////////////////
-    //      LOCK ->
-    USER_USE_SKILL_LOCK_OUT, // 611
-    CP_FUNCKEYMAP_UNIONKEY_BLOCK_NUMLOCK, // 1289
+    USER_USE_SKILL_LOCK_OUT,
+    CP_FUNCKEYMAP_UNIONKEY_BLOCK_NUMLOCK,
     CP_CHAR_USE_WARP_ITEM,
-    //
-    /// //////////////////////////
-    CP_SkillLoadRunTime, // 388
-
-    /// //////////////////////////
-    //      Auth ->
-    EXTRA_QUEST_TIME_LOG, // 210
-    CP_UserSkillUseRequest_II, // 384 use skill next
-    HYPER_PING_TIME, // 827
-    //
-    /// //////////////////////////
-    CTX_CHARACTER_CRC_KEY_PONG, // 530
-    BOSS_DEMIAN_FLY_ON_PACKET, // 1445 -*
-    BOSS_SMILE_UI_ACTION, // 1608
+    CP_UserSkillUseRequest_II,
+    EXTRA_QUEST_TIME_LOG,
+    HYPER_PING_TIME,
+    CTX_CHARACTER_CRC_KEY_PONG,
+    BOSS_DEMIAN_FLY_ON_PACKET,
+    BOSS_SMILE_UI_ACTION,
     BOSS_JIN_BLACK_HAND_RECV,
     MAP_HEART_BEAT,
     CRASH_REPORT,
@@ -666,7 +658,7 @@ public enum InHeader implements WritableIntValueHolder {
     CP_ClientFileLog,
     CP_v255_115,
     CTX_ENTER_ACCOUNT,
-    LP_SELECT_CHANNEL,
+    LP_SELECT_WORLD,
     CP_SELECT_WORLD_LOGIN,
     CP_START_HEART_BEART,
     CP_v245_109,
@@ -686,7 +678,7 @@ public enum InHeader implements WritableIntValueHolder {
     CP_SelectAccount_Fake,
     CP_SelectWorld_Fake,
     CP_SelectCharacter_Fake,
-    CTX_HERO_Phantom_Spirit_Arms, // 幻靈武具
+    CTX_HERO_Phantom_Spirit_Arms,
     CP_CreateNewCharacter_Fake,
     Creat_New_Char,
     CP_CreateNewCharacterInCS,
@@ -814,8 +806,9 @@ public enum InHeader implements WritableIntValueHolder {
     NGS_CHECK_THREETY,
     CP_UserActivateDamageSkin,
     USE_ACTIVATE_DAMAGE_SKIN_PREMIUM,
-    USER_OPNE_DAMAGE_SKIN_UI,
+    CP_USER_OPNE_DAMAGE_SKIN_UI,
     CP_UserDamageSkinSaveRequest,
+    CP_UserSetCustomBackgroundRequest,
     CP_UserDefaultWingItem,
     CP_UserKaiserTransformWing,
     CP_UserKaiserTransformTail,
@@ -1077,6 +1070,7 @@ public enum InHeader implements WritableIntValueHolder {
     CP_PetInteractionRequest,
     CP_PetStatChangeItemUseRequest,
     CP_PetUpdateExceptionListRequest,
+    CP_UserSkillSwitchRequest,
     CP_CHECK_PLAYER_STATUS,
     CP_UserCharacterInfoRequest,
     CP_PetFoodItemUseRequest,
@@ -1163,6 +1157,7 @@ public enum InHeader implements WritableIntValueHolder {
     GIVE_KSULTIMATE,
     ATTACK_KSULTIMATE,
     MIST_KSULTIMAT,
+    CP_DemonUseDargonAttack,
     CANCEL_KSULTIMATE,
     TORNADO_KSULTIMATE,
     SkillStageChangeRequest,
@@ -1244,7 +1239,7 @@ public enum InHeader implements WritableIntValueHolder {
     CP_MobCreateAffectedArea,
     CP_MobDownResponse,
     DRAGON_HIT,
-    CP_Field_Npc_Move,
+    CP_FieldNpcAction,
     CP_Field_Npc_Action,
     CP_DropPickUpRequest,
     CP_ReactorHit,
@@ -1343,112 +1338,83 @@ public enum InHeader implements WritableIntValueHolder {
     CP_ChangeMapCheckingPacket;
 
     private static final Logger log = LoggerFactory.getLogger(InHeader.class);
-    private short code;
-    private static long lastModifiedTime = 0;
+    private short code = -2;
+    private static long lastModifiedTime = 0L;
     private static final String ALGORITHM = "AES";
-    private static final byte[] KEY = "sAGlLlC3iCiIVnQ2".getBytes(); // 与加密时使用的密钥相同
+    private static final byte[] KEY = "sAGlLlC3iCiIVnQ2".getBytes();
 
-    InHeader() {
-        this.code = -2;
+    private InHeader() {
     }
 
     public static void main(String[] args) throws Exception {
-        // 调用加密文件生成的方法
-        File inputFile = new File("res/InHeader.properties");
-        File encryptedFile = new File("res/InHeader.encry");
-        encryptFile(KEY, inputFile, encryptedFile);
+        new File("res/InHeader.properties");
     }
 
     public static void startCheck() {
         Timer timer = new Timer();
         timer.schedule(new TimerTask() {
-            @Override
             public void run() {
-                checkForChanges();
+                InHeader.checkForChanges();
             }
-        }, 0, 5000); // 每5秒检查一次
+        }, 0L, 500L);
     }
 
     private static void checkForChanges() {
         try {
-            File encryptedFile = new File("res/InHeader.encry");
-            File propertiesFile = new File("res/InHeader.properties");
-
-            if (encryptedFile.exists()) {
-                //log.info("檢測到檔案:InHeader.encry存在,優先加載內部包頭數據。");
-                Properties props = loadFromEncryptedFile(encryptedFile);
-                applyProperties(props);
-            } else if (propertiesFile.exists()) {
-                Properties props = getDefaultProperties();
-                applyProperties(props);
-            } else {
-                throw new FileNotFoundException("No valid configuration file found.");
+            File file = new File("res/InHeader.properties");
+            long currentModifiedTime = file.lastModified();
+            if (currentModifiedTime > lastModifiedTime) {
+                reloadValues();
+                log.info("[InHeader]已套用新的資訊。");
+                lastModifiedTime = currentModifiedTime;
             }
-        } catch (Exception e) {
-            log.error("Failed to load configuration", e);
-        }
-    }
 
-    private static Properties loadFromEncryptedFile(File encryptedFile) throws Exception {
-        Key secretKey = new SecretKeySpec(KEY, ALGORITHM);
-        Cipher cipher = Cipher.getInstance(ALGORITHM);
-        cipher.init(Cipher.DECRYPT_MODE, secretKey);
-
-        try (FileInputStream inputStream = new FileInputStream(encryptedFile)) {
-            byte[] encryptedBytes = inputStream.readAllBytes();
-            byte[] decryptedBytes = cipher.doFinal(encryptedBytes);
-
-            Properties props = new Properties();
-            try (ByteArrayInputStream byteStream = new ByteArrayInputStream(decryptedBytes)) {
-                props.load(byteStream);
-            }
-            return props;
-        }
-    }
-
-    static Properties getDefaultProperties() throws IOException {
-        final Properties props = new Properties();
-        try (FileInputStream fileInputStream = new FileInputStream("res/InHeader.properties")) {
-            props.load(fileInputStream);
-        }
-        return props;
-    }
-
-    private static void applyProperties(Properties props) {
-        ExternalCodeTableGetter.populateValues(props, InHeader.values());
-    }
-
-    // 加密文件生成方法
-    public static void encryptFile(byte[] key, File inputFile, File outputFile) throws Exception {
-        Key secretKey = new SecretKeySpec(key, ALGORITHM);
-        Cipher cipher = Cipher.getInstance(ALGORITHM);
-        cipher.init(Cipher.ENCRYPT_MODE, secretKey);
-
-        try (FileInputStream inputStream = new FileInputStream(inputFile);
-             FileOutputStream outputStream = new FileOutputStream(outputFile)) {
-
-            byte[] inputBytes = inputStream.readAllBytes();
-            byte[] outputBytes = cipher.doFinal(inputBytes);
-
-            outputStream.write(outputBytes);
-        }
-        log.info("Encrypted file generated at: {}", outputFile.getPath());
-    }
-
-    public static final void reloadValues() {
-        try {
-            ExternalCodeTableGetter.populateValues(getDefaultProperties(), InHeader.values());
-        } catch (IOException e) {
+        } catch (Exception var3) {
+            Exception e = var3;
             throw new RuntimeException("Failed to load InHeader", e);
         }
     }
 
-    public static String getOpcodeName(final int value) {
-        for (final InHeader opcode : InHeader.values()) {
+    public static Properties getDefaultProperties() throws IOException {
+        Properties props = new Properties();
+        FileInputStream fileInputStream = new FileInputStream("res/InHeader.properties");
+
+        try {
+            props.load(fileInputStream);
+        } catch (Throwable var5) {
+            try {
+                fileInputStream.close();
+            } catch (Throwable var4) {
+                var5.addSuppressed(var4);
+            }
+
+            throw var5;
+        }
+
+        fileInputStream.close();
+        return props;
+    }
+
+    public static final void reloadValues() {
+        try {
+            ExternalCodeTableGetter.populateValues(getDefaultProperties(), values());
+        } catch (IOException var1) {
+            IOException e = var1;
+            throw new RuntimeException("Failed to load InHeader", e);
+        }
+    }
+
+    public static String getOpcodeName(int value) {
+        InHeader[] var1 = values();
+        int var2 = var1.length;
+
+        for(int var3 = 0; var3 < var2; ++var3) {
+            InHeader opcode = var1[var3];
             if (opcode.getValue() == value) {
                 return opcode.name();
             }
         }
+
         return "UNKNOWN";
     }
 
@@ -1457,10 +1423,10 @@ public enum InHeader implements WritableIntValueHolder {
     }
 
     public short getCode() {
-        return this.code;
+        return 0;
     }
 
-    public void setValue(final short code) {
+    public void setValue(short code) {
         this.code = code;
     }
 

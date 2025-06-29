@@ -27,37 +27,32 @@ public class CharSelectedHandler {
         int charId = slea.readInt();
         if (c.getPlayer() != null) {
             c.getSession().close();
-            return;
-        }
-        if (!c.isLoggedIn() || loginFailCount(c) || !c.login_Auth(charId)) {
-            c.sendEnableActions();
-            return;
-        }
-        if (ChannelServer.getInstance(c.getChannel()) == null || c.getWorldId() != 0) {
-            c.getSession().close();
-            return;
-        }
-        int job = c.getCharacterJob(charId);
-        if (job > -1) {
-            JobType jobt = JobType.getByJob(job);
-            if (jobt == null || !ServerConstants.isOpenJob(jobt.name())) {
-                c.dropMessage("該職業暫未開放,敬請期待!");
-                c.sendEnableActions();
-                return;
-            }
-        }
-        if (c.getIdleTask() != null) {
-            c.getIdleTask().cancel(true);
-        }
-        //c.announce(MaplePacketCreator.getWzCheck(LoginServer.getWzCheckPack()));
-        String ip = c.getSessionIPAddress();
-        LoginServer.putLoginAuth(charId, ip.substring(ip.indexOf('/') + 1), c.getTempIP(), c.getChannel(), c.getMac());
-        c.updateLoginState(MapleClient.LOGIN_SERVER_TRANSITION, ip);
-        World.clearChannelChangeDataByAccountId(c.getAccID());
-        // 官方機房
-        c.announce(MaplePacketCreator.getServerIP(ChannelServer.getInstance(c.getChannel()).getPort(), charId));
+        } else if (c.isLoggedIn() && !loginFailCount(c) && c.login_Auth(charId)) {
+            if (ChannelServer.getInstance(c.getChannel()) != null && c.getWorldId() == 0) {
+                int job = c.getCharacterJob(charId);
+                if (job > -1) {
+                    JobType jobt = JobType.getByJob(job);
+                    if (jobt == null || !ServerConstants.isOpenJob(jobt.name())) {
+                        c.dropMessage("該職業暫未開放,敬請期待!");
+                        c.sendEnableActions();
+                        return;
+                    }
+                }
 
-        // 服務器
-        c.announce(MaplePacketCreator.DummyGamaniaNat(ChannelServer.getInstance(c.getChannel()).getPort(), charId));
+                if (c.getIdleTask() != null) {
+                    c.getIdleTask().cancel(true);
+                }
+
+                String ip = c.getSessionIPAddress();
+                LoginServer.putLoginAuth(charId, ip.substring(ip.indexOf(47) + 1), c.getTempIP(), c.getChannel(), c.getMac());
+                c.updateLoginState(1, ip);
+                World.clearChannelChangeDataByAccountId(c.getAccID());
+                c.announce(MaplePacketCreator.getServerIP(ChannelServer.getInstance(c.getChannel()).getPort(), charId));
+            } else {
+                c.getSession().close();
+            }
+        } else {
+            c.sendEnableActions();
+        }
     }
 }

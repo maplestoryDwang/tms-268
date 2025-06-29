@@ -281,11 +281,7 @@
         </encoder>
     </appender>
 
-    <!-- 日志级别配置 -->
-    <root level="INFO">
-        <appender-ref ref="控制面板"/>
-        <appender-ref ref="伺服端日誌"/>
-    </root>
+
 
     <!-- 数据库日志 -->
     <logger name="Database" level="ERROR" additivity="false">
@@ -378,4 +374,11 @@
     <logger name="DebugWindows" level="ALL" additivity="true">
         <appender-ref ref="調試視窗"/>
     </logger>
+
+
+    <!-- 日志级别配置 -->
+    <root level="INFO">
+        <appender-ref ref="控制面板"/>
+        <appender-ref ref="伺服端日誌"/>
+    </root>
 </configuration>

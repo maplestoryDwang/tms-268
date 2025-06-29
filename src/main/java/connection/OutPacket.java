@@ -36,6 +36,13 @@ public class OutPacket extends Packet {
         this.op = op;
     }
 
+    public final void encodeZero(int i) {
+        for(int x = 0; x < i; ++x) {
+            this.encodeByte((byte)0);
+        }
+
+    }
+
     /**
      * Creates a new OutPacket with a given op. Immediately encodes the op.
      *

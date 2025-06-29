@@ -1,51 +1,51 @@
 package Client;
 
 public enum MapleStat {
-
-    皮膚(0x1), // short
-    臉型(0x2), // int
-    髮型(0x4), // int
-    寵物(0x8), //
-    等級(0x10), // byte
-    職業(0x20), // int
-    力量(0x40), // short
-    敏捷(0x80), // short
-    智力(0x100), // short
-    幸運(0x200), // short
-    HP(0x400), // int
-    MAXHP(0x800), // int
-    MP(0x1000), // int
-    MAXMP(0x2000), // int
-    AVAILABLEAP(0x4000), // short
-    AVAILABLESP(0x8000), // short (depends)
-    經驗(0x10000), // V.110修改為 long
-    人氣(0x20000), // int
-    楓幣(0x40000), // V.110修改為 long
-    疲勞(0x80000), //疲勞
-    領導力(0x100000), //領袖
-    洞察力(0x200000), //洞察
-    意志(0x400000), //意志
-    手藝(0x800000), //手技
-    感性(0x1000000), //感性
-    魅力(0x2000000), //魅力
+    SKIN(1L),
+    FACE(2L),
+    HAIR(4L),
+    PET_LOCKER_SN(8L),
+    LEVEL(16L),
+    JOB(32L),
+    STR(64L),
+    DEX(128L),
+    INT(256L),
+    LUK(512L),
+    HP(1024L),
+    MAX_HP(2048L),
+    MP(4096L),
+    MAX_MP(8192L),
+    AVAILABLE_AP(16384L),
+    AVAILABLE_SP(32768L),
+    EXP(65536L),
+    POPULARITY(131072L),
+    MONEY(262144L),
+    FATIGUE(524288L),
+    CHARISMA(1048576L),
+    INSIGHT(2097152L),
+    WILL(4194304L),
+    CRAFT(8388608L),
+    SENSE(16777216L),
+    CHARM(33554432L),
+    BATTLE_EXP(268435456L),
+    BATTLE_RANK(536870912L),
+    BATTLE_POINTS(1073741824L),
+    ICE_GAGE(536870912L),
+    VIRTUE(1073741824L),
+    RECOVERY_POTION_WITH_HP(67109888L),
+    RECOVERY_POTION_WITH_MP(67112960L),
+    RECOVERY_POTION_WITH_HP_MP(67113984L),
+    TEMP_EXP(4294967296L),
+    GENDER(8589934592L),
     TODAYS_TRAITS(0x4000000), //今日獲得
     TRAIT_LIMIT(0x8000000),
-    BATTLE_EXP(0x10000000),
-    BATTLE_RANK(0x20000000),
-    BATTLE_POINTS(0x40000000),
-    ICE_GAGE(0x80000000L),
-    VIRTUE(0x100000000L),
     性別(0x200000000L),
-    CHARISMA(1048576),
     PET(1572872),
-    INSIGHT(2097152),
-    WILL(4194304),
-    CRAFT(8388608),
-    SENSE(16777216),
-    CHARM(33554432),
-    RECOVERY_POTION_WITH_HP(67109888),
-    RECOVERY_POTION_WITH_MP(67112960),
     RECOVERY_POTION_WITH_HPMP(67113984);
+    ;
+
+
+
 
     private final long i;
 

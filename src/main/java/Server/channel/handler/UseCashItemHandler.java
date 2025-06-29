@@ -281,25 +281,25 @@ public class UseCashItemHandler {
                             case 64: { // 力量
                                 long toSet = playerst.getStr() + 1;
                                 playerst.setStr((short) toSet, chr);
-                                statupdate.put(MapleStat.力量, toSet);
+                                statupdate.put(MapleStat.STR, toSet);
                                 break;
                             }
                             case 128: { // 敏捷
                                 long toSet = playerst.getDex() + 1;
                                 playerst.setDex((short) toSet, chr);
-                                statupdate.put(MapleStat.敏捷, toSet);
+                                statupdate.put(MapleStat.DEX, toSet);
                                 break;
                             }
                             case 256: { // 智力
                                 long toSet = playerst.getInt() + 1;
                                 playerst.setInt((short) toSet, chr);
-                                statupdate.put(MapleStat.智力, toSet);
+                                statupdate.put(MapleStat.INT, toSet);
                                 break;
                             }
                             case 512: { // 幸運
                                 long toSet = playerst.getLuk() + 1;
                                 playerst.setLuk((short) toSet, chr);
-                                statupdate.put(MapleStat.幸運, toSet);
+                                statupdate.put(MapleStat.LUK, toSet);
                                 break;
                             }
                             case 2048: // 血
@@ -317,25 +317,25 @@ public class UseCashItemHandler {
                             case 64: { // 力量
                                 long toSet = playerst.getStr() - 1;
                                 playerst.setStr((short) toSet, chr);
-                                statupdate.put(MapleStat.力量, toSet);
+                                statupdate.put(MapleStat.STR, toSet);
                                 break;
                             }
                             case 128: { // 敏捷
                                 long toSet = playerst.getDex() - 1;
                                 playerst.setDex((short) toSet, chr);
-                                statupdate.put(MapleStat.敏捷, toSet);
+                                statupdate.put(MapleStat.DEX, toSet);
                                 break;
                             }
                             case 256: { // 智力
                                 long toSet = playerst.getInt() - 1;
                                 playerst.setInt((short) toSet, chr);
-                                statupdate.put(MapleStat.智力, toSet);
+                                statupdate.put(MapleStat.INT, toSet);
                                 break;
                             }
                             case 512: { // 幸運
                                 long toSet = playerst.getLuk() - 1;
                                 playerst.setLuk((short) toSet, chr);
-                                statupdate.put(MapleStat.幸運, toSet);
+                                statupdate.put(MapleStat.LUK, toSet);
                                 break;
                             }
                             case 2048: // 血
@@ -1184,8 +1184,8 @@ public class UseCashItemHandler {
                         Map<MapleStat, Long> statupdate = new EnumMap<MapleStat, Long>(MapleStat.class);
                         chr.setFace(ret.getLeft());
                         chr.setHair(ret.getRight());
-                        statupdate.put(MapleStat.臉型, (long) chr.getFace());
-                        statupdate.put(MapleStat.髮型, (long) chr.getHair());
+                        statupdate.put(MapleStat.FACE, (long) chr.getFace());
+                        statupdate.put(MapleStat.HAIR, (long) chr.getHair());
                         statupdate.put(MapleStat.性別, (long) chr.getGender());
                         c.announce(MaplePacketCreator.updatePlayerStats(statupdate, chr));
                         c.announce(EffectPacket.showOwnEffectUOL("Effect/BasicEff.img/TransGender", 0, 0));

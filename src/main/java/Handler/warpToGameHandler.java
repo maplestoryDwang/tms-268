@@ -31,360 +31,23 @@ import SwordieX.overseas.extraequip.ExtraEquipResult;
 import tools.*;
 import tools.data.MaplePacketLittleEndianWriter;
 
+import java.awt.*;
 import java.util.*;
+import java.util.List;
 
 import static Config.constants.skills.惡魔復仇者.血之限界;
 import static Packet.MaplePacketCreator.getWarpToMap;
 
 public class warpToGameHandler {
-
     private static MapleCharacter chr;
+
+    public warpToGameHandler() {
+    }
 
     public static MapleCharacter getChr() {
         return chr;
     }
 
-    public static void Start(MapleClient c) {
-        //DamageSkin load
-        c.getPlayer().initDamageSkinList();
-        // 73+ v267
-        c.write(Login.sendServerValues());
-        // 74+ v267
-        c.write(Login.sendServerEnvironment());
-        // 66+  v267
-        c.announce(c.getEncryptOpcodesData(ServerConstants.OpcodeEncryptionKey));
-        // 570+ v267
-        c.announce(loginExtra());
-        // 367+ v267+
-        c.announce(setNameTagHide());
-        // 1427
-        c.outPacket(OutHeader.LP_ENTER_GAME_UNK.getValue(), 0);
-        // 1442
-        c.outPacket(OutHeader.LP_ENTER_GAME_UNK_II.getValue(), 0);
-        // start load guild 205+
-        c.write(startLoadGuild(c));
-        // unk 54+
-        c.write(loginChecking(c));
-        // unk 148+
-        c.write(ChangeSkillRecordResult(c));
-        // 281+  v267
-        c.announce(linkSkillNotice(c));
-        // 658+ v267
-        c.announce(getWarpToMap(c.getPlayer(), c.getPlayer().getMap(), null, 0, true, false));
-        // 232+ v267
-        c.announce(MaplePacketCreator.changeHour(6, Calendar.getInstance().get(Calendar.HOUR_OF_DAY)));
-        // 2653+ v267 讀取記憶鍵盤位置
-        c.announce(MaplePacketCreator.getKeymap(c.getPlayer()));
-        // 2655 / 657 /2656 / 2657 - pet load
-        c.getPlayer().updatePetAuto();
-        // 823+ v267+
-        c.getPlayer().getMap().userEnterField(c.getPlayer());
-        // 189+ v267+
-        c.outPacket(OutHeader.LP_PartyResult.getValue(), (byte) 0x1C, (short) 0);
-        // 147+ v267+
-        c.outPacket(OutHeader.LP_ForcedStatReset.getValue());
-        // 726+ v267+
-        c.outPacket(OutHeader.LP_SetQuickMoveInfo.getValue(), (byte) 0);
-        // 207+ v267+
-        c.announce(MaplePacketCreator.onTownPortal(999999999, 999999999, 0, null));
-        // 541+ v267+
-        c.outPacket((short) 541, PacketHelper.getTime(System.currentTimeMillis()));
-        // 160+ v267+
-        c.outPacket(OutHeader.LP_Message.getValue(), 16907277, (byte) 0, (byte) 0, (byte) 0);
-        // 594+ v267+
-        c.outPacket((short) 594, 0);
-        // 607+ v267+
-        c.announce(infoHexa(c));
-        // 632+ v267+
-        c.announce(unkSkillLoad(c));
-        // 203+ V267+
-        c.announce(Init_Friend(c));
-        // 2744+ v267
-        c.announce(unk2744(c));
-        // todo: 萌獸未完成
-        c.write(OverseasPacket.extraEquipResult(ExtraEquipResult.initSpecialData(c.getPlayer())));
-
-        c.getPlayer().initOnlineTime();
-        c.getPlayer().giveCoolDowns(PlayerBuffStorage.getCooldownsFromStorage(c.getPlayer().getId()));
-        c.getPlayer().silentGiveBuffs(PlayerBuffStorage.getBuffsFromStorage(c.getPlayer().getId()));
-        c.getPlayer().initAllInfo();
-        c.getPlayer().setOnline(true);
-
-        //TODO :: 六轉技能相關
-        c.announce(CWvsContext.sendHexaEnforcementInfo());
-
-        //TODO :: 輪迴碑石解除使用鎖定
-        c.write(warpToGameHandler.EquipRuneSetting());
-
-        //TODO :: 惡魔復仇者 需要此buff打怪才不會是1
-        if (JobConstants.is惡魔復仇者(c.getPlayer().getJob())) {
-            c.getPlayer().getSkillEffect(血之限界).applyTo(c.getPlayer());
-        }
-
-        c.getPlayer().getScriptManager().startScript(0, "enterFieldQuest", ScriptType.Npc);
-
-        // 墨玄 解鎖招式lock
-        if (JobConstants.is墨玄(c.getPlayer().getJob())) {
-            c.announce(is墨玄招式warptogame());
-            c.announce(is墨玄招式lock(c, 110, 3000));
-        }
-
-        //天使破壞者 變身時間 -
-        if (JobConstants.is天使破壞者(c.getPlayer().getJob())) {
-            MapleQuestStatus marr1 = c.getPlayer().getQuestNAdd(MapleQuest.getInstance(29015));
-            if (marr1 != null) {
-                if (marr1.getStatus() == 0) {
-                    marr1.setStatus((byte) 1);
-                }
-            }
-        }
-
-        //神之子打開武器強化欄
-        if (JobConstants.is神之子(c.getPlayer().getJob())) {
-            MapleQuestStatus marr = c.getPlayer().getQuestNAdd(MapleQuest.getInstance(40905));
-            if ((marr != null)) {
-                if (marr.getStatus() == 0) {
-                    marr.setStatus((byte) 2);
-                }
-            }
-        }
-        if (JobConstants.is爆拳槍神(c.getPlayer().getJob())) {
-            MapleStatEffect effect = c.getPlayer().getSkillEffect(爆拳槍神.彈丸填裝);
-            if (effect != null) {
-                c.getPlayer().handleAmmoClip(8);
-                effect.applyTo(c.getPlayer());
-            }
-        }
-        if (JobConstants.is卡蒂娜(c.getPlayer().getJob())) {
-            MapleStatEffect effect = c.getPlayer().getSkillEffect(卡蒂娜.武器變換終章);
-            if (effect != null) {
-                effect.applyTo(c.getPlayer());
-            }
-        }
-        c.getPlayer().expirationTask(false);
-        /* login script */
-        c.announce(GuildPacket.sendGuildResult(MapleGuildResultOption.setGuildUnk(c.getPlayer())));
-        c.announce(GuildPacket.sendGuildResult(new MapleGuildResultOption(GuildResponseType.Res_SetSignInReward)));
-        c.announce(GuildPacket.sendGuildResult(MapleGuildResultOption.loadGuild(c.getPlayer())));
-        c.announce(GuildPacket.sendGuildResult(new MapleGuildResultOption(GuildResponseType.Res_Authkey_Update))); // TODO: 待完成 token
-        if (c.getPlayer().getGuild() != null) {
-            WorldGuildService.getInstance().setGuildMemberOnline(c.getPlayer().getMGC(), true, c.getChannel());
-            MapleGuild gs = WorldGuildService.getInstance().getGuild(c.getPlayer().getGuildId());
-            if (gs != null) {
-                List<byte[]> packetList = WorldAllianceService.getInstance().getAllianceInfo(gs.getAllianceId(), true);
-                if (packetList != null) {
-                    for (byte[] pack : packetList) {
-                        if (pack != null) {
-                            c.announce(pack);
-                        }
-                    }
-                }
-            }
-        } else { // 沒有公會和聯盟就設置為默認
-            c.getPlayer().setGuildId(0);
-            c.getPlayer().setGuildRank((byte) 5);
-            c.getPlayer().setAllianceRank((byte) 5);
-            c.getPlayer().saveGuildStatus();
-        }
-        if (c.getPlayer().getJob() == 6001 && c.getPlayer().getLevel() < 10) {
-            while (c.getPlayer().getLevel() < 10) {
-                c.getPlayer().gainExp(5000, true, false, true);
-            }
-        }
-        // 狂豹獵人
-        if (JobConstants.is狂豹獵人(c.getPlayer().getJob())) {
-            c.announce(MaplePacketCreator.updateJaguar(c.getPlayer()));
-            StringBuilder stringBuilder = new StringBuilder();
-            for (int i = 1; i <= 9; i++) {
-                stringBuilder.append(i).append("=1");
-                if (i != 9) {
-                    stringBuilder.append(";");
-                }
-            }
-            c.announce(MaplePacketCreator.updateInfoQuest(GameConstants.美洲豹管理, stringBuilder.toString()));
-        }
-        // 劍豪
-        if (JobConstants.is劍豪(c.getPlayer().getJob())) {
-            MapleStatEffect effect = c.getPlayer().getSkillEffect(劍豪.一般姿勢效果);
-            if (effect != null) {
-                effect.applyTo(c.getPlayer());
-            }
-            c.announce(MaplePacketCreator.updateHayatoPoint(0));
-        }
-        // 解決進入商城卡在線時間的問題.
-        c.getPlayer().fixOnlineTime();
-        c.getPlayer().updateWorldShareInfo(6, "enter", DateUtil.getFormatDate(new Date(), "yyyyMM"));
-        c.getPlayer().getStat().recalcLocalStats(c.getPlayer());
-
-        // 發送道具冷卻時間
-        String keyValue = c.getPlayer().getKeyValue("MapTransferItemNextTime");
-        String newKeyValue = "";
-        if (keyValue != null) {
-            final String[] split = keyValue.split(",");
-            for (String nextTime : split) {
-                if (nextTime == null || !nextTime.contains("=")) {
-                    continue;
-                }
-                final String[] split_2 = nextTime.split("=");
-                if (split_2.length < 2) {
-                    continue;
-                }
-                long nt = Long.parseLong(split_2[1]);
-                if (System.currentTimeMillis() >= nt) {
-                    continue;
-                }
-                //c.getPlayer().write(OverseasPacket.extraSystemResult(ExtraSystemResult.extraTimerSystem(Long.parseLong(split_2[0]), nt)));
-                newKeyValue += nt + ",";
-            }
-            if (newKeyValue.isEmpty()) {
-                c.getPlayer().setKeyValue("MapTransferItemNextTime", null);
-            } else {
-                c.getPlayer().setKeyValue("MapTransferItemNextTime", newKeyValue.substring(0, newKeyValue.length() - 1));
-            }
-        }
-        int mvpLevel = c.getPlayer().getMvpLevel();
-        if (mvpLevel > 0) {
-            mvpLevel = mvpLevel < 5 ? 4 : mvpLevel;
-            String gp = c.getPlayer().getWorldShareInfo(6, "gp");
-            int today = Integer.parseInt(DateUtil.getCurrentDate("dd"));
-            String now = DateUtil.getCurrentDate("yyyyMM")
-                    + (today > 20 ? "03" : today > 10 ? "02" : "01")
-                    + StringUtil.getLeftPaddedStr(String.valueOf(mvpLevel), '0', 2);
-            if (!now.equals(gp)) {
-                c.announce(MaplePacketCreator.mvpPacketTips());
-            }
-        }
-        // 重製任務 - 凌晨
-        if (c.getPlayer().getQuestStatus(7707) == 1) {
-            MapleQuest.getInstance(7707).reset(c.getPlayer());
-        }
-        //開始發送玩家送到的一些未處理的消息
-        MapleMessenger messenger = c.getPlayer().getMessenger();
-        if (messenger != null) {
-            WorldMessengerService.getInstance().silentJoinMessenger(messenger.getId(), new MapleMessengerCharacter(c.getPlayer()));
-            WorldMessengerService.getInstance().updateMessenger(messenger.getId(), c.getPlayer().getName(), c.getChannel());
-        }
-        //檢測靈魂武器
-        if (c.getPlayer().checkSoulWeapon()) {
-            c.announce(BuffPacket.giveBuff(c.getPlayer(), c.getPlayer().getSkillEffect(c.getPlayer().getSoulSkillID()), Collections.singletonMap(SecondaryStat.SoulMP, c.getPlayer().getSoulSkillID())));
-        }
-        //顯示夜光的光暗能量點數
-        if (JobConstants.is夜光(c.getPlayer().getJob())) {
-            c.announce(BuffPacket.updateLuminousGauge(5000, (byte) 3));
-        }
-        World.clearChannelChangeDataByAccountId(c.getPlayer().getAccountID());
-        //對檢測是否能進入商城的時間進行重置
-        c.getPlayer().getCheatTracker().getLastlogonTime();
-
-        // 更新禮物箱子
-        c.getPlayer().updateReward();
-
-        //c.getPlayer().updateWorldShareInfo(500606, null);
-        MapleQuest.getInstance(500606).reset(c.getPlayer());
-        // 加載斷線保存的BUFF
-        World.TemporaryStat.LoadData(c.getPlayer());
-        // 檢測極限屬性點數是否異常
-        if (SkillConstants.getHyperAP(c.getPlayer()) < 0) {
-            StatsHandling.ResetHyperAP(c, c.getPlayer(), true, -1, 0);
-        }
-    }
-
-    public static OutPacket startLoadGuild(MapleClient c) {
-        OutPacket outPacket = new OutPacket(OutHeader.LP_GuildResult);
-        outPacket.encodeInt(128);
-        outPacket.encodeInt(0);
-        c.write(startLoadGuildN(c));
-        return outPacket;
-    }
-
-    public static OutPacket startLoadGuildN(MapleClient c) {
-        OutPacket outPacket = new OutPacket(OutHeader.LP_GuildResult);
-        outPacket.encodeInt(129);
-        outPacket.encodeInt(4);
-        outPacket.encodeInt(100);
-        outPacket.encodeInt(2000);
-        outPacket.encodeInt(60);
-        outPacket.encodeInt(1000);
-        outPacket.encodeInt(30);
-        outPacket.encodeInt(100);
-        outPacket.encodeInt(15);
-        outPacket.encodeInt(50);
-        return outPacket;
-    }
-
-
-    public static OutPacket TemporaryStatSet(MapleClient c) {
-        OutPacket outPacket = new OutPacket(OutHeader.LP_TemporaryStatSet);
-        outPacket.encodeArr(new byte[70]);
-        outPacket.encodeByte(2);
-        outPacket.encodeArr(new byte[79]);
-        outPacket.encodeByte(1);
-        outPacket.encodeByte(1);
-        outPacket.encodeInt(0);
-        outPacket.encodeByte(0);
-        outPacket.encodeByte(1);
-        return outPacket;
-    }
-
-    public static OutPacket loginChecking(MapleClient c) {
-        OutPacket outPacket = new OutPacket(OutHeader.LP_LOGIN_ACTION_CHECK);
-        return outPacket;
-    }
-
-    public static OutPacket ChangeSkillRecordResult(MapleClient c) {
-        OutPacket outPacket = new OutPacket(OutHeader.LP_ChangeSkillRecordResult);
-        outPacket.encodeByte(0);
-        outPacket.encodeByte(0);
-        outPacket.encodeByte(0);
-        outPacket.encodeShort(7);
-        outPacket.encodeInt(80003525);
-        outPacket.encodeInt(0);
-        outPacket.encodeInt(0);
-        outPacket.encodeLong(150842304000000000L);
-        outPacket.encodeInt(80003524);
-        outPacket.encodeInt(0);
-        outPacket.encodeInt(0);
-        outPacket.encodeLong(150842304000000000L);
-        outPacket.encodeInt(80003521);
-        outPacket.encodeInt(0);
-        outPacket.encodeInt(0);
-        outPacket.encodeLong(150842304000000000L);
-        outPacket.encodeInt(80003520);
-        outPacket.encodeInt(0);
-        outPacket.encodeInt(0);
-        outPacket.encodeLong(150842304000000000L);
-        outPacket.encodeInt(80003518);
-        outPacket.encodeInt(3);
-        outPacket.encodeInt(0);
-        outPacket.encodeLong(150842304000000000L);
-        outPacket.encodeInt(80003517);
-        outPacket.encodeInt(3);
-        outPacket.encodeInt(0);
-        outPacket.encodeLong(150842304000000000L);
-        outPacket.encodeInt(80003516);
-        outPacket.encodeInt(3);
-        outPacket.encodeInt(0);
-        outPacket.encodeLong(150842304000000000L);
-        outPacket.encodeByte(2);
-        return outPacket;
-    }
-
-
-    public static byte[] is墨玄招式warptogame() {
-        MaplePacketLittleEndianWriter mplew = new MaplePacketLittleEndianWriter();
-        mplew.writeShort(OutHeader.EXTRA_SYSTEM_RESULT.getValue());
-        mplew.writeInt(-1289454273);
-        mplew.writeShort(36);
-        mplew.writeInt(0);
-        mplew.write(0);
-        mplew.writeInt(-468103806);
-        mplew.writeInt(0);
-        mplew.write(1);
-        mplew.writeInt(1830);
-        mplew.write(0);
-        mplew.write(220);
-        return mplew.getPacket();
-    }
 
     public static byte[] is墨玄招式lock(MapleClient c, int mode, int type) {
         MaplePacketLittleEndianWriter mplew = new MaplePacketLittleEndianWriter();
@@ -402,1016 +65,1231 @@ public class warpToGameHandler {
         return mplew.getPacket();
     }
 
+    public static void Start(MapleClient c) {
+        c.getPlayer().initDamageSkinList();
+        c.write(Login.sendServerValues());
+        c.write(Login.sendServerEnvironment());
+        c.announce(c.getEncryptOpcodesData(ServerConstants.OpcodeEncryptionKey));
+        c.write(LP_SetBackgroundEffect());
+        c.announce(setNameTagHide());
+        c.write(unk_268_1432());
+        c.write(unk_268_1447());
+        c.announce(linkSkillNotice(c));
+        c.write(loginChecking(c));
+        c.write(Enter_Field_Unk_Attach("0_18512449_20250309160605956_"));
+        c.announce(MaplePacketCreator.getWarpToMap(c.getPlayer(), c.getPlayer().getMap(), (Point)null, 0, true, false));
+        c.write(CHAT_SERVER_RESULT());
+        c.announce(MaplePacketCreator.changeHour(6, Calendar.getInstance().get(11)));
+        c.write(LOGIN_SUCC());
+        c.write(LOGIN_SUCC_ATTACH());
+        c.write(LP_SetTamingMobInfo(c));
+        c.announce(MaplePacketCreator.getKeymap(c.getPlayer()));
+        c.write(LP_LoadSkillAction(false));
+        c.getPlayer().updatePetAuto();
+        c.write(LP_SKILL_MACRO());
+        c.write(LP_SetClaimSvrAvailableTime());
+        c.announce(MaplePacketCreator.reportResponse());
+        c.announce(MaplePacketCreator.enableReport());
+        c.write(Competition());
+        c.write(LP_ToadsHammerRequestResult());
+        c.write(LP_UNK_ENTER_FIELD_458());
+        c.write(LP_UNK_ENTER_FIELD_600());
+        c.write(CHANGE_MAP_UNK());
+        if (c.getPlayer().hasEquipped(1202193)) {
+            c.write(EquipRuneSetting());
+        }
 
-    public static byte[] unk2744(MapleClient c) {
-        MaplePacketLittleEndianWriter mplew = new MaplePacketLittleEndianWriter();
-        mplew.writeShort((short) 2744);
-        mplew.writeInt(1677721600);
-        mplew.writeInt(0);
-        mplew.writeInt(0);
-        mplew.writeInt(0);
-        mplew.writeInt(0);
-        mplew.writeInt(0);
-        mplew.writeInt(0);
-        mplew.writeInt(0);
-        mplew.writeInt(0);
-        mplew.writeInt(0);
-        mplew.writeInt(0);
-        mplew.writeInt(0);
-        mplew.writeInt(0);
-        mplew.writeInt(0);
-        mplew.writeInt(0);
-        mplew.writeInt(0);
-        mplew.writeInt(0);
-        mplew.writeInt(0);
-        mplew.writeInt(0);
-        mplew.writeInt(0);
-        mplew.writeInt(0);
-        mplew.writeInt(0);
-        mplew.writeInt(0);
-        mplew.writeInt(0);
-        mplew.writeInt(0);
-        mplew.writeInt(0);
-        mplew.writeInt(0);
-        mplew.writeInt(0);
-        mplew.writeInt(0);
-        mplew.writeInt(0);
-        mplew.writeInt(0);
-        mplew.writeInt(0);
-        mplew.writeInt(0);
-        mplew.writeInt(0);
-        mplew.writeInt(0);
-        mplew.writeInt(0);
-        mplew.writeInt(0);
-        mplew.writeInt(0);
-        mplew.writeInt(0);
-        mplew.writeInt(0);
-        mplew.writeInt(0);
-        mplew.writeInt(0);
-        mplew.writeInt(0);
-        mplew.writeInt(0);
-        mplew.writeInt(0);
-        mplew.writeInt(0);
-        mplew.writeInt(0);
-        mplew.writeInt(0);
-        mplew.writeInt(0);
-        mplew.writeInt(0);
-        mplew.writeInt(0);
-        mplew.writeInt(0);
-        mplew.writeInt(0);
-        mplew.writeInt(0);
-        mplew.writeInt(0);
-        mplew.writeInt(0);
-        mplew.writeInt(0);
-        mplew.writeInt(0);
-        mplew.writeInt(0);
-        mplew.writeInt(0);
-        mplew.writeInt(0);
-        mplew.writeInt(0);
-        mplew.writeInt(0);
-        mplew.writeInt(0);
-        mplew.writeInt(0);
-        mplew.writeInt(0);
-        mplew.writeInt(0);
-        mplew.writeInt(0);
-        mplew.writeInt(0);
-        mplew.writeInt(0);
-        mplew.writeInt(0);
-        mplew.writeInt(0);
-        mplew.writeInt(0);
-        mplew.writeInt(0);
-        mplew.writeInt(0);
-        mplew.writeInt(0);
-        mplew.writeInt(0);
-        mplew.writeInt(0);
-        mplew.writeInt(0);
-        mplew.writeInt(0);
-        mplew.writeInt(0);
-        mplew.writeInt(0);
-        mplew.writeInt(0);
-        mplew.writeInt(0);
-        mplew.writeInt(0);
-        mplew.writeInt(0);
-        mplew.writeInt(0);
-        mplew.writeInt(0);
-        mplew.writeInt(0);
-        mplew.writeInt(0);
-        mplew.writeInt(0);
-        mplew.writeInt(0);
-        mplew.writeInt(0);
-        mplew.writeInt(0);
-        mplew.writeInt(0);
-        mplew.writeInt(0);
-        mplew.writeInt(0);
-        mplew.writeInt(0);
-        mplew.writeInt(0);
-        mplew.writeInt(0);
-        mplew.writeInt(0);
-        mplew.writeInt(0);
-        mplew.writeInt(0);
-        mplew.writeInt(0);
-        mplew.writeInt(0);
-        mplew.writeInt(0);
-        mplew.writeInt(0);
-        mplew.writeInt(0);
-        mplew.writeInt(0);
-        mplew.writeInt(0);
-        mplew.writeInt(0);
-        mplew.writeInt(0);
-        mplew.writeInt(0);
-        mplew.writeInt(0);
-        mplew.writeInt(0);
-        mplew.writeInt(0);
-        mplew.writeInt(0);
-        mplew.writeInt(0);
-        mplew.writeInt(0);
-        mplew.writeInt(0);
-        mplew.writeInt(0);
-        mplew.writeInt(0);
-        mplew.writeInt(0);
-        mplew.writeInt(0);
-        mplew.writeInt(0);
-        mplew.writeInt(0);
-        mplew.writeInt(0);
-        mplew.writeInt(0);
-        mplew.writeInt(0);
-        mplew.writeInt(0);
-        mplew.writeInt(0);
-        mplew.writeInt(0);
-        mplew.writeInt(0);
-        mplew.writeInt(0);
-        mplew.writeInt(0);
-        mplew.writeInt(0);
-        mplew.writeInt(0);
-        mplew.writeInt(0);
-        mplew.writeInt(0);
-        mplew.writeInt(0);
-        mplew.writeInt(0);
-        mplew.writeInt(0);
-        mplew.writeInt(0);
-        mplew.writeInt(0);
-        mplew.writeInt(0);
-        mplew.writeInt(0);
-        mplew.writeInt(0);
-        mplew.writeInt(0);
-        mplew.writeInt(0);
-        mplew.writeInt(0);
-        mplew.writeInt(0);
-        mplew.writeShort(0);
-        mplew.write(0);
-        return mplew.getPacket();
+        c.getPlayer().getMap().userEnterField(c.getPlayer());
+        c.getPlayer().initOnlineTime();
+        c.getPlayer().giveCoolDowns(PlayerBuffStorage.getCooldownsFromStorage(c.getPlayer().getId()));
+        c.getPlayer().silentGiveBuffs(PlayerBuffStorage.getBuffsFromStorage(c.getPlayer().getId()));
+        c.getPlayer().initAllInfo();
+        c.getPlayer().setOnline(true);
+        c.announce(MaplePacketCreator.onTownPortal(999999999, 999999999, 0, (Point)null));
+        c.write(LP_UserCancelChair(c));
+        c.getPlayer().send(MaplePacketCreator.temporaryStats_Reset());
+        c.write(LP_UserSitResult());
+        c.write(LP_SpecialChairSitResult());
+        c.write(LP_USER_WARP_TO_MAP(c));
+        c.write(setDeathCoountMontser());
+        c.write(NirvanaPotentialResult());
+        c.announce(CWvsContext.sendHexaEnforcementInfo());
+        DailyGiftPacket.addDailyGiftInfo(c);
+        if (JobConstants.is惡魔復仇者(c.getPlayer().getJob())) {
+            c.getPlayer().getSkillEffect(30010242).applyTo(c.getPlayer());
+        }
+
+        if (JobConstants.is墨玄(c.getPlayer().getJob())) {
+            c.announce(XuanWarpToMap());
+            c.getPlayer().setKeyValue("175101007", "5");
+        }
+
+        MapleQuestStatus marr;
+        if (JobConstants.is天使破壞者(c.getPlayer().getJob())) {
+            marr = c.getPlayer().getQuestNAdd(MapleQuest.getInstance(29015));
+            if (marr != null && marr.getStatus() == 0) {
+                marr.setStatus((byte)1);
+            }
+        }
+
+        if (JobConstants.is神之子(c.getPlayer().getJob())) {
+            marr = c.getPlayer().getQuestNAdd(MapleQuest.getInstance(40905));
+            if (marr != null && marr.getStatus() == 0) {
+                marr.setStatus((byte)2);
+            }
+        }
+
+        MapleStatEffect effect;
+        if (JobConstants.is爆拳槍神(c.getPlayer().getJob())) {
+            effect = c.getPlayer().getSkillEffect(37000010);
+            if (effect != null) {
+                c.getPlayer().handleAmmoClip(8);
+                effect.applyTo(c.getPlayer());
+            }
+        }
+
+        if (JobConstants.is卡蒂娜(c.getPlayer().getJob())) {
+            effect = c.getPlayer().getSkillEffect(400041074);
+            if (effect != null) {
+                effect.applyTo(c.getPlayer());
+            }
+        }
+
+        if (c.getPlayer().getGuild() != null) {
+            c.announce(GuildPacket.sendGuildResult(MapleGuildResultOption.setGuildUnk(c.getPlayer())));
+            c.announce(GuildPacket.sendGuildResult(new MapleGuildResultOption(GuildResponseType.Res_SetSignInReward)));
+            c.announce(GuildPacket.sendGuildResult(MapleGuildResultOption.loadGuild(c.getPlayer())));
+            c.announce(GuildPacket.sendGuildResult(new MapleGuildResultOption(GuildResponseType.Res_Authkey_Update)));
+        } else {
+            c.write(startLoadGuild(c));
+        }
+
+        if (c.getPlayer().getGuild() != null) {
+            WorldGuildService.getInstance().setGuildMemberOnline(c.getPlayer().getMGC(), true, c.getChannel());
+            MapleGuild gs = WorldGuildService.getInstance().getGuild(c.getPlayer().getGuildId());
+            if (gs != null) {
+                List<byte[]> packetList = WorldAllianceService.getInstance().getAllianceInfo(gs.getAllianceId(), true);
+                if (packetList != null) {
+                    Iterator var3 = packetList.iterator();
+
+                    while(var3.hasNext()) {
+                        byte[] pack = (byte[])var3.next();
+                        if (pack != null) {
+                            c.announce(pack);
+                        }
+                    }
+                }
+            }
+        } else {
+            c.getPlayer().setGuildId(0);
+            c.getPlayer().setGuildRank((byte)5);
+            c.getPlayer().setAllianceRank((byte)5);
+            c.getPlayer().saveGuildStatus();
+        }
+
+        if (c.getPlayer().getJob() == 6001 && c.getPlayer().getLevel() < 10) {
+            while(c.getPlayer().getLevel() < 10) {
+                c.getPlayer().gainExp(5000L, true, false, true);
+            }
+        }
+
+        if (JobConstants.is狂豹獵人(c.getPlayer().getJob())) {
+            c.announce(MaplePacketCreator.updateJaguar(c.getPlayer()));
+            StringBuilder stringBuilder = new StringBuilder();
+
+            for(int i = 1; i <= 9; ++i) {
+                stringBuilder.append(i).append("=1");
+                if (i != 9) {
+                    stringBuilder.append(";");
+                }
+            }
+
+            c.announce(MaplePacketCreator.updateInfoQuest(23008, stringBuilder.toString()));
+        }
+
+        if (JobConstants.is劍豪(c.getPlayer().getJob())) {
+            effect = c.getPlayer().getSkillEffect(40011291);
+            if (effect != null) {
+                effect.applyTo(c.getPlayer());
+            }
+
+            c.announce(MaplePacketCreator.updateHayatoPoint(0));
+        }
+
+        c.getPlayer().fixOnlineTime();
+        c.getPlayer().updateWorldShareInfo(6, "enter", DateUtil.getFormatDate(new Date(), "yyyyMM"));
+        c.getPlayer().getStat().recalcLocalStats(c.getPlayer());
+        String keyValue = c.getPlayer().getKeyValue("MapTransferItemNextTime");
+        String newKeyValue = "";
+        int today;
+        if (keyValue != null) {
+            String[] split = keyValue.split(",");
+            String[] var19 = split;
+            today = split.length;
+
+            for(int var6 = 0; var6 < today; ++var6) {
+                String nextTime = var19[var6];
+                if (nextTime != null && nextTime.contains("=")) {
+                    String[] split_2 = nextTime.split("=");
+                    if (split_2.length >= 2) {
+                        long nt = Long.parseLong(split_2[1]);
+                        if (System.currentTimeMillis() < nt) {
+                            newKeyValue = newKeyValue + nt + ",";
+                        }
+                    }
+                }
+            }
+
+            if (newKeyValue.isEmpty()) {
+                c.getPlayer().setKeyValue("MapTransferItemNextTime", (String)null);
+            } else {
+                c.getPlayer().setKeyValue("MapTransferItemNextTime", newKeyValue.substring(0, newKeyValue.length() - 1));
+            }
+        }
+
+        int mvpLevel = c.getPlayer().getMvpLevel();
+        if (mvpLevel > 0) {
+            mvpLevel = mvpLevel < 5 ? 4 : mvpLevel;
+            String gp = c.getPlayer().getWorldShareInfo(6, "gp");
+            today = Integer.parseInt(DateUtil.getCurrentDate("dd"));
+            String var10000 = DateUtil.getCurrentDate("yyyyMM");
+            String now = var10000 + (today > 20 ? "03" : (today > 10 ? "02" : "01")) + StringUtil.getLeftPaddedStr(String.valueOf(mvpLevel), '0', 2);
+            if (!now.equals(gp)) {
+                c.announce(MaplePacketCreator.mvpPacketTips());
+            }
+        }
+
+        if (c.getPlayer().getQuestStatus(7707) == 1) {
+            MapleQuest.getInstance(7707).reset(c.getPlayer());
+        }
+
+        MapleMessenger messenger = c.getPlayer().getMessenger();
+        if (messenger != null) {
+            WorldMessengerService.getInstance().silentJoinMessenger(messenger.getId(), new MapleMessengerCharacter(c.getPlayer()));
+            WorldMessengerService.getInstance().updateMessenger(messenger.getId(), c.getPlayer().getName(), c.getChannel());
+        }
+
+        c.announce(MaplePacketCreator.getMacros(c.getPlayer().getSkillMacros()));
+        c.announce(MaplePacketCreator.showCharCash(c.getPlayer()));
+        if (!c.getPlayer().getTempStatsToRemove().isEmpty()) {
+            c.announce(BuffPacket.temporaryStatReset(c.getPlayer().getTempStatsToRemove(), c.getPlayer()));
+            c.getPlayer().getTempStatsToRemove().clear();
+        }
+
+        c.getPlayer().expirationTask(true);
+        if (c.getPlayer().checkSoulWeapon()) {
+            c.announce(BuffPacket.giveBuff(c.getPlayer(), c.getPlayer().getSkillEffect(c.getPlayer().getSoulSkillID()), Collections.singletonMap(SecondaryStat.SoulMP, c.getPlayer().getSoulSkillID())));
+        }
+
+        if (JobConstants.is夜光(c.getPlayer().getJob())) {
+            c.announce(BuffPacket.updateLuminousGauge(5000, 3));
+        }
+
+        World.clearChannelChangeDataByAccountId(c.getPlayer().getAccountID());
+        c.getPlayer().getCheatTracker().getLastlogonTime();
+        c.getPlayer().updateReward();
+        c.getPlayer().updateWorldShareInfo(500606, (String)null);
+        MapleQuest.getInstance(500606).reset(c.getPlayer());
+        World.TemporaryStat.LoadData(c.getPlayer());
+        if (SkillConstants.getHyperAP(c.getPlayer()) < 0) {
+            StatsHandling.ResetHyperAP(c, c.getPlayer(), true, -1, 0);
+        }
+
+        c.getPlayer().getScriptManager().startScript(0, "enterFieldQuest", ScriptType.Npc);
     }
 
-    public static byte[] Init_Friend(MapleClient c) {
-        MaplePacketLittleEndianWriter mplew = new MaplePacketLittleEndianWriter();
-        mplew.writeShort(OutHeader.LP_FriendResult.getValue());
-        mplew.writeInt(39);
-        mplew.write(0);
-        return mplew.getPacket();
-    }
-
-    public static byte[] unkSkillLoad(MapleClient c) {
-        MaplePacketLittleEndianWriter mplew = new MaplePacketLittleEndianWriter();
-        mplew.writeShort((short) 632);
-        mplew.writeInt(-300);
-        mplew.writeInt(-370);
-        mplew.writeInt(300);
-        mplew.writeInt(220);
-        mplew.writeInt(-300);
-        mplew.writeInt(-405);
-        mplew.writeInt(300);
-        mplew.writeInt(290);
-        mplew.writeInt(17);
-        mplew.writeInt(80000537);
-        mplew.writeInt(80000619);
-        mplew.writeInt(80000645);
-        mplew.writeInt(80000678);
-        mplew.writeInt(80000735);
-        mplew.writeInt(80000775);
-        mplew.writeInt(80000808);
-        mplew.writeInt(80000842);
-        mplew.writeInt(80000845);
-        mplew.writeInt(80000848);
-        mplew.writeInt(80000851);
-        mplew.writeInt(80000854);
-        mplew.writeInt(80010168);
-        mplew.writeInt(80010224);
-        mplew.writeInt(80010288);
-        mplew.writeInt(80010317);
-        mplew.writeInt(80011996);
-        return mplew.getPacket();
-    }
-
-    public static byte[] infoHexa(MapleClient c) {
-        MaplePacketLittleEndianWriter mplew = new MaplePacketLittleEndianWriter();
-        mplew.writeShort(OutHeader.LP_HEXA_SKILL_INFO.getValue());
-        mplew.writeInt(60);
-        mplew.writeInt(10100);
-        mplew.writeInt(2500);
-        mplew.writeInt(1);
-        mplew.writeInt(10200);
-        mplew.writeInt(2550);
-        mplew.writeInt(2);
-        mplew.writeInt(10300);
-        mplew.writeInt(2600);
-        mplew.writeInt(3);
-        mplew.writeInt(10400);
-        mplew.writeInt(2650);
-        mplew.writeInt(4);
-        mplew.writeInt(10500);
-        mplew.writeInt(2700);
-        mplew.writeInt(6);
-        mplew.writeInt(10600);
-        mplew.writeInt(2750);
-        mplew.writeInt(7);
-        mplew.writeInt(10700);
-        mplew.writeInt(2800);
-        mplew.writeInt(8);
-        mplew.writeInt(10800);
-        mplew.writeInt(2850);
-        mplew.writeInt(9);
-        mplew.writeInt(10900);
-        mplew.writeInt(2900);
-        mplew.writeInt(10);
-        mplew.writeInt(11000);
-        mplew.writeInt(2950);
-        mplew.writeInt(12);
-        mplew.writeInt(11100);
-        mplew.writeInt(3000);
-        mplew.writeInt(13);
-        mplew.writeInt(11200);
-        mplew.writeInt(3050);
-        mplew.writeInt(14);
-        mplew.writeInt(11300);
-        mplew.writeInt(3100);
-        mplew.writeInt(15);
-        mplew.writeInt(11400);
-        mplew.writeInt(3150);
-        mplew.writeInt(16);
-        mplew.writeInt(11500);
-        mplew.writeInt(3200);
-        mplew.writeInt(18);
-        mplew.writeInt(11600);
-        mplew.writeInt(3250);
-        mplew.writeInt(19);
-        mplew.writeInt(11700);
-        mplew.writeInt(3300);
-        mplew.writeInt(20);
-        mplew.writeInt(11800);
-        mplew.writeInt(3350);
-        mplew.writeInt(21);
-        mplew.writeInt(11900);
-        mplew.writeInt(3400);
-        mplew.writeInt(22);
-        mplew.writeInt(12000);
-        mplew.writeInt(3450);
-        mplew.writeInt(24);
-        mplew.writeInt(12100);
-        mplew.writeInt(3500);
-        mplew.writeInt(25);
-        mplew.writeInt(12200);
-        mplew.writeInt(3550);
-        mplew.writeInt(26);
-        mplew.writeInt(12300);
-        mplew.writeInt(3600);
-        mplew.writeInt(27);
-        mplew.writeInt(12400);
-        mplew.writeInt(3700);
-        mplew.writeInt(28);
-        mplew.writeInt(12500);
-        mplew.writeInt(3800);
-        mplew.writeInt(30);
-        mplew.writeInt(12600);
-        mplew.writeInt(3900);
-        mplew.writeInt(31);
-        mplew.writeInt(12700);
-        mplew.writeInt(4000);
-        mplew.writeInt(32);
-        mplew.writeInt(12800);
-        mplew.writeInt(4500);
-        mplew.writeInt(33);
-        mplew.writeInt(12900);
-        mplew.writeInt(5000);
-        mplew.writeInt(34);
-        mplew.writeInt(13000);
-        mplew.writeInt(5500);
-        mplew.writeInt(36);
-        mplew.writeInt(13200);
-        mplew.writeInt(6000);
-        mplew.writeInt(37);
-        mplew.writeInt(13400);
-        mplew.writeInt(6500);
-        mplew.writeInt(38);
-        mplew.writeInt(13600);
-        mplew.writeInt(7000);
-        mplew.writeInt(39);
-        mplew.writeInt(13800);
-        mplew.writeInt(7500);
-        mplew.writeInt(40);
-        mplew.writeInt(14000);
-        mplew.writeInt(8000);
-        mplew.writeInt(42);
-        mplew.writeInt(14200);
-        mplew.writeInt(8500);
-        mplew.writeInt(43);
-        mplew.writeInt(14400);
-        mplew.writeInt(9000);
-        mplew.writeInt(44);
-        mplew.writeInt(14600);
-        mplew.writeInt(9500);
-        mplew.writeInt(45);
-        mplew.writeInt(14800);
-        mplew.writeInt(10000);
-        mplew.writeInt(46);
-        mplew.writeInt(15000);
-        mplew.writeInt(12000);
-        mplew.writeInt(48);
-        mplew.writeInt(15200);
-        mplew.writeInt(14000);
-        mplew.writeInt(49);
-        mplew.writeInt(15400);
-        mplew.writeInt(16000);
-        mplew.writeInt(50);
-        mplew.writeInt(15600);
-        mplew.writeInt(18000);
-        mplew.writeInt(51);
-        mplew.writeInt(15800);
-        mplew.writeInt(20000);
-        mplew.writeInt(52);
-        mplew.writeInt(16000);
-        mplew.writeInt(22000);
-        mplew.writeInt(54);
-        mplew.writeInt(16200);
-        mplew.writeInt(24000);
-        mplew.writeInt(55);
-        mplew.writeInt(16400);
-        mplew.writeInt(26000);
-        mplew.writeInt(56);
-        mplew.writeInt(16600);
-        mplew.writeInt(28000);
-        mplew.writeInt(57);
-        mplew.writeInt(16800);
-        mplew.writeInt(30000);
-        mplew.writeInt(58);
-        mplew.writeInt(17000);
-        mplew.writeInt(50000);
-        mplew.writeInt(60);
-        mplew.writeInt(17300);
-        mplew.writeInt(55000);
-        mplew.writeInt(61);
-        mplew.writeInt(17600);
-        mplew.writeInt(60000);
-        mplew.writeInt(62);
-        mplew.writeInt(17900);
-        mplew.writeInt(65000);
-        mplew.writeInt(63);
-        mplew.writeInt(18200);
-        mplew.writeInt(70000);
-        mplew.writeInt(64);
-        mplew.writeInt(18500);
-        mplew.writeInt(100000);
-        mplew.writeInt(66);
-        mplew.writeInt(18800);
-        mplew.writeInt(110000);
-        mplew.writeInt(67);
-        mplew.writeInt(19100);
-        mplew.writeInt(120000);
-        mplew.writeInt(68);
-        mplew.writeInt(19400);
-        mplew.writeInt(130000);
-        mplew.writeInt(69);
-        mplew.writeInt(19700);
-        mplew.writeInt(200000);
-        mplew.writeInt(70);
-        mplew.writeInt(20000);
-        mplew.writeInt(0);
-        mplew.writeInt(72);
-        return mplew.getPacket();
-    }
-
-    public static byte[] ClearKillCount(MapleClient c) {
-        MaplePacketLittleEndianWriter mplew = new MaplePacketLittleEndianWriter();
-        mplew.writeShort(OutHeader.ENFORCE_MSG.getValue());
-        mplew.writeMapleAsciiString("kill_count");
-        mplew.writeMapleAsciiString("0");
-        return mplew.getPacket();
-    }
-
-    public static byte[] unk_761(MapleClient c) {
-        MaplePacketLittleEndianWriter mplew = new MaplePacketLittleEndianWriter();
-        mplew.writeShort((short) 761);
-        mplew.writeInt(0);
-        mplew.writeInt(0);
-        mplew.writeInt(0);
-        mplew.writeInt(0);
-        mplew.writeInt(0);
-        mplew.writeInt(0);
-        mplew.writeInt(0);
-        mplew.writeShort(0);
-        mplew.writeInt(16368);
-        mplew.write(0);
-        return mplew.getPacket();
-    }
-
-    public static byte[] unk_763(MapleClient c) {
-        MaplePacketLittleEndianWriter mplew = new MaplePacketLittleEndianWriter();
-        mplew.writeShort((short) 763);
-        mplew.write(0);
-        return mplew.getPacket();
-    }
-
-    public static byte[] unk_764(MapleClient c, byte code, int code2) {
-        MaplePacketLittleEndianWriter mplew = new MaplePacketLittleEndianWriter();
-        mplew.writeShort((short) 764);
-        mplew.write(code);
-        mplew.writeInt(code2);
-        return mplew.getPacket();
-    }
-
-    public static byte[] unk_765(MapleClient c, byte code) {
-        MaplePacketLittleEndianWriter mplew = new MaplePacketLittleEndianWriter();
-        mplew.writeShort((short) 765);
-        mplew.write(code);
-        mplew.writeInt(0);
-        return mplew.getPacket();
-    }
-
-    public static byte[] unk_932(MapleClient c) {
-        MaplePacketLittleEndianWriter mplew = new MaplePacketLittleEndianWriter();
-        mplew.writeShort((short) 932);
-        mplew.writeInt(c.getPlayer().getId());
-        mplew.writeInt(0);
-        mplew.writeInt(0);
-        return mplew.getPacket();
-    }
-
-    public static byte[] unk_781(MapleClient c) {
-        MaplePacketLittleEndianWriter mplew = new MaplePacketLittleEndianWriter();
-        mplew.writeShort((short) 781);
-        mplew.writeInt(c.getPlayer().getId());
-        mplew.write(1);
-        mplew.write(1);
-        mplew.writeInt(0);
-        return mplew.getPacket();
-    }
-
-    public static byte[] unk_600(MapleClient c) {
-        MaplePacketLittleEndianWriter mplew = new MaplePacketLittleEndianWriter();
-        mplew.writeShort(OutHeader.NirvanaPotentialResult.getValue());
-        mplew.writeInt(-442901696);
-        return mplew.getPacket();
-    }
-
-    public static byte[] _nickSkillEXP(MapleClient c) {
-        MaplePacketLittleEndianWriter mplew = new MaplePacketLittleEndianWriter();
-        mplew.writeShort(OutHeader.NickSkillExpired.getValue());
-        mplew.writeInt(3);
-        mplew.writeInt(1116274179);
-        return mplew.getPacket();
-    }
-
-    public static byte[] updateCore(MapleClient c) {
-        MaplePacketLittleEndianWriter mplew = new MaplePacketLittleEndianWriter();
-        mplew.writeShort(OutHeader.UPDATE_CORE_AURA.getValue());
-        mplew.writeInt(491);
-        mplew.writeInt(1682029);
-        mplew.writeInt(1682037);
-        mplew.writeInt(1682045);
-        mplew.writeInt(1680110);
-        mplew.writeInt(1680134);
-        mplew.writeInt(1680118);
-        mplew.writeInt(1680142);
-        mplew.writeInt(1680166);
-        mplew.writeInt(1680126);
-        mplew.writeInt(1680150);
-        mplew.writeInt(1680174);
-        mplew.writeInt(1680198);
-        mplew.writeInt(1680158);
-        mplew.writeInt(1680182);
-        mplew.writeInt(1680206);
-        mplew.writeInt(1680230);
-        mplew.writeInt(1680190);
-        mplew.writeInt(1680214);
-        mplew.writeInt(1680238);
-        mplew.writeInt(1680262);
-        mplew.writeInt(1680222);
-        mplew.writeInt(1680246);
-        mplew.writeInt(1680270);
-        mplew.writeInt(1680294);
-        mplew.writeInt(1680254);
-        mplew.writeInt(1680278);
-        mplew.writeInt(1680286);
-        mplew.writeInt(1680358);
-        mplew.writeInt(1680366);
-        mplew.writeInt(1680390);
-        mplew.writeInt(1680350);
-        mplew.writeInt(1680374);
-        mplew.writeInt(1680398);
-        mplew.writeInt(1680422);
-        mplew.writeInt(1680382);
-        mplew.writeInt(1680406);
-        mplew.writeInt(1680430);
-        mplew.writeInt(1680454);
-        mplew.writeInt(1680414);
-        mplew.writeInt(1680438);
-        mplew.writeInt(1680462);
-        mplew.writeInt(1680486);
-        mplew.writeInt(1680446);
-        mplew.writeInt(1680470);
-        mplew.writeInt(1680518);
-        mplew.writeInt(1680478);
-        mplew.writeInt(1680526);
-        mplew.writeInt(1680550);
-        mplew.writeInt(1680582);
-        mplew.writeInt(1680510);
-        mplew.writeInt(1680534);
-        mplew.writeInt(1680558);
-        mplew.writeInt(1680614);
-        mplew.writeInt(1680590);
-        mplew.writeInt(1680542);
-        mplew.writeInt(1680566);
-        mplew.writeInt(1680622);
-        mplew.writeInt(1680598);
-        mplew.writeInt(1680574);
-        mplew.writeInt(1680630);
-        mplew.writeInt(1680606);
-        mplew.writeInt(1680638);
-        mplew.writeInt(1682030);
-        mplew.writeInt(1682038);
-        mplew.writeInt(1682046);
-        mplew.writeInt(1680111);
-        mplew.writeInt(1680135);
-        mplew.writeInt(1680119);
-        mplew.writeInt(1680143);
-        mplew.writeInt(1680167);
-        mplew.writeInt(1680127);
-        mplew.writeInt(1680151);
-        mplew.writeInt(1680175);
-        mplew.writeInt(1680199);
-        mplew.writeInt(1680159);
-        mplew.writeInt(1680183);
-        mplew.writeInt(1680207);
-        mplew.writeInt(1680231);
-        mplew.writeInt(1680191);
-        mplew.writeInt(1680215);
-        mplew.writeInt(1680239);
-        mplew.writeInt(1680263);
-        mplew.writeInt(1680223);
-        mplew.writeInt(1680247);
-        mplew.writeInt(1680271);
-        mplew.writeInt(1680295);
-        mplew.writeInt(1680255);
-        mplew.writeInt(1680279);
-        mplew.writeInt(1680287);
-        mplew.writeInt(1680359);
-        mplew.writeInt(1680367);
-        mplew.writeInt(1680391);
-        mplew.writeInt(1680351);
-        mplew.writeInt(1680375);
-        mplew.writeInt(1680399);
-        mplew.writeInt(1680423);
-        mplew.writeInt(1680383);
-        mplew.writeInt(1680407);
-        mplew.writeInt(1680431);
-        mplew.writeInt(1680455);
-        mplew.writeInt(1680415);
-        mplew.writeInt(1680439);
-        mplew.writeInt(1680463);
-        mplew.writeInt(1680487);
-        mplew.writeInt(1680447);
-        mplew.writeInt(1680471);
-        mplew.writeInt(1680519);
-        mplew.writeInt(1680479);
-        mplew.writeInt(1680503);
-        mplew.writeInt(1680527);
-        mplew.writeInt(1680551);
-        mplew.writeInt(1680583);
-        mplew.writeInt(1680511);
-        mplew.writeInt(1680535);
-        mplew.writeInt(1680559);
-        mplew.writeInt(1680615);
-        mplew.writeInt(1680591);
-        mplew.writeInt(1680543);
-        mplew.writeInt(1680567);
-        mplew.writeInt(1680623);
-        mplew.writeInt(1680575);
-        mplew.writeInt(1680631);
-        mplew.writeInt(1680607);
-        mplew.writeInt(1682031);
-        mplew.writeInt(1682039);
-        mplew.writeInt(1682047);
-        mplew.writeInt(1680128);
-        mplew.writeInt(1680112);
-        mplew.writeInt(1680136);
-        mplew.writeInt(1680160);
-        mplew.writeInt(1680120);
-        mplew.writeInt(1680144);
-        mplew.writeInt(1680168);
-        mplew.writeInt(1680192);
-        mplew.writeInt(1680152);
-        mplew.writeInt(1680176);
-        mplew.writeInt(1680200);
-        mplew.writeInt(1680224);
-        mplew.writeInt(1680184);
-        mplew.writeInt(1680208);
-        mplew.writeInt(1680232);
-        mplew.writeInt(1680256);
-        mplew.writeInt(1680216);
-        mplew.writeInt(1680240);
-        mplew.writeInt(1680264);
-        mplew.writeInt(1680288);
-        mplew.writeInt(1680248);
-        mplew.writeInt(1680272);
-        mplew.writeInt(1680296);
-        mplew.writeInt(1680280);
-        mplew.writeInt(1680352);
-        mplew.writeInt(1680360);
-        mplew.writeInt(1680384);
-        mplew.writeInt(1680368);
-        mplew.writeInt(1680392);
-        mplew.writeInt(1680416);
-        mplew.writeInt(1680376);
-        mplew.writeInt(1680400);
-        mplew.writeInt(1680424);
-        mplew.writeInt(1680448);
-        mplew.writeInt(1680408);
-        mplew.writeInt(1680432);
-        mplew.writeInt(1680456);
-        mplew.writeInt(1680480);
-        mplew.writeInt(1680440);
-        mplew.writeInt(1680464);
-        mplew.writeInt(1680488);
-        mplew.writeInt(1680512);
-        mplew.writeInt(1680472);
-        mplew.writeInt(1680520);
-        mplew.writeInt(1680544);
-        mplew.writeInt(1680576);
-        mplew.writeInt(1680504);
-        mplew.writeInt(1680528);
-        mplew.writeInt(1680552);
-        mplew.writeInt(1680608);
-        mplew.writeInt(1680584);
-        mplew.writeInt(1680536);
-        mplew.writeInt(1680560);
-        mplew.writeInt(1680616);
-        mplew.writeInt(1680592);
-        mplew.writeInt(1680568);
-        mplew.writeInt(1680624);
-        mplew.writeInt(1680632);
-        mplew.writeInt(1682048);
-        mplew.writeInt(1682032);
-        mplew.writeInt(1682040);
-        mplew.writeInt(1680129);
-        mplew.writeInt(1680113);
-        mplew.writeInt(1680137);
-        mplew.writeInt(1680161);
-        mplew.writeInt(1680121);
-        mplew.writeInt(1680145);
-        mplew.writeInt(1680193);
-        mplew.writeInt(1680153);
-        mplew.writeInt(1680177);
-        mplew.writeInt(1680201);
-        mplew.writeInt(1680225);
-        mplew.writeInt(1680185);
-        mplew.writeInt(1680209);
-        mplew.writeInt(1680233);
-        mplew.writeInt(1680257);
-        mplew.writeInt(1680217);
-        mplew.writeInt(1680241);
-        mplew.writeInt(1680265);
-        mplew.writeInt(1680289);
-        mplew.writeInt(1680249);
-        mplew.writeInt(1680273);
-        mplew.writeInt(1680297);
-        mplew.writeInt(1680281);
-        mplew.writeInt(1680353);
-        mplew.writeInt(1680361);
-        mplew.writeInt(1680385);
-        mplew.writeInt(1680369);
-        mplew.writeInt(1680393);
-        mplew.writeInt(1680417);
-        mplew.writeInt(1680377);
-        mplew.writeInt(1680401);
-        mplew.writeInt(1680425);
-        mplew.writeInt(1680449);
-        mplew.writeInt(1680409);
-        mplew.writeInt(1680433);
-        mplew.writeInt(1680457);
-        mplew.writeInt(1680481);
-        mplew.writeInt(1680441);
-        mplew.writeInt(1680465);
-        mplew.writeInt(1680489);
-        mplew.writeInt(1680513);
-        mplew.writeInt(1680473);
-        mplew.writeInt(1680521);
-        mplew.writeInt(1680545);
-        mplew.writeInt(1680577);
-        mplew.writeInt(1680505);
-        mplew.writeInt(1680529);
-        mplew.writeInt(1680553);
-        mplew.writeInt(1680609);
-        mplew.writeInt(1680585);
-        mplew.writeInt(1680537);
-        mplew.writeInt(1680561);
-        mplew.writeInt(1680617);
-        mplew.writeInt(1680593);
-        mplew.writeInt(1680569);
-        mplew.writeInt(1680625);
-        mplew.writeInt(1680633);
-        mplew.writeInt(1682049);
-        mplew.writeInt(1682033);
-        mplew.writeInt(1682041);
-        mplew.writeInt(1680130);
-        mplew.writeInt(1680114);
-        mplew.writeInt(1680138);
-        mplew.writeInt(1680162);
-        mplew.writeInt(1680122);
-        mplew.writeInt(1680146);
-        mplew.writeInt(1680170);
-        mplew.writeInt(1680194);
-        mplew.writeInt(1680154);
-        mplew.writeInt(1680178);
-        mplew.writeInt(1680202);
-        mplew.writeInt(1680226);
-        mplew.writeInt(1680186);
-        mplew.writeInt(1680210);
-        mplew.writeInt(1680234);
-        mplew.writeInt(1680258);
-        mplew.writeInt(1680218);
-        mplew.writeInt(1680242);
-        mplew.writeInt(1680266);
-        mplew.writeInt(1680290);
-        mplew.writeInt(1680250);
-        mplew.writeInt(1680274);
-        mplew.writeInt(1680298);
-        mplew.writeInt(1680282);
-        mplew.writeInt(1680354);
-        mplew.writeInt(1680362);
-        mplew.writeInt(1680386);
-        mplew.writeInt(1680370);
-        mplew.writeInt(1680394);
-        mplew.writeInt(1680418);
-        mplew.writeInt(1680378);
-        mplew.writeInt(1680402);
-        mplew.writeInt(1680426);
-        mplew.writeInt(1680450);
-        mplew.writeInt(1680410);
-        mplew.writeInt(1680434);
-        mplew.writeInt(1680458);
-        mplew.writeInt(1680482);
-        mplew.writeInt(1680442);
-        mplew.writeInt(1680466);
-        mplew.writeInt(1680490);
-        mplew.writeInt(1680514);
-        mplew.writeInt(1680474);
-        mplew.writeInt(1680522);
-        mplew.writeInt(1680546);
-        mplew.writeInt(1680578);
-        mplew.writeInt(1680506);
-        mplew.writeInt(1680530);
-        mplew.writeInt(1680554);
-        mplew.writeInt(1680610);
-        mplew.writeInt(1680586);
-        mplew.writeInt(1680538);
-        mplew.writeInt(1680562);
-        mplew.writeInt(1680618);
-        mplew.writeInt(1680594);
-        mplew.writeInt(1680570);
-        mplew.writeInt(1680626);
-        mplew.writeInt(1680634);
-        mplew.writeInt(1682050);
-        mplew.writeInt(1682034);
-        mplew.writeInt(1682042);
-        mplew.writeInt(1680107);
-        mplew.writeInt(1680131);
-        mplew.writeInt(1680115);
-        mplew.writeInt(1680139);
-        mplew.writeInt(1680163);
-        mplew.writeInt(1680123);
-        mplew.writeInt(1680147);
-        mplew.writeInt(1680171);
-        mplew.writeInt(1680195);
-        mplew.writeInt(1680155);
-        mplew.writeInt(1680179);
-        mplew.writeInt(1680203);
-        mplew.writeInt(1680227);
-        mplew.writeInt(1680187);
-        mplew.writeInt(1680211);
-        mplew.writeInt(1680235);
-        mplew.writeInt(1680259);
-        mplew.writeInt(1680219);
-        mplew.writeInt(1680243);
-        mplew.writeInt(1680267);
-        mplew.writeInt(1680291);
-        mplew.writeInt(1680251);
-        mplew.writeInt(1680275);
-        mplew.writeInt(1680283);
-        mplew.writeInt(1680355);
-        mplew.writeInt(1680363);
-        mplew.writeInt(1680387);
-        mplew.writeInt(1680347);
-        mplew.writeInt(1680371);
-        mplew.writeInt(1680395);
-        mplew.writeInt(1680419);
-        mplew.writeInt(1680379);
-        mplew.writeInt(1680403);
-        mplew.writeInt(1680427);
-        mplew.writeInt(1680451);
-        mplew.writeInt(1680411);
-        mplew.writeInt(1680435);
-        mplew.writeInt(1680459);
-        mplew.writeInt(1680483);
-        mplew.writeInt(1680443);
-        mplew.writeInt(1680467);
-        mplew.writeInt(1680515);
-        mplew.writeInt(1680475);
-        mplew.writeInt(1680523);
-        mplew.writeInt(1680547);
-        mplew.writeInt(1680579);
-        mplew.writeInt(1680507);
-        mplew.writeInt(1680531);
-        mplew.writeInt(1680555);
-        mplew.writeInt(1680611);
-        mplew.writeInt(1680587);
-        mplew.writeInt(1680539);
-        mplew.writeInt(1680563);
-        mplew.writeInt(1680619);
-        mplew.writeInt(1680595);
-        mplew.writeInt(1680571);
-        mplew.writeInt(1680627);
-        mplew.writeInt(1680603);
-        mplew.writeInt(1680635);
-        mplew.writeInt(1682027);
-        mplew.writeInt(1682035);
-        mplew.writeInt(1682043);
-        mplew.writeInt(1680108);
-        mplew.writeInt(1680132);
-        mplew.writeInt(1680116);
-        mplew.writeInt(1680140);
-        mplew.writeInt(1680164);
-        mplew.writeInt(1680124);
-        mplew.writeInt(1680148);
-        mplew.writeInt(1680172);
-        mplew.writeInt(1680196);
-        mplew.writeInt(1680156);
-        mplew.writeInt(1680180);
-        mplew.writeInt(1680204);
-        mplew.writeInt(1680228);
-        mplew.writeInt(1680188);
-        mplew.writeInt(1680212);
-        mplew.writeInt(1680236);
-        mplew.writeInt(1680260);
-        mplew.writeInt(1680220);
-        mplew.writeInt(1680244);
-        mplew.writeInt(1680268);
-        mplew.writeInt(1680292);
-        mplew.writeInt(1680252);
-        mplew.writeInt(1680276);
-        mplew.writeInt(1680284);
-        mplew.writeInt(1680356);
-        mplew.writeInt(1680364);
-        mplew.writeInt(1680388);
-        mplew.writeInt(1680348);
-        mplew.writeInt(1680372);
-        mplew.writeInt(1680396);
-        mplew.writeInt(1680420);
-        mplew.writeInt(1680380);
-        mplew.writeInt(1680404);
-        mplew.writeInt(1680428);
-        mplew.writeInt(1680452);
-        mplew.writeInt(1680412);
-        mplew.writeInt(1680436);
-        mplew.writeInt(1680460);
-        mplew.writeInt(1680484);
-        mplew.writeInt(1680444);
-        mplew.writeInt(1680468);
-        mplew.writeInt(1680516);
-        mplew.writeInt(1680476);
-        mplew.writeInt(1680524);
-        mplew.writeInt(1680548);
-        mplew.writeInt(1680580);
-        mplew.writeInt(1680508);
-        mplew.writeInt(1680532);
-        mplew.writeInt(1680556);
-        mplew.writeInt(1680612);
-        mplew.writeInt(1680588);
-        mplew.writeInt(1680540);
-        mplew.writeInt(1680564);
-        mplew.writeInt(1680620);
-        mplew.writeInt(1680596);
-        mplew.writeInt(1680572);
-        mplew.writeInt(1680628);
-        mplew.writeInt(1680604);
-        mplew.writeInt(1680636);
-        mplew.writeInt(1682028);
-        mplew.writeInt(1682036);
-        mplew.writeInt(1682044);
-        mplew.writeInt(1680109);
-        mplew.writeInt(1680133);
-        mplew.writeInt(1680117);
-        mplew.writeInt(1680141);
-        mplew.writeInt(1680165);
-        mplew.writeInt(1680125);
-        mplew.writeInt(1680149);
-        mplew.writeInt(1680173);
-        mplew.writeInt(1680197);
-        mplew.writeInt(1680157);
-        mplew.writeInt(1680181);
-        mplew.writeInt(1680205);
-        mplew.writeInt(1680229);
-        mplew.writeInt(1680189);
-        mplew.writeInt(1680213);
-        mplew.writeInt(1680237);
-        mplew.writeInt(1680261);
-        mplew.writeInt(1680221);
-        mplew.writeInt(1680245);
-        mplew.writeInt(1680269);
-        mplew.writeInt(1680293);
-        mplew.writeInt(1680253);
-        mplew.writeInt(1680277);
-        mplew.writeInt(1680285);
-        mplew.writeInt(1680357);
-        mplew.writeInt(1680365);
-        mplew.writeInt(1680389);
-        mplew.writeInt(1680349);
-        mplew.writeInt(1680373);
-        mplew.writeInt(1680397);
-        mplew.writeInt(1680421);
-        mplew.writeInt(1680381);
-        mplew.writeInt(1680405);
-        mplew.writeInt(1680429);
-        mplew.writeInt(1680453);
-        mplew.writeInt(1680413);
-        mplew.writeInt(1680437);
-        mplew.writeInt(1680461);
-        mplew.writeInt(1680485);
-        mplew.writeInt(1680445);
-        mplew.writeInt(1680469);
-        mplew.writeInt(1680517);
-        mplew.writeInt(1680477);
-        mplew.writeInt(1680525);
-        mplew.writeInt(1680549);
-        mplew.writeInt(1680581);
-        mplew.writeInt(1680509);
-        mplew.writeInt(1680533);
-        mplew.writeInt(1680557);
-        mplew.writeInt(1680613);
-        mplew.writeInt(1680589);
-        mplew.writeInt(1680541);
-        mplew.writeInt(1680565);
-        mplew.writeInt(1680621);
-        mplew.writeInt(1680597);
-        mplew.writeInt(1680573);
-        mplew.writeInt(1680629);
-        mplew.writeInt(1680605);
-        mplew.writeInt(1680637);
-        return mplew.getPacket();
-    }
-
-    public static byte[] lys(MapleClient c) {
-        MaplePacketLittleEndianWriter mplew = new MaplePacketLittleEndianWriter();
-        mplew.writeShort(OutHeader.LP_SetTamingMobInfo.getValue());
-        mplew.writeInt(c.getPlayer().getId());
-        mplew.writeInt(1);
-        mplew.writeInt(0);
-        mplew.writeInt(0);
-        mplew.write(0);
-        return mplew.getPacket();
-    }
-
-    public static byte[] loginExtra() {
+    public static byte[] XuanWarpToMap() {
         MaplePacketLittleEndianWriter mplew = new MaplePacketLittleEndianWriter();
         mplew.writeShort(OutHeader.EXTRA_SYSTEM_RESULT.getValue());
-        mplew.writeInt(-1289454273);
-        mplew.writeShort(2); // login type
-        mplew.writeInt(-1395856379);
-        mplew.writeInt(1090473174);
-        mplew.writeLong(PacketHelper.getTime(System.currentTimeMillis()));
+        mplew.writeInt(1065166003);
+        mplew.writeShort(39);
+        mplew.write(0);
+        mplew.writeInt(111);
+        mplew.writeInt(3000);
+        mplew.writeInt(1);
+        mplew.write(1);
+        mplew.write(43);
+        mplew.writeInt(519);
+        mplew.write(4);
         return mplew.getPacket();
     }
 
-    public static byte[] initGuild() {
-        MaplePacketLittleEndianWriter mplew = new MaplePacketLittleEndianWriter();
-        mplew.writeShort(OutHeader.LP_GuildResult.getValue());
-        mplew.writeInt(128);
-        mplew.writeInt(0);
-        return mplew.getPacket();
+    public static OutPacket NirvanaPotentialResult() {
+        OutPacket outPacket = new OutPacket(OutHeader.NirvanaPotentialResult);
+        outPacket.encodeByte(0);
+        return outPacket;
     }
 
-    public static byte[] initGuildSlotUser() {
-        MaplePacketLittleEndianWriter mplew = new MaplePacketLittleEndianWriter();
-        mplew.writeShort(OutHeader.LP_GuildResult.getValue());
-        mplew.writeInt(129);
-        mplew.writeInt(4);
-        mplew.writeInt(100);
-        mplew.writeInt(2000);
-        mplew.writeInt(60);
-        mplew.writeInt(1000);
-        mplew.writeInt(30);
-        mplew.writeInt(100);
-        mplew.writeInt(15);
-        mplew.writeInt(50);
-        return mplew.getPacket();
+    public static OutPacket setDeathCoountMontser() {
+        OutPacket outPacket = new OutPacket(OutHeader.LP_SetDeathCoountMonster);
+        outPacket.encodeString("kill_count");
+        outPacket.encodeShort(1);
+        outPacket.encodeByte(48);
+        return outPacket;
+    }
+
+    public static OutPacket LP_USER_WARP_TO_MAP(MapleClient c) {
+        OutPacket outPacket = new OutPacket(OutHeader.LP_USER_WARP_TO_MAP);
+        outPacket.encodeInt(c.getPlayer().getId());
+        outPacket.encodeInt(0);
+        return outPacket;
+    }
+
+    public static OutPacket LP_UserSitResult() {
+        OutPacket outPacket = new OutPacket(OutHeader.LP_UserSitResult);
+        outPacket.encodeInt(0);
+        outPacket.encodeByte(0);
+        return outPacket;
+    }
+
+    public static OutPacket LP_SpecialChairSitResult() {
+        OutPacket outPacket = new OutPacket(OutHeader.LP_SpecialChairSitResult);
+        outPacket.encodeInt(0);
+        return outPacket;
+    }
+
+    public static OutPacket LP_UserCancelChair(MapleClient c) {
+        OutPacket outPacket = new OutPacket(OutHeader.LP_UserCancelChair);
+        outPacket.encodeInt(c.getPlayer().getId());
+        outPacket.encodeByte(1);
+        outPacket.encodeByte(1);
+        outPacket.encodeInt(0);
+        return outPacket;
+    }
+
+    public static OutPacket CHANGE_MAP_UNK() {
+        OutPacket outPacket = new OutPacket(OutHeader.CHANGE_MAP_UNK);
+        outPacket.encodeInt(17);
+        outPacket.encodeInt(0);
+        outPacket.encodeInt(0);
+        outPacket.encodeShort(0);
+        outPacket.encodeByte(0);
+        return outPacket;
+    }
+
+    public static OutPacket LP_UNK_ENTER_FIELD_600() {
+        OutPacket outPacket = new OutPacket(OutHeader.LP_UNK_ENTER_FIELD_600);
+        outPacket.encodeInt(-279665325);
+        return outPacket;
+    }
+
+    public static OutPacket LP_UNK_ENTER_FIELD_458() {
+        OutPacket outPacket = new OutPacket(OutHeader.LP_UNK_ENTER_FIELD_458);
+        outPacket.encodeInt(3);
+        outPacket.encodeByte(3);
+        outPacket.encodeShort(-30466);
+        outPacket.encodeByte(66);
+        return outPacket;
+    }
+
+    public static OutPacket LP_ToadsHammerRequestResult() {
+        OutPacket outPacket = new OutPacket(OutHeader.LP_ToadsHammerRequestResult);
+        outPacket.encodeInt(587);
+        outPacket.encodeInt(1682029);
+        outPacket.encodeInt(1682037);
+        outPacket.encodeInt(1682045);
+        outPacket.encodeInt(1680110);
+        outPacket.encodeInt(1680134);
+        outPacket.encodeInt(1680118);
+        outPacket.encodeInt(1680142);
+        outPacket.encodeInt(1680166);
+        outPacket.encodeInt(1680126);
+        outPacket.encodeInt(1680150);
+        outPacket.encodeInt(1680174);
+        outPacket.encodeInt(1680198);
+        outPacket.encodeInt(1680158);
+        outPacket.encodeInt(1680182);
+        outPacket.encodeInt(1680206);
+        outPacket.encodeInt(1680230);
+        outPacket.encodeInt(1680190);
+        outPacket.encodeInt(1680214);
+        outPacket.encodeInt(1680238);
+        outPacket.encodeInt(1680262);
+        outPacket.encodeInt(1680222);
+        outPacket.encodeInt(1680246);
+        outPacket.encodeInt(1680270);
+        outPacket.encodeInt(1680294);
+        outPacket.encodeInt(1680254);
+        outPacket.encodeInt(1680278);
+        outPacket.encodeInt(1680286);
+        outPacket.encodeInt(1680358);
+        outPacket.encodeInt(1680366);
+        outPacket.encodeInt(1680390);
+        outPacket.encodeInt(1680350);
+        outPacket.encodeInt(1680374);
+        outPacket.encodeInt(1680398);
+        outPacket.encodeInt(1680422);
+        outPacket.encodeInt(1680382);
+        outPacket.encodeInt(1680406);
+        outPacket.encodeInt(1680430);
+        outPacket.encodeInt(1680454);
+        outPacket.encodeInt(1680414);
+        outPacket.encodeInt(1680438);
+        outPacket.encodeInt(1680462);
+        outPacket.encodeInt(1680486);
+        outPacket.encodeInt(1680446);
+        outPacket.encodeInt(1680470);
+        outPacket.encodeInt(1680518);
+        outPacket.encodeInt(1680478);
+        outPacket.encodeInt(1680526);
+        outPacket.encodeInt(1680550);
+        outPacket.encodeInt(1680582);
+        outPacket.encodeInt(1680510);
+        outPacket.encodeInt(1680534);
+        outPacket.encodeInt(1680558);
+        outPacket.encodeInt(1680614);
+        outPacket.encodeInt(1680590);
+        outPacket.encodeInt(1680542);
+        outPacket.encodeInt(1680566);
+        outPacket.encodeInt(1680622);
+        outPacket.encodeInt(1680598);
+        outPacket.encodeInt(1680574);
+        outPacket.encodeInt(1680678);
+        outPacket.encodeInt(1680654);
+        outPacket.encodeInt(1680630);
+        outPacket.encodeInt(1680606);
+        outPacket.encodeInt(1680710);
+        outPacket.encodeInt(1680686);
+        outPacket.encodeInt(1680662);
+        outPacket.encodeInt(1680638);
+        outPacket.encodeInt(1680742);
+        outPacket.encodeInt(1680718);
+        outPacket.encodeInt(1680694);
+        outPacket.encodeInt(1680670);
+        outPacket.encodeInt(1680726);
+        outPacket.encodeInt(1680702);
+        outPacket.encodeInt(1680734);
+        outPacket.encodeInt(1682030);
+        outPacket.encodeInt(1682038);
+        outPacket.encodeInt(1682046);
+        outPacket.encodeInt(1680111);
+        outPacket.encodeInt(1680135);
+        outPacket.encodeInt(1680119);
+        outPacket.encodeInt(1680143);
+        outPacket.encodeInt(1680167);
+        outPacket.encodeInt(1680127);
+        outPacket.encodeInt(1680151);
+        outPacket.encodeInt(1680175);
+        outPacket.encodeInt(1680199);
+        outPacket.encodeInt(1680159);
+        outPacket.encodeInt(1680183);
+        outPacket.encodeInt(1680207);
+        outPacket.encodeInt(1680231);
+        outPacket.encodeInt(1680191);
+        outPacket.encodeInt(1680215);
+        outPacket.encodeInt(1680239);
+        outPacket.encodeInt(1680263);
+        outPacket.encodeInt(1680223);
+        outPacket.encodeInt(1680247);
+        outPacket.encodeInt(1680271);
+        outPacket.encodeInt(1680295);
+        outPacket.encodeInt(1680255);
+        outPacket.encodeInt(1680279);
+        outPacket.encodeInt(1680287);
+        outPacket.encodeInt(1680359);
+        outPacket.encodeInt(1680367);
+        outPacket.encodeInt(1680391);
+        outPacket.encodeInt(1680351);
+        outPacket.encodeInt(1680375);
+        outPacket.encodeInt(1680399);
+        outPacket.encodeInt(1680423);
+        outPacket.encodeInt(1680383);
+        outPacket.encodeInt(1680407);
+        outPacket.encodeInt(1680431);
+        outPacket.encodeInt(1680455);
+        outPacket.encodeInt(1680415);
+        outPacket.encodeInt(1680439);
+        outPacket.encodeInt(1680463);
+        outPacket.encodeInt(1680487);
+        outPacket.encodeInt(1680447);
+        outPacket.encodeInt(1680471);
+        outPacket.encodeInt(1680519);
+        outPacket.encodeInt(1680479);
+        outPacket.encodeInt(1680503);
+        outPacket.encodeInt(1680527);
+        outPacket.encodeInt(1680551);
+        outPacket.encodeInt(1680583);
+        outPacket.encodeInt(1680511);
+        outPacket.encodeInt(1680535);
+        outPacket.encodeInt(1680559);
+        outPacket.encodeInt(1680615);
+        outPacket.encodeInt(1680591);
+        outPacket.encodeInt(1680543);
+        outPacket.encodeInt(1680567);
+        outPacket.encodeInt(1680623);
+        outPacket.encodeInt(1680575);
+        outPacket.encodeInt(1680679);
+        outPacket.encodeInt(1680655);
+        outPacket.encodeInt(1680631);
+        outPacket.encodeInt(1680607);
+        outPacket.encodeInt(1680711);
+        outPacket.encodeInt(1680687);
+        outPacket.encodeInt(1680663);
+        outPacket.encodeInt(1680743);
+        outPacket.encodeInt(1680719);
+        outPacket.encodeInt(1680695);
+        outPacket.encodeInt(1680671);
+        outPacket.encodeInt(1680727);
+        outPacket.encodeInt(1680703);
+        outPacket.encodeInt(1680735);
+        outPacket.encodeInt(1682031);
+        outPacket.encodeInt(1682039);
+        outPacket.encodeInt(1682047);
+        outPacket.encodeInt(1680128);
+        outPacket.encodeInt(1680112);
+        outPacket.encodeInt(1680136);
+        outPacket.encodeInt(1680160);
+        outPacket.encodeInt(1680120);
+        outPacket.encodeInt(1680144);
+        outPacket.encodeInt(1680168);
+        outPacket.encodeInt(1680192);
+        outPacket.encodeInt(1680152);
+        outPacket.encodeInt(1680176);
+        outPacket.encodeInt(1680200);
+        outPacket.encodeInt(1680224);
+        outPacket.encodeInt(1680184);
+        outPacket.encodeInt(1680208);
+        outPacket.encodeInt(1680232);
+        outPacket.encodeInt(1680256);
+        outPacket.encodeInt(1680216);
+        outPacket.encodeInt(1680240);
+        outPacket.encodeInt(1680264);
+        outPacket.encodeInt(1680288);
+        outPacket.encodeInt(1680248);
+        outPacket.encodeInt(1680272);
+        outPacket.encodeInt(1680296);
+        outPacket.encodeInt(1680280);
+        outPacket.encodeInt(1680352);
+        outPacket.encodeInt(1680360);
+        outPacket.encodeInt(1680384);
+        outPacket.encodeInt(1680368);
+        outPacket.encodeInt(1680392);
+        outPacket.encodeInt(1680416);
+        outPacket.encodeInt(1680376);
+        outPacket.encodeInt(1680400);
+        outPacket.encodeInt(1680424);
+        outPacket.encodeInt(1680448);
+        outPacket.encodeInt(1680408);
+        outPacket.encodeInt(1680432);
+        outPacket.encodeInt(1680456);
+        outPacket.encodeInt(1680480);
+        outPacket.encodeInt(1680440);
+        outPacket.encodeInt(1680464);
+        outPacket.encodeInt(1680488);
+        outPacket.encodeInt(1680512);
+        outPacket.encodeInt(1680472);
+        outPacket.encodeInt(1680520);
+        outPacket.encodeInt(1680544);
+        outPacket.encodeInt(1680576);
+        outPacket.encodeInt(1680504);
+        outPacket.encodeInt(1680528);
+        outPacket.encodeInt(1680552);
+        outPacket.encodeInt(1680608);
+        outPacket.encodeInt(1680584);
+        outPacket.encodeInt(1680536);
+        outPacket.encodeInt(1680560);
+        outPacket.encodeInt(1680616);
+        outPacket.encodeInt(1680592);
+        outPacket.encodeInt(1680568);
+        outPacket.encodeInt(1680672);
+        outPacket.encodeInt(1680624);
+        outPacket.encodeInt(1680704);
+        outPacket.encodeInt(1680680);
+        outPacket.encodeInt(1680656);
+        outPacket.encodeInt(1680632);
+        outPacket.encodeInt(1680736);
+        outPacket.encodeInt(1680712);
+        outPacket.encodeInt(1680688);
+        outPacket.encodeInt(1680664);
+        outPacket.encodeInt(1680744);
+        outPacket.encodeInt(1680720);
+        outPacket.encodeInt(1680696);
+        outPacket.encodeInt(1680728);
+        outPacket.encodeInt(1682048);
+        outPacket.encodeInt(1682032);
+        outPacket.encodeInt(1682040);
+        outPacket.encodeInt(1680129);
+        outPacket.encodeInt(1680113);
+        outPacket.encodeInt(1680137);
+        outPacket.encodeInt(1680161);
+        outPacket.encodeInt(1680121);
+        outPacket.encodeInt(1680145);
+        outPacket.encodeInt(1680193);
+        outPacket.encodeInt(1680153);
+        outPacket.encodeInt(1680177);
+        outPacket.encodeInt(1680201);
+        outPacket.encodeInt(1680225);
+        outPacket.encodeInt(1680185);
+        outPacket.encodeInt(1680209);
+        outPacket.encodeInt(1680233);
+        outPacket.encodeInt(1680257);
+        outPacket.encodeInt(1680217);
+        outPacket.encodeInt(1680241);
+        outPacket.encodeInt(1680265);
+        outPacket.encodeInt(1680289);
+        outPacket.encodeInt(1680249);
+        outPacket.encodeInt(1680273);
+        outPacket.encodeInt(1680297);
+        outPacket.encodeInt(1680281);
+        outPacket.encodeInt(1680353);
+        outPacket.encodeInt(1680361);
+        outPacket.encodeInt(1680385);
+        outPacket.encodeInt(1680369);
+        outPacket.encodeInt(1680393);
+        outPacket.encodeInt(1680417);
+        outPacket.encodeInt(1680377);
+        outPacket.encodeInt(1680401);
+        outPacket.encodeInt(1680425);
+        outPacket.encodeInt(1680449);
+        outPacket.encodeInt(1680409);
+        outPacket.encodeInt(1680433);
+        outPacket.encodeInt(1680457);
+        outPacket.encodeInt(1680481);
+        outPacket.encodeInt(1680441);
+        outPacket.encodeInt(1680465);
+        outPacket.encodeInt(1680489);
+        outPacket.encodeInt(1680513);
+        outPacket.encodeInt(1680473);
+        outPacket.encodeInt(1680521);
+        outPacket.encodeInt(1680545);
+        outPacket.encodeInt(1680577);
+        outPacket.encodeInt(1680505);
+        outPacket.encodeInt(1680529);
+        outPacket.encodeInt(1680553);
+        outPacket.encodeInt(1680609);
+        outPacket.encodeInt(1680585);
+        outPacket.encodeInt(1680537);
+        outPacket.encodeInt(1680561);
+        outPacket.encodeInt(1680617);
+        outPacket.encodeInt(1680593);
+        outPacket.encodeInt(1680569);
+        outPacket.encodeInt(1680673);
+        outPacket.encodeInt(1680625);
+        outPacket.encodeInt(1680705);
+        outPacket.encodeInt(1680681);
+        outPacket.encodeInt(1680657);
+        outPacket.encodeInt(1680633);
+        outPacket.encodeInt(1680737);
+        outPacket.encodeInt(1680713);
+        outPacket.encodeInt(1680689);
+        outPacket.encodeInt(1680665);
+        outPacket.encodeInt(1680745);
+        outPacket.encodeInt(1680721);
+        outPacket.encodeInt(1680697);
+        outPacket.encodeInt(1680729);
+        outPacket.encodeInt(1682049);
+        outPacket.encodeInt(1682033);
+        outPacket.encodeInt(1682041);
+        outPacket.encodeInt(1680130);
+        outPacket.encodeInt(1680114);
+        outPacket.encodeInt(1680138);
+        outPacket.encodeInt(1680162);
+        outPacket.encodeInt(1680122);
+        outPacket.encodeInt(1680146);
+        outPacket.encodeInt(1680170);
+        outPacket.encodeInt(1680194);
+        outPacket.encodeInt(1680154);
+        outPacket.encodeInt(1680178);
+        outPacket.encodeInt(1680202);
+        outPacket.encodeInt(1680226);
+        outPacket.encodeInt(1680186);
+        outPacket.encodeInt(1680210);
+        outPacket.encodeInt(1680234);
+        outPacket.encodeInt(1680258);
+        outPacket.encodeInt(1680218);
+        outPacket.encodeInt(1680242);
+        outPacket.encodeInt(1680266);
+        outPacket.encodeInt(1680290);
+        outPacket.encodeInt(1680250);
+        outPacket.encodeInt(1680274);
+        outPacket.encodeInt(1680298);
+        outPacket.encodeInt(1680282);
+        outPacket.encodeInt(1680354);
+        outPacket.encodeInt(1680362);
+        outPacket.encodeInt(1680386);
+        outPacket.encodeInt(1680370);
+        outPacket.encodeInt(1680394);
+        outPacket.encodeInt(1680418);
+        outPacket.encodeInt(1680378);
+        outPacket.encodeInt(1680402);
+        outPacket.encodeInt(1680426);
+        outPacket.encodeInt(1680450);
+        outPacket.encodeInt(1680410);
+        outPacket.encodeInt(1680434);
+        outPacket.encodeInt(1680458);
+        outPacket.encodeInt(1680482);
+        outPacket.encodeInt(1680442);
+        outPacket.encodeInt(1680466);
+        outPacket.encodeInt(1680490);
+        outPacket.encodeInt(1680514);
+        outPacket.encodeInt(1680474);
+        outPacket.encodeInt(1680522);
+        outPacket.encodeInt(1680546);
+        outPacket.encodeInt(1680578);
+        outPacket.encodeInt(1680506);
+        outPacket.encodeInt(1680530);
+        outPacket.encodeInt(1680554);
+        outPacket.encodeInt(1680610);
+        outPacket.encodeInt(1680586);
+        outPacket.encodeInt(1680538);
+        outPacket.encodeInt(1680562);
+        outPacket.encodeInt(1680618);
+        outPacket.encodeInt(1680594);
+        outPacket.encodeInt(1680570);
+        outPacket.encodeInt(1680674);
+        outPacket.encodeInt(1680626);
+        outPacket.encodeInt(1680706);
+        outPacket.encodeInt(1680682);
+        outPacket.encodeInt(1680658);
+        outPacket.encodeInt(1680634);
+        outPacket.encodeInt(1680738);
+        outPacket.encodeInt(1680714);
+        outPacket.encodeInt(1680690);
+        outPacket.encodeInt(1680666);
+        outPacket.encodeInt(1680746);
+        outPacket.encodeInt(1680722);
+        outPacket.encodeInt(1680698);
+        outPacket.encodeInt(1680730);
+        outPacket.encodeInt(1682050);
+        outPacket.encodeInt(1682034);
+        outPacket.encodeInt(1682042);
+        outPacket.encodeInt(1680107);
+        outPacket.encodeInt(1680131);
+        outPacket.encodeInt(1680115);
+        outPacket.encodeInt(1680139);
+        outPacket.encodeInt(1680163);
+        outPacket.encodeInt(1680123);
+        outPacket.encodeInt(1680147);
+        outPacket.encodeInt(1680171);
+        outPacket.encodeInt(1680195);
+        outPacket.encodeInt(1680155);
+        outPacket.encodeInt(1680179);
+        outPacket.encodeInt(1680203);
+        outPacket.encodeInt(1680227);
+        outPacket.encodeInt(1680187);
+        outPacket.encodeInt(1680211);
+        outPacket.encodeInt(1680235);
+        outPacket.encodeInt(1680259);
+        outPacket.encodeInt(1680219);
+        outPacket.encodeInt(1680243);
+        outPacket.encodeInt(1680267);
+        outPacket.encodeInt(1680291);
+        outPacket.encodeInt(1680251);
+        outPacket.encodeInt(1680275);
+        outPacket.encodeInt(1680283);
+        outPacket.encodeInt(1680355);
+        outPacket.encodeInt(1680363);
+        outPacket.encodeInt(1680387);
+        outPacket.encodeInt(1680347);
+        outPacket.encodeInt(1680371);
+        outPacket.encodeInt(1680395);
+        outPacket.encodeInt(1680419);
+        outPacket.encodeInt(1680379);
+        outPacket.encodeInt(1680403);
+        outPacket.encodeInt(1680427);
+        outPacket.encodeInt(1680451);
+        outPacket.encodeInt(1680411);
+        outPacket.encodeInt(1680435);
+        outPacket.encodeInt(1680459);
+        outPacket.encodeInt(1680483);
+        outPacket.encodeInt(1680443);
+        outPacket.encodeInt(1680467);
+        outPacket.encodeInt(1680515);
+        outPacket.encodeInt(1680475);
+        outPacket.encodeInt(1680523);
+        outPacket.encodeInt(1680547);
+        outPacket.encodeInt(1680579);
+        outPacket.encodeInt(1680507);
+        outPacket.encodeInt(1680531);
+        outPacket.encodeInt(1680555);
+        outPacket.encodeInt(1680611);
+        outPacket.encodeInt(1680587);
+        outPacket.encodeInt(1680539);
+        outPacket.encodeInt(1680563);
+        outPacket.encodeInt(1680619);
+        outPacket.encodeInt(1680595);
+        outPacket.encodeInt(1680571);
+        outPacket.encodeInt(1680675);
+        outPacket.encodeInt(1680651);
+        outPacket.encodeInt(1680627);
+        outPacket.encodeInt(1680603);
+        outPacket.encodeInt(1680707);
+        outPacket.encodeInt(1680683);
+        outPacket.encodeInt(1680659);
+        outPacket.encodeInt(1680635);
+        outPacket.encodeInt(1680739);
+        outPacket.encodeInt(1680715);
+        outPacket.encodeInt(1680691);
+        outPacket.encodeInt(1680667);
+        outPacket.encodeInt(1680723);
+        outPacket.encodeInt(1680699);
+        outPacket.encodeInt(1680731);
+        outPacket.encodeInt(1682027);
+        outPacket.encodeInt(1682035);
+        outPacket.encodeInt(1682043);
+        outPacket.encodeInt(1680108);
+        outPacket.encodeInt(1680132);
+        outPacket.encodeInt(1680116);
+        outPacket.encodeInt(1680140);
+        outPacket.encodeInt(1680164);
+        outPacket.encodeInt(1680124);
+        outPacket.encodeInt(1680148);
+        outPacket.encodeInt(1680172);
+        outPacket.encodeInt(1680196);
+        outPacket.encodeInt(1680156);
+        outPacket.encodeInt(1680180);
+        outPacket.encodeInt(1680204);
+        outPacket.encodeInt(1680228);
+        outPacket.encodeInt(1680188);
+        outPacket.encodeInt(1680212);
+        outPacket.encodeInt(1680236);
+        outPacket.encodeInt(1680260);
+        outPacket.encodeInt(1680220);
+        outPacket.encodeInt(1680244);
+        outPacket.encodeInt(1680268);
+        outPacket.encodeInt(1680292);
+        outPacket.encodeInt(1680252);
+        outPacket.encodeInt(1680276);
+        outPacket.encodeInt(1680284);
+        outPacket.encodeInt(1680356);
+        outPacket.encodeInt(1680364);
+        outPacket.encodeInt(1680388);
+        outPacket.encodeInt(1680348);
+        outPacket.encodeInt(1680372);
+        outPacket.encodeInt(1680396);
+        outPacket.encodeInt(1680420);
+        outPacket.encodeInt(1680380);
+        outPacket.encodeInt(1680404);
+        outPacket.encodeInt(1680428);
+        outPacket.encodeInt(1680452);
+        outPacket.encodeInt(1680412);
+        outPacket.encodeInt(1680436);
+        outPacket.encodeInt(1680460);
+        outPacket.encodeInt(1680484);
+        outPacket.encodeInt(1680444);
+        outPacket.encodeInt(1680468);
+        outPacket.encodeInt(1680516);
+        outPacket.encodeInt(1680476);
+        outPacket.encodeInt(1680524);
+        outPacket.encodeInt(1680548);
+        outPacket.encodeInt(1680580);
+        outPacket.encodeInt(1680508);
+        outPacket.encodeInt(1680532);
+        outPacket.encodeInt(1680556);
+        outPacket.encodeInt(1680612);
+        outPacket.encodeInt(1680588);
+        outPacket.encodeInt(1680540);
+        outPacket.encodeInt(1680564);
+        outPacket.encodeInt(1680620);
+        outPacket.encodeInt(1680596);
+        outPacket.encodeInt(1680572);
+        outPacket.encodeInt(1680676);
+        outPacket.encodeInt(1680652);
+        outPacket.encodeInt(1680628);
+        outPacket.encodeInt(1680604);
+        outPacket.encodeInt(1680708);
+        outPacket.encodeInt(1680684);
+        outPacket.encodeInt(1680660);
+        outPacket.encodeInt(1680636);
+        outPacket.encodeInt(1680740);
+        outPacket.encodeInt(1680716);
+        outPacket.encodeInt(1680692);
+        outPacket.encodeInt(1680668);
+        outPacket.encodeInt(1680724);
+        outPacket.encodeInt(1680700);
+        outPacket.encodeInt(1680732);
+        outPacket.encodeInt(1682028);
+        outPacket.encodeInt(1682036);
+        outPacket.encodeInt(1682044);
+        outPacket.encodeInt(1680109);
+        outPacket.encodeInt(1680133);
+        outPacket.encodeInt(1680117);
+        outPacket.encodeInt(1680141);
+        outPacket.encodeInt(1680165);
+        outPacket.encodeInt(1680125);
+        outPacket.encodeInt(1680149);
+        outPacket.encodeInt(1680173);
+        outPacket.encodeInt(1680197);
+        outPacket.encodeInt(1680157);
+        outPacket.encodeInt(1680181);
+        outPacket.encodeInt(1680205);
+        outPacket.encodeInt(1680229);
+        outPacket.encodeInt(1680189);
+        outPacket.encodeInt(1680213);
+        outPacket.encodeInt(1680237);
+        outPacket.encodeInt(1680261);
+        outPacket.encodeInt(1680221);
+        outPacket.encodeInt(1680245);
+        outPacket.encodeInt(1680269);
+        outPacket.encodeInt(1680293);
+        outPacket.encodeInt(1680253);
+        outPacket.encodeInt(1680277);
+        outPacket.encodeInt(1680285);
+        outPacket.encodeInt(1680357);
+        outPacket.encodeInt(1680365);
+        outPacket.encodeInt(1680389);
+        outPacket.encodeInt(1680349);
+        outPacket.encodeInt(1680373);
+        outPacket.encodeInt(1680397);
+        outPacket.encodeInt(1680421);
+        outPacket.encodeInt(1680381);
+        outPacket.encodeInt(1680405);
+        outPacket.encodeInt(1680429);
+        outPacket.encodeInt(1680453);
+        outPacket.encodeInt(1680413);
+        outPacket.encodeInt(1680437);
+        outPacket.encodeInt(1680461);
+        outPacket.encodeInt(1680485);
+        outPacket.encodeInt(1680445);
+        outPacket.encodeInt(1680469);
+        outPacket.encodeInt(1680517);
+        outPacket.encodeInt(1680477);
+        outPacket.encodeInt(1680525);
+        outPacket.encodeInt(1680549);
+        outPacket.encodeInt(1680581);
+        outPacket.encodeInt(1680509);
+        outPacket.encodeInt(1680533);
+        outPacket.encodeInt(1680557);
+        outPacket.encodeInt(1680613);
+        outPacket.encodeInt(1680589);
+        outPacket.encodeInt(1680541);
+        outPacket.encodeInt(1680565);
+        outPacket.encodeInt(1680621);
+        outPacket.encodeInt(1680597);
+        outPacket.encodeInt(1680573);
+        outPacket.encodeInt(1680677);
+        outPacket.encodeInt(1680653);
+        outPacket.encodeInt(1680629);
+        outPacket.encodeInt(1680605);
+        outPacket.encodeInt(1680709);
+        outPacket.encodeInt(1680685);
+        outPacket.encodeInt(1680661);
+        outPacket.encodeInt(1680637);
+        outPacket.encodeInt(1680741);
+        outPacket.encodeInt(1680717);
+        outPacket.encodeInt(1680693);
+        outPacket.encodeInt(1680669);
+        outPacket.encodeInt(1680725);
+        outPacket.encodeInt(1680701);
+        outPacket.encodeInt(1680733);
+        return outPacket;
+    }
+
+    public static OutPacket Competition() {
+        OutPacket outPacket = new OutPacket(OutHeader.Competition);
+        outPacket.encodeBoolean(true);
+        outPacket.encodeInt(23);
+        outPacket.encodeInt(0);
+        outPacket.encodeInt(6);
+        outPacket.encodeInt(1002357);
+        outPacket.encodeInt(1012478);
+        outPacket.encodeInt(1022231);
+        outPacket.encodeInt(1242099);
+        outPacket.encodeInt(2048700);
+        outPacket.encodeInt(2711000);
+        outPacket.encodeInt(1);
+        outPacket.encodeInt(6);
+        outPacket.encodeInt(1002357);
+        outPacket.encodeInt(1012478);
+        outPacket.encodeInt(1022231);
+        outPacket.encodeInt(1242099);
+        outPacket.encodeInt(2048700);
+        outPacket.encodeInt(2711000);
+        outPacket.encodeInt(3);
+        outPacket.encodeInt(12);
+        outPacket.encodeInt(1072740);
+        outPacket.encodeInt(1072741);
+        outPacket.encodeInt(1102479);
+        outPacket.encodeInt(1102480);
+        outPacket.encodeInt(1132167);
+        outPacket.encodeInt(1132168);
+        outPacket.encodeInt(1132172);
+        outPacket.encodeInt(1132173);
+        outPacket.encodeInt(1152170);
+        outPacket.encodeInt(1182087);
+        outPacket.encodeInt(2048700);
+        outPacket.encodeInt(2711000);
+        outPacket.encodeInt(4);
+        outPacket.encodeInt(13);
+        outPacket.encodeInt(1004217);
+        outPacket.encodeInt(1004218);
+        outPacket.encodeInt(1052787);
+        outPacket.encodeInt(1052788);
+        outPacket.encodeInt(1072955);
+        outPacket.encodeInt(1072956);
+        outPacket.encodeInt(1082596);
+        outPacket.encodeInt(1082597);
+        outPacket.encodeInt(1162009);
+        outPacket.encodeInt(1242035);
+        outPacket.encodeInt(1242131);
+        outPacket.encodeInt(2048701);
+        outPacket.encodeInt(2711000);
+        outPacket.encodeInt(5);
+        outPacket.encodeInt(4);
+        outPacket.encodeInt(1032241);
+        outPacket.encodeInt(1113149);
+        outPacket.encodeInt(2048701);
+        outPacket.encodeInt(2711000);
+        outPacket.encodeInt(10);
+        outPacket.encodeInt(4);
+        outPacket.encodeInt(1032241);
+        outPacket.encodeInt(1113149);
+        outPacket.encodeInt(2048701);
+        outPacket.encodeInt(2711000);
+        outPacket.encodeInt(12);
+        outPacket.encodeInt(4);
+        outPacket.encodeInt(1050253);
+        outPacket.encodeInt(1072776);
+        outPacket.encodeInt(1122254);
+        outPacket.encodeInt(2711000);
+        outPacket.encodeInt(14);
+        outPacket.encodeInt(4);
+        outPacket.encodeInt(1032241);
+        outPacket.encodeInt(1113149);
+        outPacket.encodeInt(2048701);
+        outPacket.encodeInt(2711000);
+        outPacket.encodeInt(15);
+        outPacket.encodeInt(5);
+        outPacket.encodeInt(1022232);
+        outPacket.encodeInt(1132272);
+        outPacket.encodeInt(1162025);
+        outPacket.encodeInt(2048701);
+        outPacket.encodeInt(2711000);
+        outPacket.encodeInt(17);
+        outPacket.encodeInt(11);
+        outPacket.encodeInt(1004237);
+        outPacket.encodeInt(1004238);
+        outPacket.encodeInt(1052807);
+        outPacket.encodeInt(1052808);
+        outPacket.encodeInt(1072975);
+        outPacket.encodeInt(1072976);
+        outPacket.encodeInt(1082616);
+        outPacket.encodeInt(1082617);
+        outPacket.encodeInt(1102716);
+        outPacket.encodeInt(1102717);
+        outPacket.encodeInt(1242103);
+        outPacket.encodeInt(18);
+        outPacket.encodeInt(5);
+        outPacket.encodeInt(1050253);
+        outPacket.encodeInt(1072776);
+        outPacket.encodeInt(1122150);
+        outPacket.encodeInt(1122254);
+        outPacket.encodeInt(2711000);
+        outPacket.encodeInt(19);
+        outPacket.encodeInt(12);
+        outPacket.encodeInt(1072740);
+        outPacket.encodeInt(1072741);
+        outPacket.encodeInt(1102479);
+        outPacket.encodeInt(1102480);
+        outPacket.encodeInt(1132167);
+        outPacket.encodeInt(1132168);
+        outPacket.encodeInt(1132172);
+        outPacket.encodeInt(1132173);
+        outPacket.encodeInt(1152170);
+        outPacket.encodeInt(1182087);
+        outPacket.encodeInt(2048700);
+        outPacket.encodeInt(2711000);
+        outPacket.encodeInt(21);
+        outPacket.encodeInt(3);
+        outPacket.encodeInt(1050253);
+        outPacket.encodeInt(1072776);
+        outPacket.encodeInt(2711000);
+        outPacket.encodeInt(22);
+        outPacket.encodeInt(13);
+        outPacket.encodeInt(1004217);
+        outPacket.encodeInt(1004218);
+        outPacket.encodeInt(1052787);
+        outPacket.encodeInt(1052788);
+        outPacket.encodeInt(1072955);
+        outPacket.encodeInt(1072956);
+        outPacket.encodeInt(1082596);
+        outPacket.encodeInt(1082597);
+        outPacket.encodeInt(1162009);
+        outPacket.encodeInt(1242035);
+        outPacket.encodeInt(1242131);
+        outPacket.encodeInt(2048701);
+        outPacket.encodeInt(2711000);
+        outPacket.encodeInt(23);
+        outPacket.encodeInt(5);
+        outPacket.encodeInt(1022232);
+        outPacket.encodeInt(1132272);
+        outPacket.encodeInt(1162025);
+        outPacket.encodeInt(2048701);
+        outPacket.encodeInt(2711000);
+        outPacket.encodeInt(24);
+        outPacket.encodeInt(5);
+        outPacket.encodeInt(1050253);
+        outPacket.encodeInt(1072776);
+        outPacket.encodeInt(1152112);
+        outPacket.encodeInt(1152113);
+        outPacket.encodeInt(2711000);
+        outPacket.encodeInt(25);
+        outPacket.encodeInt(9);
+        outPacket.encodeInt(1003112);
+        outPacket.encodeInt(1004637);
+        outPacket.encodeInt(1012478);
+        outPacket.encodeInt(1022231);
+        outPacket.encodeInt(1102871);
+        outPacket.encodeInt(1132296);
+        outPacket.encodeInt(1242099);
+        outPacket.encodeInt(2048700);
+        outPacket.encodeInt(2711000);
+        outPacket.encodeInt(30);
+        outPacket.encodeInt(15);
+        outPacket.encodeInt(1050253);
+        outPacket.encodeInt(1072740);
+        outPacket.encodeInt(1072741);
+        outPacket.encodeInt(1072776);
+        outPacket.encodeInt(1102479);
+        outPacket.encodeInt(1102480);
+        outPacket.encodeInt(1102484);
+        outPacket.encodeInt(1102485);
+        outPacket.encodeInt(1132167);
+        outPacket.encodeInt(1132168);
+        outPacket.encodeInt(1132172);
+        outPacket.encodeInt(1132173);
+        outPacket.encodeInt(1152170);
+        outPacket.encodeInt(1182087);
+        outPacket.encodeInt(2711000);
+        outPacket.encodeInt(50);
+        outPacket.encodeInt(1);
+        outPacket.encodeInt(1113313);
+        outPacket.encodeInt(52);
+        outPacket.encodeInt(1);
+        outPacket.encodeInt(1113313);
+        outPacket.encodeInt(1000);
+        outPacket.encodeInt(4);
+        outPacket.encodeInt(1012478);
+        outPacket.encodeInt(1022231);
+        outPacket.encodeInt(2048700);
+        outPacket.encodeInt(2711000);
+        outPacket.encodeInt(1002);
+        outPacket.encodeInt(5);
+        outPacket.encodeInt(1032220);
+        outPacket.encodeInt(1113072);
+        outPacket.encodeInt(1122264);
+        outPacket.encodeInt(1132243);
+        outPacket.encodeInt(2711000);
+        outPacket.encodeInt(1003);
+        outPacket.encodeInt(7);
+        outPacket.encodeInt(1132159);
+        outPacket.encodeInt(1132160);
+        outPacket.encodeInt(1152097);
+        outPacket.encodeInt(1152098);
+        outPacket.encodeInt(1242077);
+        outPacket.encodeInt(1242078);
+        outPacket.encodeInt(2711000);
+        outPacket.encodeInt(4);
+        outPacket.encodeString("arcane");
+        outPacket.encodeInt(0);
+        outPacket.encodeString("competition");
+        outPacket.encodeInt(0);
+        outPacket.encodeString("growth");
+        outPacket.encodeInt(0);
+        outPacket.encodeString("story");
+        outPacket.encodeInt(0);
+        return outPacket;
+    }
+
+    public static OutPacket LP_SetClaimSvrAvailableTime() {
+        OutPacket outPacket = new OutPacket(OutHeader.LP_SetClaimSvrAvailableTime);
+        outPacket.encodeShort(0);
+        return outPacket;
+    }
+
+    public static OutPacket LP_SKILL_MACRO() {
+        OutPacket outPacket = new OutPacket(OutHeader.LP_SKILL_MACRO);
+        outPacket.encodeByte(0);
+        return outPacket;
+    }
+
+    public static OutPacket LP_LoadSkillAction(boolean unk) {
+        OutPacket outPacket = new OutPacket(OutHeader.LP_LoadSkillAction);
+        outPacket.encodeBoolean(unk);
+        return outPacket;
+    }
+
+    public static OutPacket LP_SetTamingMobInfo(MapleClient c) {
+        OutPacket outPacket = new OutPacket(OutHeader.LP_SetTamingMobInfo);
+        outPacket.encodeInt(c.getPlayer().getId());
+        outPacket.encodeInt(1);
+        outPacket.encodeInt(0);
+        outPacket.encodeInt(0);
+        outPacket.encodeByte(0);
+        return outPacket;
+    }
+
+    public static OutPacket LOGIN_SUCC() {
+        OutPacket outPacket = new OutPacket(OutHeader.LOGIN_SUCC);
+        return outPacket;
+    }
+
+    public static OutPacket LOGIN_SUCC_ATTACH() {
+        OutPacket outPacket = new OutPacket(OutHeader.LOGIN_SUCC_ATTACH);
+        return outPacket;
+    }
+
+    public static OutPacket CHAT_SERVER_RESULT() {
+        OutPacket outPacket = new OutPacket(OutHeader.CHAT_SERVER_RESULT);
+        outPacket.encodeInt(0);
+        outPacket.encodeShort(0);
+        return outPacket;
+    }
+
+    public static OutPacket Enter_Field_Unk_Attach(String key) {
+        OutPacket outPacket = new OutPacket(OutHeader.Enter_Field_Unk_Attach);
+        outPacket.encodeString(key);
+        outPacket.encodeInt(0);
+        return outPacket;
+    }
+
+    public static OutPacket LP_SetBackgroundEffect() {
+        OutPacket outPacket = new OutPacket(OutHeader.LP_SetBackgroundEffect);
+        outPacket.encodeInt(5);
+        outPacket.encodeInt(1);
+        outPacket.encodeInt(99);
+        outPacket.encodeInt(2000);
+        outPacket.encodeInt(0);
+        outPacket.encodeInt(0);
+        outPacket.encodeInt(0);
+        outPacket.encodeLong(4600877379321698714L);
+        outPacket.encodeInt(100);
+        outPacket.encodeInt(199);
+        outPacket.encodeInt(4000);
+        outPacket.encodeInt(0);
+        outPacket.encodeInt(0);
+        outPacket.encodeInt(0);
+        outPacket.encodeLong(4600877379321698714L);
+        outPacket.encodeInt(200);
+        outPacket.encodeInt(259);
+        outPacket.encodeInt(8000);
+        outPacket.encodeInt(5);
+        outPacket.encodeInt(500);
+        outPacket.encodeInt(0);
+        outPacket.encodeLong(4600877379321698714L);
+        outPacket.encodeInt(260);
+        outPacket.encodeInt(279);
+        outPacket.encodeInt(15000);
+        outPacket.encodeInt(5);
+        outPacket.encodeInt(1000);
+        outPacket.encodeInt(0);
+        outPacket.encodeLong(4600877379321698714L);
+        outPacket.encodeInt(280);
+        outPacket.encodeInt(300);
+        outPacket.encodeInt(20000);
+        outPacket.encodeInt(5);
+        outPacket.encodeInt(1500);
+        outPacket.encodeInt(0);
+        outPacket.encodeLong(4600877379321698714L);
+        return outPacket;
+    }
+
+    public static OutPacket startLoadGuild(MapleClient c) {
+        OutPacket outPacket = new OutPacket(OutHeader.LP_GuildResult);
+        outPacket.encodeInt(128);
+        outPacket.encodeInt(0);
+        c.write(startLoadGuildN(c));
+        return outPacket;
     }
 
     public static byte[] linkSkillNotice(MapleClient c) {
@@ -1431,6 +1309,38 @@ public class warpToGameHandler {
         return mplew.getPacket();
     }
 
+    public static OutPacket startLoadGuildN(MapleClient c) {
+        OutPacket outPacket = new OutPacket(OutHeader.LP_GuildResult);
+        outPacket.encodeInt(129);
+        outPacket.encodeInt(4);
+        outPacket.encodeInt(100);
+        outPacket.encodeInt(2000);
+        outPacket.encodeInt(60);
+        outPacket.encodeInt(1000);
+        outPacket.encodeInt(30);
+        outPacket.encodeInt(100);
+        outPacket.encodeInt(15);
+        outPacket.encodeInt(50);
+        return outPacket;
+    }
+
+    public static OutPacket unk_268_1432() {
+        OutPacket outPacket = new OutPacket(OutHeader.LP_ENTER_GAME_UNK);
+        outPacket.encodeInt(0);
+        return outPacket;
+    }
+
+    public static OutPacket unk_268_1447() {
+        OutPacket outPacket = new OutPacket(OutHeader.LP_ENTER_GAME_UNK_II);
+        outPacket.encodeInt(0);
+        return outPacket;
+    }
+
+    public static OutPacket loginChecking(MapleClient c) {
+        OutPacket outPacket = new OutPacket(OutHeader.LP_LOGIN_ACTION_CHECK);
+        return outPacket;
+    }
+
     public static byte[] setNameTagHide() {
         MaplePacketLittleEndianWriter mplew = new MaplePacketLittleEndianWriter();
         mplew.writeShort(OutHeader.LP_EventNameTagInfo.getValue());
@@ -1447,86 +1357,97 @@ public class warpToGameHandler {
         return mplew.getPacket();
     }
 
-    public static byte[] chatServerPong() {
-        MaplePacketLittleEndianWriter mplew = new MaplePacketLittleEndianWriter();
-        mplew.writeShort(OutHeader.CHAT_SERVER_RESULT.getValue());
-        mplew.writeInt(0);
-        mplew.writeShort(0);
-        return mplew.getPacket();
-    }
-
     public static OutPacket getShowQuestCompletion(int quest_cid) {
         OutPacket say = new OutPacket(OutHeader.LP_QuestClear.getValue());
         if (getChr() != null) {
             say.encodeInt(quest_cid);
         }
+
         return say;
     }
 
-    public static OutPacket SetBackgroundEffect() {
-        OutPacket outPacket = new OutPacket(OutHeader.LP_SetBackgroundEffect);
-        outPacket.encodeInt(5);
-        outPacket.encodeInt(1);
-        outPacket.encodeInt(99);
-        outPacket.encodeInt(2000);
+    public static OutPacket LP_UNK_LOAD_I() {
+        OutPacket outPacket = new OutPacket(OutHeader.LP_UNK_LOAD_I);
         outPacket.encodeInt(0);
         outPacket.encodeInt(0);
         outPacket.encodeInt(0);
-        outPacket.encodeInt(-1717986918);
-        outPacket.encodeInt(1071225241);
-        outPacket.encodeInt(100);
-        outPacket.encodeInt(199);
-        outPacket.encodeInt(4000);
         outPacket.encodeInt(0);
         outPacket.encodeInt(0);
         outPacket.encodeInt(0);
-        outPacket.encodeInt(-1717986918);
-        outPacket.encodeInt(1071225241);
-        outPacket.encodeInt(200);
-        outPacket.encodeInt(259);
-        outPacket.encodeInt(8000);
-        outPacket.encodeInt(5);
-        outPacket.encodeInt(500);
         outPacket.encodeInt(0);
-        outPacket.encodeInt(-1717986918);
-        outPacket.encodeInt(1071225241);
-        outPacket.encodeInt(260);
-        outPacket.encodeInt(279);
-        outPacket.encodeInt(15000);
-        outPacket.encodeInt(5);
-        outPacket.encodeInt(1000);
-        outPacket.encodeInt(0);
-        outPacket.encodeInt(-1717986918);
-        outPacket.encodeInt(1071225241);
-        outPacket.encodeInt(280);
-        outPacket.encodeInt(300);
-        outPacket.encodeInt(20000);
-        outPacket.encodeInt(5);
-        outPacket.encodeInt(1500);
-        outPacket.encodeInt(0);
-        outPacket.encodeInt(-1717986918);
-        outPacket.encodeInt(1071225241);
+        outPacket.encodeShort(0);
+        outPacket.encodeInt(16368);
+        outPacket.encodeByte(0);
+        return outPacket;
+    }
+
+    public static OutPacket LP_UNK_LOAD_II(int str) {
+        OutPacket outPacket = new OutPacket(OutHeader.LP_UNK_LOAD_II);
+        outPacket.encodeInt(str);
+        outPacket.encodeByte(0);
+        return outPacket;
+    }
+
+    public static OutPacket LP_UNK_LOAD_III() {
+        OutPacket outPacket = new OutPacket(OutHeader.LP_UNK_LOAD_III);
+        outPacket.encodeByte(0);
+        return outPacket;
+    }
+
+    public static OutPacket LP_UNK_LOAD_IV(int str) {
+        OutPacket outPacket = new OutPacket(OutHeader.LP_UNK_LOAD_IV);
+        outPacket.encodeInt(str);
+        outPacket.encodeByte(0);
         return outPacket;
     }
 
     public static OutPacket EquipRuneSetting() {
         OutPacket outPacket = new OutPacket(OutHeader.LP_ReincarnationStele);
-        outPacket.encodeArr("07 04 00 00 00 9B 58 F7 B7 01 07 00 00 00 00 00 00 00 00 00 08 00 00 00 00 00 00 00 00 00 09 00 00 00 00 00 0A 00 00 00 00 00 0B 00 00 00 00 00 0C 00 00 00 00 00 0D 00 00 0E 00 00 0F 00 00 00 00 00 00 00 00 00 10 00 00 11 00 01 12 00 00 13 00 01 14 00 00 00 00 00 00 00 00");
+        outPacket.encodeByte(11);
+        outPacket.encodeInt(4);
+        outPacket.encodeInt(-1208526693);
+        outPacket.encodeInt(65539);
+        outPacket.encodeInt(0);
+        outPacket.encodeInt(0);
+        outPacket.encodeInt(8);
+        outPacket.encodeInt(0);
+        outPacket.encodeInt(589824);
+        outPacket.encodeInt(0);
+        outPacket.encodeInt(0);
+        outPacket.encodeInt(10);
+        outPacket.encodeInt(720896);
+        outPacket.encodeInt(0);
+        outPacket.encodeInt(12);
+        outPacket.encodeInt(851968);
+        outPacket.encodeInt(0);
+        outPacket.encodeInt(251658254);
+        outPacket.encodeInt(1048576);
+        outPacket.encodeInt(0);
+        outPacket.encodeInt(0);
+        outPacket.encodeInt(302055441);
+        outPacket.encodeInt(1245184);
+        outPacket.encodeInt(5121);
+        outPacket.encodeInt(0);
+        outPacket.encodeShort(0);
+        outPacket.encodeByte(0);
         return outPacket;
     }
-
 
     public static byte[] getMacros(SkillMacro[] macros) {
         MaplePacketLittleEndianWriter mplew = new MaplePacketLittleEndianWriter();
         mplew.writeShort(OutHeader.LP_SKILL_MACRO.getValue());
         int count = 0;
-        for (int i = 0; i < 5; i++) {
+
+        int i;
+        for(i = 0; i < 5; ++i) {
             if (macros[i] != null) {
-                count++;
+                ++count;
             }
         }
-        mplew.write(count); // number of macros
-        for (int i = 0; i < 5; i++) {
+
+        mplew.write(count);
+
+        for(i = 0; i < 5; ++i) {
             SkillMacro macro = macros[i];
             if (macro != null) {
                 mplew.writeMapleAsciiString(macro.getName());
@@ -1536,8 +1457,8 @@ public class warpToGameHandler {
                 mplew.writeInt(macro.getSkill3());
             }
         }
+
         return mplew.getPacket();
     }
 }
-
 

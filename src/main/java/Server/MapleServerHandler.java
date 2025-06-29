@@ -13,6 +13,7 @@ import Server.channel.ChannelServer;
 import Server.login.LoginServer;
 import Server.netty.MaplePacketDecoder;
 import Server.world.World;
+import SwordieX.enums.SoulType;
 import connection.netty.ChannelHandler;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.ChannelInboundHandlerAdapter;
@@ -211,6 +212,7 @@ public final class MapleServerHandler extends ChannelInboundHandlerAdapter {
         if (opcode == null) {
             System.err.printf("[In] %d(0x%s)%n", packetId, Integer.toHexString(packetId));
         } else {
+            System.out.printf("[In] %d(0x%s)   opcode %s  %n", packetId, Integer.toHexString(packetId), opcode);
             PacketProcessor.getProcessor(opcode, slea, type, client);
         }
     }

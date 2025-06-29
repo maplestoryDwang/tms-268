@@ -123,7 +123,7 @@ public class 皮卡啾 extends AbstractSkillHandler {
                 return 1;
             }
             case 皮卡啾的勇士: {
-                applier.localstatups.put(SecondaryStat.IndieStatR, applyfrom.getLevel() / applier.effect.getY());
+                applier.localstatups.put(SecondaryStat.BasicStatUp, applyfrom.getLevel() / applier.effect.getY());
                 return 1;
             }
         }

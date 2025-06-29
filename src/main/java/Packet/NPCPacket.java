@@ -55,7 +55,7 @@ public class NPCPacket {
 
     public static byte[] spawnNPC(MapleNPC life) {
         MaplePacketLittleEndianWriter mplew = new MaplePacketLittleEndianWriter();
-        mplew.writeShort(OutHeader.CTX_Npc_Enter_Field.getValue());
+        mplew.writeShort(OutHeader.LP_FieldNpcEnter.getValue());
         mplew.writeInt(life.getObjectId());
         writeNpcData(mplew, life, false);
         return mplew.getPacket();
@@ -72,11 +72,9 @@ public class NPCPacket {
 
     public static byte[] removeNPCController(int objectid, boolean miniMap) {
         MaplePacketLittleEndianWriter mplew = new MaplePacketLittleEndianWriter();
-
-        mplew.writeShort(OutHeader.CTX_Npc_Change_Controller.getValue());
+        mplew.writeShort(OutHeader.LP_NpcController.getValue());
         mplew.writeBool(miniMap);
         mplew.writeInt(objectid);
-
         return mplew.getPacket();
     }
 
@@ -109,12 +107,10 @@ public class NPCPacket {
 
     public static byte[] spawnNPCRequestController(MapleNPC life, boolean MiniMap) {
         MaplePacketLittleEndianWriter mplew = new MaplePacketLittleEndianWriter();
-
-        mplew.writeShort(OutHeader.CTX_Npc_Change_Controller.getValue());
+        mplew.writeShort(OutHeader.LP_NpcController.getValue());
         mplew.write(1);
         mplew.writeInt(life.getObjectId());
         writeNpcData(mplew, life, MiniMap);
-
         return mplew.getPacket();
     }
 
