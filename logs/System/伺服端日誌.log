@@ -1,0 +1,123 @@
+2025-06-29 11:38:01.827 [main] INFO  Net.NetRun.main - 啟動遊戲版本:TMS-268..
+2025-06-29 11:38:02.663 [main] INFO  connection.netty.ChannelHandler.initHandlers - Initialized 42 handlers in 704ms.
+2025-06-29 11:38:03.053 [main] INFO  Net.NetRun.main - OutHeader包頭反射已啟動，等待連接中。
+2025-06-29 11:38:03.053 [main] INFO  Net.NetRun.main - InHeader包頭反射已啟動，等待連接中。
+2025-06-29 11:38:03.347 [ForkJoinPool-2-worker-1] WARN  c.alibaba.druid.pool.DruidDataSource.initCheck - removeAbandoned is true, not use in production.
+2025-06-29 11:38:03.424 [ForkJoinPool-2-worker-1] INFO  c.alibaba.druid.pool.DruidDataSource.init - {dataSource-1} inited
+2025-06-29 11:38:03.532 [ForkJoinPool-3-worker-16] INFO  Net.NetRun.lambda$main$0 - [初始化伺服器] 已加載 1 / 23
+2025-06-29 11:38:03.555 [ForkJoinPool-3-worker-6] ERROR Net.server.InitializeServer.lambda$initAllData$6 - [TASK] MapleForceFactory.initialize() error:
+java.lang.NullPointerException: Cannot invoke "Plugin.provider.MapleData.getChildByPath(String)" because the return value of "Plugin.provider.MapleDataProvider.getData(String)" is null
+	at Client.force.MapleForceFactory.initialize(MapleForceFactory.java:45)
+	at Net.server.InitializeServer.lambda$initAllData$6(InitializeServer.java:255)
+	at java.base/java.util.concurrent.CompletableFuture$AsyncRun.run(CompletableFuture.java:1804)
+	at java.base/java.util.concurrent.CompletableFuture$AsyncRun.exec(CompletableFuture.java:1796)
+	at java.base/java.util.concurrent.ForkJoinTask.doExec(ForkJoinTask.java:387)
+	at java.base/java.util.concurrent.ForkJoinPool$WorkQueue.topLevelExec(ForkJoinPool.java:1310)
+	at java.base/java.util.concurrent.ForkJoinPool.scan(ForkJoinPool.java:1841)
+	at java.base/java.util.concurrent.ForkJoinPool.runWorker(ForkJoinPool.java:1806)
+	at java.base/java.util.concurrent.ForkJoinWorkerThread.run(ForkJoinWorkerThread.java:188)
+2025-06-29 11:38:03.557 [ForkJoinPool-3-worker-6] INFO  Net.NetRun.lambda$main$0 - [初始化伺服器] 已加載 2 / 23
+2025-06-29 11:38:03.605 [ForkJoinPool-3-worker-10] ERROR Net.server.InitializeServer.lambda$initAllData$10 - [TASK] MapleUnionData.init() error:
+java.lang.NullPointerException: Cannot invoke "Plugin.provider.MapleData.getChildByPath(String)" because "unionData" is null
+	at Net.server.MapleUnionData.init(MapleUnionData.java:92)
+	at Net.server.InitializeServer.lambda$initAllData$10(InitializeServer.java:299)
+	at java.base/java.util.concurrent.CompletableFuture$AsyncRun.run(CompletableFuture.java:1804)
+	at java.base/java.util.concurrent.CompletableFuture$AsyncRun.exec(CompletableFuture.java:1796)
+	at java.base/java.util.concurrent.ForkJoinTask.doExec(ForkJoinTask.java:387)
+	at java.base/java.util.concurrent.ForkJoinPool$WorkQueue.topLevelExec(ForkJoinPool.java:1310)
+	at java.base/java.util.concurrent.ForkJoinPool.scan(ForkJoinPool.java:1841)
+	at java.base/java.util.concurrent.ForkJoinPool.runWorker(ForkJoinPool.java:1806)
+	at java.base/java.util.concurrent.ForkJoinWorkerThread.run(ForkJoinWorkerThread.java:188)
+2025-06-29 11:38:03.605 [ForkJoinPool-3-worker-22] ERROR Net.server.InitializeServer.lambda$initAllData$22 - [TASK] HexaFactory.loadAllHexaSkill() error:
+java.lang.NullPointerException: Cannot invoke "Plugin.provider.MapleData.getChildByPath(String)" because "Client.hexa.HexaFactory.hexaCoreData" is null
+	at Client.hexa.HexaFactory.loadAllHexaSkill(HexaFactory.java:17)
+	at Net.server.InitializeServer.lambda$initAllData$22(InitializeServer.java:431)
+	at java.base/java.util.concurrent.CompletableFuture$AsyncRun.run(CompletableFuture.java:1804)
+	at java.base/java.util.concurrent.CompletableFuture$AsyncRun.exec(CompletableFuture.java:1796)
+	at java.base/java.util.concurrent.ForkJoinTask.doExec(ForkJoinTask.java:387)
+	at java.base/java.util.concurrent.ForkJoinPool$WorkQueue.topLevelExec(ForkJoinPool.java:1310)
+	at java.base/java.util.concurrent.ForkJoinPool.scan(ForkJoinPool.java:1841)
+	at java.base/java.util.concurrent.ForkJoinPool.runWorker(ForkJoinPool.java:1806)
+	at java.base/java.util.concurrent.ForkJoinWorkerThread.run(ForkJoinWorkerThread.java:188)
+2025-06-29 11:38:03.605 [ForkJoinPool-3-worker-13] ERROR Net.server.InitializeServer.lambda$initAllData$13 - [TASK] CashItemFactory.initialize() error:
+java.lang.NullPointerException: Cannot invoke "Plugin.provider.MapleData.getChildren()" because "this.commodities" is null
+	at Net.server.cashshop.CashItemFactory.initialize(CashItemFactory.java:46)
+	at Net.server.InitializeServer.lambda$initAllData$13(InitializeServer.java:332)
+	at java.base/java.util.concurrent.CompletableFuture$AsyncRun.run(CompletableFuture.java:1804)
+	at java.base/java.util.concurrent.CompletableFuture$AsyncRun.exec(CompletableFuture.java:1796)
+	at java.base/java.util.concurrent.ForkJoinTask.doExec(ForkJoinTask.java:387)
+	at java.base/java.util.concurrent.ForkJoinPool$WorkQueue.topLevelExec(ForkJoinPool.java:1310)
+	at java.base/java.util.concurrent.ForkJoinPool.scan(ForkJoinPool.java:1841)
+	at java.base/java.util.concurrent.ForkJoinPool.runWorker(ForkJoinPool.java:1806)
+	at java.base/java.util.concurrent.ForkJoinWorkerThread.run(ForkJoinWorkerThread.java:188)
+2025-06-29 11:38:03.605 [ForkJoinPool-3-worker-10] INFO  Net.NetRun.lambda$main$0 - [初始化伺服器] 已加載 3 / 23
+2025-06-29 11:38:03.606 [ForkJoinPool-3-worker-22] INFO  Net.NetRun.lambda$main$0 - [初始化伺服器] 已加載 4 / 23
+2025-06-29 11:38:03.606 [ForkJoinPool-3-worker-13] INFO  Net.NetRun.lambda$main$0 - [初始化伺服器] 已加載 5 / 23
+2025-06-29 11:38:03.989 [ForkJoinPool-3-worker-21] ERROR Net.server.InitializeServer.lambda$initAllData$21 - [TASK] ActionBarField.init() error:
+java.lang.NullPointerException: Cannot invoke "Plugin.provider.MapleData.getChildByPath(String)" because the return value of "Plugin.provider.MapleDataProvider.getData(String)" is null
+	at Net.server.maps.field.ActionBarField.init(ActionBarField.java:18)
+	at Net.server.InitializeServer.lambda$initAllData$21(InitializeServer.java:420)
+	at java.base/java.util.concurrent.CompletableFuture$AsyncRun.run(CompletableFuture.java:1804)
+	at java.base/java.util.concurrent.CompletableFuture$AsyncRun.exec(CompletableFuture.java:1796)
+	at java.base/java.util.concurrent.ForkJoinTask.doExec(ForkJoinTask.java:387)
+	at java.base/java.util.concurrent.ForkJoinPool$WorkQueue.topLevelExec(ForkJoinPool.java:1310)
+	at java.base/java.util.concurrent.ForkJoinPool.scan(ForkJoinPool.java:1841)
+	at java.base/java.util.concurrent.ForkJoinPool.runWorker(ForkJoinPool.java:1806)
+	at java.base/java.util.concurrent.ForkJoinWorkerThread.run(ForkJoinWorkerThread.java:188)
+2025-06-29 11:38:03.989 [ForkJoinPool-3-worker-21] INFO  Net.NetRun.lambda$main$0 - [初始化伺服器] 已加載 6 / 23
+2025-06-29 11:38:03.997 [ForkJoinPool-3-worker-19] INFO  Net.NetRun.lambda$main$0 - [初始化伺服器] 已加載 7 / 23
+2025-06-29 11:38:03.998 [ForkJoinPool-3-worker-20] INFO  Net.NetRun.lambda$main$0 - [初始化伺服器] 已加載 8 / 23
+2025-06-29 11:38:04.340 [ForkJoinPool-3-worker-2] INFO  Plugin.provider.loaders.StringData.loadItemStrings - Loaded item strings from data file in 864ms.
+2025-06-29 11:38:04.510 [ForkJoinPool-3-worker-18] INFO  Net.NetRun.lambda$main$0 - [初始化伺服器] 已加載 9 / 23
+2025-06-29 11:38:04.536 [ForkJoinPool-3-worker-9] INFO  Net.NetRun.lambda$main$0 - [初始化伺服器] 已加載 10 / 23
+2025-06-29 11:38:04.553 [ForkJoinPool-3-worker-2] INFO  Plugin.provider.loaders.StringData.loadSkillStrings - Loaded skill strings from data file in 213ms.
+2025-06-29 11:38:04.635 [ForkJoinPool-3-worker-2] INFO  Plugin.provider.loaders.StringData.loadMobStrings - Loaded mob strings from data file in 81ms.
+2025-06-29 11:38:04.728 [ForkJoinPool-3-worker-2] INFO  Plugin.provider.loaders.StringData.loadNpcStrings - Loaded npc strings from data file in 93ms.
+2025-06-29 11:38:04.841 [ForkJoinPool-3-worker-2] INFO  Plugin.provider.loaders.StringData.loadMapStrings - Loaded item strings from data file in 112ms.
+2025-06-29 11:38:04.842 [ForkJoinPool-3-worker-2] INFO  Net.NetRun.lambda$main$0 - [初始化伺服器] 已加載 11 / 23
+2025-06-29 11:38:04.953 [ForkJoinPool-3-worker-23] INFO  Net.NetRun.lambda$main$0 - [初始化伺服器] 已加載 12 / 23
+2025-06-29 11:38:05.217 [ForkJoinPool-3-worker-12] ERROR Net.server.InitializeServer.lambda$initAllData$12 - [TASK] MapleMapFactory.loadAllMapName() error:
+java.lang.NullPointerException: Cannot invoke "Plugin.provider.MapleData.iterator()" because "nameData" is null
+	at Net.server.maps.MapleMapFactory.loadAllMapName(MapleMapFactory.java:186)
+	at Net.server.InitializeServer.lambda$initAllData$12(InitializeServer.java:321)
+	at java.base/java.util.concurrent.CompletableFuture$AsyncRun.run(CompletableFuture.java:1804)
+	at java.base/java.util.concurrent.CompletableFuture$AsyncRun.exec(CompletableFuture.java:1796)
+	at java.base/java.util.concurrent.ForkJoinTask.doExec(ForkJoinTask.java:387)
+	at java.base/java.util.concurrent.ForkJoinPool$WorkQueue.topLevelExec(ForkJoinPool.java:1310)
+	at java.base/java.util.concurrent.ForkJoinPool.scan(ForkJoinPool.java:1841)
+	at java.base/java.util.concurrent.ForkJoinPool.runWorker(ForkJoinPool.java:1806)
+	at java.base/java.util.concurrent.ForkJoinWorkerThread.run(ForkJoinWorkerThread.java:188)
+2025-06-29 11:38:05.218 [ForkJoinPool-3-worker-12] INFO  Net.NetRun.lambda$main$0 - [初始化伺服器] 已加載 13 / 23
+2025-06-29 11:38:05.233 [ForkJoinPool-3-worker-11] INFO  Net.NetRun.lambda$main$0 - [初始化伺服器] 已加載 14 / 23
+2025-06-29 11:38:05.400 [ForkJoinPool-3-worker-14] ERROR Net.server.InitializeServer.lambda$initAllData$14 - [TASK] MapleLifeFactory.initEliteMonster() error:
+java.lang.NullPointerException: Cannot invoke "Plugin.provider.MapleData.iterator()" because the return value of "Plugin.provider.MapleDataProvider.getData(String)" is null
+	at Net.server.life.MapleLifeFactory.initEliteMonster(MapleLifeFactory.java:288)
+	at Net.server.InitializeServer.lambda$initAllData$14(InitializeServer.java:343)
+	at java.base/java.util.concurrent.CompletableFuture$AsyncRun.run(CompletableFuture.java:1804)
+	at java.base/java.util.concurrent.CompletableFuture$AsyncRun.exec(CompletableFuture.java:1796)
+	at java.base/java.util.concurrent.ForkJoinTask.doExec(ForkJoinTask.java:387)
+	at java.base/java.util.concurrent.ForkJoinPool$WorkQueue.topLevelExec(ForkJoinPool.java:1310)
+	at java.base/java.util.concurrent.ForkJoinPool.scan(ForkJoinPool.java:1841)
+	at java.base/java.util.concurrent.ForkJoinPool.runWorker(ForkJoinPool.java:1806)
+	at java.base/java.util.concurrent.ForkJoinWorkerThread.run(ForkJoinWorkerThread.java:188)
+2025-06-29 11:38:05.400 [ForkJoinPool-3-worker-14] INFO  Net.NetRun.lambda$main$0 - [初始化伺服器] 已加載 15 / 23
+2025-06-29 11:38:05.424 [ForkJoinPool-3-worker-17] INFO  Net.NetRun.lambda$main$0 - [初始化伺服器] 已加載 16 / 23
+2025-06-29 11:38:05.672 [main] ERROR Net.NetRun.main - 數據加載任務遇到錯誤，服務器啟動失敗。
+java.util.concurrent.CompletionException: java.lang.RuntimeException: 商城伺服器綁定連接埠 6002 失敗
+	at java.base/java.util.concurrent.CompletableFuture.encodeThrowable(CompletableFuture.java:315)
+	at java.base/java.util.concurrent.CompletableFuture.completeThrowable(CompletableFuture.java:320)
+	at java.base/java.util.concurrent.CompletableFuture$AsyncRun.run(CompletableFuture.java:1807)
+	at java.base/java.util.concurrent.CompletableFuture$AsyncRun.exec(CompletableFuture.java:1796)
+	at java.base/java.util.concurrent.ForkJoinTask.doExec(ForkJoinTask.java:387)
+	at java.base/java.util.concurrent.ForkJoinPool$WorkQueue.topLevelExec(ForkJoinPool.java:1310)
+	at java.base/java.util.concurrent.ForkJoinPool.scan(ForkJoinPool.java:1841)
+	at java.base/java.util.concurrent.ForkJoinPool.runWorker(ForkJoinPool.java:1806)
+	at java.base/java.util.concurrent.ForkJoinWorkerThread.run(ForkJoinWorkerThread.java:188)
+Caused by: java.lang.RuntimeException: 商城伺服器綁定連接埠 6002 失敗
+	at Server.cashshop.CashShopServer.run_startup_configurations(CashShopServer.java:26)
+	at java.base/java.util.concurrent.CompletableFuture$AsyncRun.run(CompletableFuture.java:1804)
+	... 6 common frames omitted
+Caused by: java.lang.NullPointerException: Cannot invoke "io.netty.channel.Channel.remoteAddress()" because "this.channel" is null
+	at Server.netty.ServerConnection.run(ServerConnection.java:42)
+	at Server.cashshop.CashShopServer.run_startup_configurations(CashShopServer.java:23)
+	... 7 common frames omitted
