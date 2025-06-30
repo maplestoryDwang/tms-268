@@ -318,31 +318,32 @@ public class Item implements Comparable<Item> {
     }
 
     public void encode(OutPacket outPacket) {
-        outPacket.encodeByte(getPet() != null ? 3 : getType()); // 道具類型
-        if (getPet() == null && getType() == 2) {
-            // GW_ItemSlotBundle_RawEncode
-            encodeBaseRaw(outPacket);
-            outPacket.encodeShort(getQuantity());
-            outPacket.encodeString(getOwner(), 15);
-            outPacket.encodeShort(getAttribute());
+        outPacket.encodeByte(this.getPet() != null ? 3 : this.getType());
+        if (this.getPet() == null && this.getType() == 2) {
+            this.encodeBaseRaw(outPacket);
+            outPacket.encodeShort(this.getQuantity());
+            outPacket.encodeString(this.getOwner(), 15);
+            outPacket.encodeShort(this.getAttribute());
             outPacket.encodeByte(0);
-            if (ItemConstants.類型.飛鏢(getItemId()) || ItemConstants.類型.子彈(getItemId()) || getItemId() / 10000 == 287 || getItemId() == 4001886 || ItemConstants.isSetupExpRate(getItemId())) {
-                outPacket.encodeLong(getSN());
+            if (ItemConstants.類型.飛鏢(this.getItemId()) || ItemConstants.類型.子彈(this.getItemId()) || this.getItemId() / 10000 == 287 || this.getItemId() == 4001886 || ItemConstants.isSetupExpRate(this.getItemId())) {
+                outPacket.encodeLong((long)this.getSN());
             }
+
             outPacket.encodeInt(0);
-            int familiarid = ItemConstants.getFamiliarByItemID(getItemId());
-            FamiliarCard fc = getFamiliarCard();
+            int familiarid = ItemConstants.getFamiliarByItemID(this.getItemId());
+            FamiliarCard fc = this.getFamiliarCard();
             outPacket.encodeInt(familiarid);
-            outPacket.encodeShort(familiarid > 0 && fc != null ? fc.getLevel() : 1);
+            outPacket.encodeShort(familiarid > 0 && fc != null ? (short)fc.getLevel() : 1);
             outPacket.encodeShort(familiarid > 0 && fc != null ? fc.getSkill() : 0);
-            outPacket.encodeShort(familiarid > 0 && fc != null ? fc.getLevel() : 1);
+            outPacket.encodeShort(familiarid > 0 && fc != null ? (short)fc.getLevel() : 1);
             outPacket.encodeShort(familiarid > 0 && fc != null ? fc.getOption(0) : 0);
             outPacket.encodeShort(familiarid > 0 && fc != null ? fc.getOption(1) : 0);
             outPacket.encodeShort(familiarid > 0 && fc != null ? fc.getOption(2) : 0);
-            outPacket.encodeByte(familiarid > 0 && fc != null ? fc.getGrade() : 0);     //品級 0=C 1=B 2=A 3=S 4=SS
-        } else if (getPet() != null) {
-            encodePetRaw(outPacket, getPet(), true);
+            outPacket.encodeByte(familiarid > 0 && fc != null ? fc.getGrade() : 0);
+        } else if (this.getPet() != null) {
+            this.encodePetRaw(outPacket, this.getPet(), true);
         }
+
     }
 
     public boolean encodeBaseRaw(OutPacket outPacket) {

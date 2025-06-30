@@ -27,23 +27,26 @@ public class FileTime implements Serializable {
         isConvertedForClient = convertedForClient;
     }
 
-    public enum Type {
-        // Mushy
-        MAX_TIME(150842304000000000L),
-        ZERO_TIME(94354848000000000L),
+    public static enum Type {
+        MAX_TIME(35120710, -1157267456),
+        ZERO_TIME(21968699, -35635200),
         PERMANENT(150841440000000000L),
         FT_UT_OFFSET(116444592000000000L),
-        QUEST_TIME(27111903),
-        PLAIN_ZERO(0); // 00 80 05 BB 46 E6 17 02
+        QUEST_TIME(27111903L),
+        PLAIN_ZERO(0L);
 
         private long val;
 
-        Type(long val) {
+        private Type(long val) {
             this.val = val;
         }
 
+        private Type(int lowPart, int highPart) {
+            this.val = (long)lowPart + ((long)highPart << 32);
+        }
+
         public long getVal() {
-            return val;
+            return this.val;
         }
     }
 

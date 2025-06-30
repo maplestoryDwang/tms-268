@@ -19,6 +19,7 @@ import SwordieX.util.FileTime;
 import tools.DateUtil;
 import tools.Pair;
 import tools.Randomizer;
+import SwordieX.util.FileTime.Type;
 
 import java.io.Serializable;
 import java.util.*;
@@ -2270,121 +2271,92 @@ public class Equip extends Item implements Serializable {
     @Override
     public void encode(OutPacket outPacket) {
         super.encode(outPacket);
+        boolean hasUniqueId = this.encodeBaseRaw(outPacket);
+        boolean isCashItem = MapleItemInformationProvider.getInstance().isCash(this.getItemId());
+        outPacket.encodeByte(0);
+        this.encodeEquipBase(outPacket);
+        outPacket.encodeString(this.isMvpEquip() ? "ＭＶＰ" : this.getOwner(), 15);
+        outPacket.encodeByte(this.getState(true) > 0 && this.getState(true) < 17 ? this.getState(false) | 32 : this.getState(false));
+        outPacket.encodeByte(this.getStarForceLevel());
 
-        // GW_ItemSlotEquip_RawEncode
-        boolean hasUniqueId = encodeBaseRaw(outPacket);
-        boolean isCashItem = MapleItemInformationProvider.getInstance().isCash(getItemId());
-
-        outPacket.encodeByte(0); // 218 sub_2BBE1E0 , v255 sub_144A9F3D0
-
-        encodeEquipBase(outPacket);
-
-        // 擁有者名字
-        outPacket.encodeString(isMvpEquip() ? "ＭＶＰ" : getOwner(), 15);
-        // 潛能等級 17 = 特殊rare, 18 = 稀有epic, 19 = 罕見unique, 20 = 傳說legendary, potential flags. special grade is 14 but it crashes
-        outPacket.encodeByte((getState(true) > 0 && getState(true) < 17) ? (getState(false) | 0x20) : getState(false));
-        // 裝備星級
-        outPacket.encodeByte(getStarForceLevel());
-        // 潛在能力
-        for (int i = 1; i <= 3; ++i) {
-            outPacket.encodeShort((getPotential(i, false) <= 0) ? 0 : getPotential(i, false));
+        int sfFlag;
+        for(sfFlag = 1; sfFlag <= 3; ++sfFlag) {
+            outPacket.encodeShort(this.getPotential(sfFlag, false) <= 0 ? 0 : this.getPotential(sfFlag, false));
         }
-        // 附加潛能
-        for (int j = 1; j <= 3; ++j) {
-            outPacket.encodeShort((getState(true) > 0 && getState(true) < 17) ? ((j == 1) ? getState(true) : 0) : getPotential(j, true));
+
+        for(sfFlag = 1; sfFlag <= 3; ++sfFlag) {
+            outPacket.encodeShort(this.getState(true) > 0 && this.getState(true) < 17 ? (sfFlag == 1 ? this.getState(true) : 0) : this.getPotential(sfFlag, true));
         }
-        // 鐵砧
-        outPacket.encodeShort(isCashItem ? 0 : getItemSkin() % 10000);
-        /*
-         * Alien Stone FLAG
-         * 0x01 = 你可以在這件物品上鑲入星岩。
-         * 0x03 = 你可以在這件物品上鑲入星岩。 有個鑲嵌的孔 未鑲嵌
-         * 0x13 = 有1個插孔 已經鑲嵌東西
-         */
-        outPacket.encodeShort(getSocketState()); //V.101新增
-        //outPacket.encodeShort(getSocket1() % 10000); //V.102新增 鑲嵌寶石1 ID: 3281 = 全屬性+4%
-        //outPacket.encodeShort(getSocket2() % 10000); //V.102新增 鑲嵌寶石2
-        //outPacket.encodeShort(getSocket3() % 10000); //V.102新增 鑲嵌寶石3
 
-        //outPacket.encodeInt(0);//equip.getMixColor() v260 remove
-
+        outPacket.encodeShort(isCashItem ? 0 : this.getItemSkin() % 10000);
+        outPacket.encodeShort(this.getSocketState());
         if (!hasUniqueId) {
-            outPacket.encodeLong(getSN());
+            outPacket.encodeLong((long)this.getSN());
         }
 
-        // GW_CashItemOption_Encode
-        outPacket.encodeLong(0); // liCashItemSN
-        outPacket.encodeFT(FileTime.fromType(FileTime.Type.ZERO_TIME)); //getTime(equip.getFtExpireDate())
-        outPacket.encodeInt(0);//equip.getCSGrade()
-        for (int i = 0; i < 3; ++i) {
-            outPacket.encodeInt(0);//equip.getAnOption(i)
-        }
-
-        // v260 add
-        outPacket.encodeLong(0);
-        outPacket.encodeInt(0);
-        // v262 add
+        outPacket.encodeLong(0L);
+        outPacket.encodeFT(FileTime.fromType(Type.ZERO_TIME));
         outPacket.encodeInt(0);
 
-        // 靈魂寶珠
-        outPacket.encodeShort(getSoulOptionID());
-        // 靈魂捲軸
-        outPacket.encodeShort(getSoulSocketID());
-        // 靈魂潛能
-        outPacket.encodeShort(getSoulOption());
-        // 秘法符文
-        if (ItemConstants.類型.秘法符文(getItemId())) {
-            outPacket.encodeShort(getARC());
-            outPacket.encodeInt(getArcExp());
-            outPacket.encodeShort(getARCLevel());
-        }
-        if (ItemConstants.類型.真實符文(getItemId())) {
-            outPacket.encodeShort(getAut());
-            outPacket.encodeInt(getAutExp());
-            outPacket.encodeShort(getAutLevel());
+        for(sfFlag = 0; sfFlag < 3; ++sfFlag) {
+            outPacket.encodeInt(0);
         }
 
-        // 220 sub_587F80 // v255 sub_1403B1B10 // v267.2 sub_140549660
+        outPacket.encodeLong(0L);
+        outPacket.encodeInt(0);
+        outPacket.encodeInt(0);
+        outPacket.encodeShort(this.getSoulOptionID());
+        outPacket.encodeShort(this.getSoulSocketID());
+        outPacket.encodeShort(this.getSoulOption());
+        if (ItemConstants.類型.秘法符文(this.getItemId())) {
+            outPacket.encodeShort(this.getARC());
+            outPacket.encodeInt(this.getArcExp());
+            outPacket.encodeShort(this.getARCLevel());
+        }
+
+        if (ItemConstants.類型.真實符文(this.getItemId())) {
+            outPacket.encodeShort(this.getAut());
+            outPacket.encodeInt(this.getAutExp());
+            outPacket.encodeShort(this.getAutLevel());
+        }
+
         outPacket.encodeShort(-1);
-        outPacket.encodeFT(FileTime.fromType(FileTime.Type.MAX_TIME));
-        outPacket.encodeFT(FileTime.fromType(FileTime.Type.ZERO_TIME));
-        outPacket.encodeFT(FileTime.fromType(FileTime.Type.MAX_TIME));
-        // v267.2 sub_140549700
+        outPacket.encodeFT(FileTime.fromType(Type.MAX_TIME));
+        outPacket.encodeFT(FileTime.fromType(Type.ZERO_TIME));
+        outPacket.encodeFT(FileTime.fromType(Type.MAX_TIME));
         outPacket.encodeInt(0);
         outPacket.encodeInt(0);
         outPacket.encodeInt(0);
-        // 機器人
-        if (ItemConstants.類型.機器人(getItemId())) {
-            if (getAndroid() != null) {
-                getAndroid().encodeAndroidLook(outPacket);
+        if (ItemConstants.類型.機器人(this.getItemId())) {
+            if (this.getAndroid() != null) {
+                this.getAndroid().encodeAndroidLook(outPacket);
             } else {
                 outPacket.encodeArr(new byte[28]);
             }
         }
-        outPacket.encodeByte(0);
-        outPacket.encodeByte(0);
 
-        int sfFlag;
-        int unkFlag;
-        if (getPosition() < 0 && EnhanceResultType.EQUIP_MARK.check(getEnchantBuff())) {
+        outPacket.encodeByte(0);
+        outPacket.encodeByte(0);
+        byte unkFlag;
+        if (this.getPosition() < 0 && EnhanceResultType.EQUIP_MARK.check(this.getEnchantBuff())) {
             sfFlag = 0;
             unkFlag = 0;
         } else {
-            sfFlag = getEquipSFBaseFlag();
+            sfFlag = this.getEquipSFBaseFlag();
             unkFlag = 0;
         }
 
-        //TODO:不知道甚麼強化加的基礎屬性(sub_140409230)
-        encodeEquipCalcStat(outPacket, unkFlag, 2);
-
+        this.encodeEquipCalcStat(outPacket, unkFlag, 2);
         outPacket.encodeByte(sfFlag > 0);
         if (sfFlag > 0) {
-            //TODO:應該是星力強化加的基礎屬性(sub_140409230)
-            encodeEquipCalcStat(outPacket, sfFlag, 1);
+            this.encodeEquipCalcStat(outPacket, sfFlag, 1);
         }
-        // 點商鐵砧
-        outPacket.encodeInt(isCashItem ? getItemSkin() : 0);
-        outPacket.encodeFT(FileTime.fromType(FileTime.Type.ZERO_TIME));
+
+        outPacket.encodeInt(isCashItem ? this.getItemSkin() : 0);
+        outPacket.encodeFT(FileTime.fromType(Type.ZERO_TIME));
+        outPacket.encodeLong(1L);
+        outPacket.encodeArr(new byte[80]);
+        outPacket.encodeInt(6);
     }
 
     public void encodeEquipBase(OutPacket outPacket) {

@@ -26,6 +26,7 @@ import tools.data.MaplePacketLittleEndianWriter;
 
 import java.awt.*;
 import java.util.Collections;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
@@ -113,60 +114,61 @@ public class InventoryPacket {
      */
     public static byte[] modifyInventory(boolean updateTick, List<ModifyInventory> mods, MapleCharacter chr, boolean active) {
         MaplePacketLittleEndianWriter mplew = new MaplePacketLittleEndianWriter();
-
         mplew.writeShort(OutHeader.LP_InventoryOperation.getValue());
         mplew.writeBool(updateTick);
-        mplew.write(0); // v255
-        mplew.writeInt(mods.size()); //更新的次數
+        mplew.write(0);
+        mplew.writeInt(mods.size());
         mplew.write(0);
         int addMovement = -1;
-        for (ModifyInventory mod : mods) {
+
+        ModifyInventory mod;
+        for(Iterator var6 = mods.iterator(); var6.hasNext(); mod.clear()) {
+            mod = (ModifyInventory)var6.next();
             mplew.write(mod.getMode());
             mplew.write(mod.getInventoryType());
-            boolean oldpos = mod.getMode() == 2 || mod.getMode() == 9 || (mod.getMode() == 6 && !mod.switchSrcDst());
+            boolean oldpos = mod.getMode() == 2 || mod.getMode() == 9 || mod.getMode() == 6 && !mod.switchSrcDst();
             mplew.writeShort(oldpos ? mod.getOldPosition() : mod.getPosition());
             switch (mod.getMode()) {
-                case 0:  //獲得道具
+                case 0:
                     PacketHelper.GW_ItemSlotBase_Encode(mplew, mod.getItem());
                     break;
-                case 1:  //更新道具數量
+                case 1:
                     mplew.writeShort(mod.getQuantity());
                     break;
-                case 2:  //移動道具
+                case 2:
                     mplew.writeShort(mod.getPosition());
                     if (mod.getPosition() < 0 || mod.getOldPosition() < 0) {
                         addMovement = mod.getOldPosition() < 0 ? 1 : 2;
                     }
                     break;
-                case 3:  //刪除道具
+                case 3:
                     if (mod.getPosition() < 0) {
                         addMovement = 2;
                     }
                     break;
-                case 4:  // 刷新經驗值
-                    mplew.writeLong(((Equip) mod.getItem()).getSealedExp());
+                case 4:
+                    mplew.writeLong(((Equip)mod.getItem()).getSealedExp());
+                case 5:
+                case 8:
+                default:
                     break;
-                case 6: //移動道具小背包到背包
+                case 6:
                     mplew.writeShort(!mod.switchSrcDst() ? mod.getPosition() : mod.getOldPosition());
                     if (mod.getIndicator() != -1) {
                         mplew.writeShort(mod.getIndicator());
                     }
                     break;
-                case 7: //小背包更新道具
+                case 7:
                     mplew.writeShort(mod.getQuantity());
                     break;
-                case 8: //小背包刪除道具
-                    //這個地方無需處理
-                    break;
-                case 9: //移動位置小背包裡面的道具
+                case 9:
                     mplew.writeShort(mod.getPosition());
                     break;
-                case 10: //小背包獲得道具
+                case 10:
                     PacketHelper.GW_ItemSlotBase_Encode(mplew, mod.getItem());
-                    break;
             }
-            mod.clear();
         }
+
         if (addMovement > -1) {
             mplew.write(addMovement);
         }
