@@ -422,3 +422,55 @@
 2025-07-01 02:15:32.596 [ForkJoinPool-2-worker-17] INFO  Net.NetRun.lambda$main$0 - [初始化伺服器] 已加載 23 / 23
 2025-07-01 02:15:32.596 [ForkJoinPool-2-worker-17] INFO  Net.NetRun.lambda$main$0 - [初始化伺服器] initAllData() 所有任務已完成。
 2025-07-01 02:15:32.596 [ForkJoinPool-2-worker-17] INFO  Net.server.InitializeServer.lambda$initAllData$24 - All 23 tasks completed successfully.
+2025-07-01 02:21:25.890 [main] INFO  Net.NetRun.main - 啟動遊戲版本:TMS-268..
+2025-07-01 02:21:26.032 [main] INFO  connection.netty.ChannelHandler.initHandlers - Initialized 42 handlers in 142ms.
+2025-07-01 02:21:26.310 [main] INFO  Net.NetRun.main - OutHeader包頭反射已啟動，等待連接中。
+2025-07-01 02:21:26.310 [main] INFO  Net.NetRun.main - InHeader包頭反射已啟動，等待連接中。
+2025-07-01 02:21:26.314 [Timer-1] INFO  Opcode.Headler.InHeader.checkForChanges - [InHeader]已套用新的資訊。
+2025-07-01 02:21:26.314 [Timer-0] INFO  Opcode.Headler.OutHeader.checkForChanges - [OutHeader]已套用新的資訊。
+2025-07-01 02:21:26.538 [ForkJoinPool-1-worker-1] WARN  c.alibaba.druid.pool.DruidDataSource.initCheck - removeAbandoned is true, not use in production.
+2025-07-01 02:21:26.607 [ForkJoinPool-1-worker-1] INFO  c.alibaba.druid.pool.DruidDataSource.init - {dataSource-1} inited
+2025-07-01 02:21:26.951 [ForkJoinPool-2-worker-16] INFO  Net.NetRun.lambda$main$0 - [初始化伺服器] 已加載 1 / 23
+2025-07-01 02:21:27.055 [ForkJoinPool-2-worker-19] INFO  Net.NetRun.lambda$main$0 - [初始化伺服器] 已加載 2 / 23
+2025-07-01 02:21:27.062 [ForkJoinPool-2-worker-21] INFO  Net.NetRun.lambda$main$0 - [初始化伺服器] 已加載 3 / 23
+2025-07-01 02:21:27.087 [ForkJoinPool-2-worker-10] INFO  Net.NetRun.lambda$main$0 - [初始化伺服器] 已加載 4 / 23
+2025-07-01 02:21:27.110 [ForkJoinPool-2-worker-22] INFO  Net.NetRun.lambda$main$0 - [初始化伺服器] 已加載 5 / 23
+2025-07-01 02:21:27.117 [ForkJoinPool.commonPool-worker-4] INFO  Server.cashshop.CashShopServer.run_startup_configurations - [CASH SHOP] Start CashShopServer。
+2025-07-01 02:21:27.182 [ForkJoinPool-2-worker-20] INFO  Net.NetRun.lambda$main$0 - [初始化伺服器] 已加載 6 / 23
+2025-07-01 02:21:27.208 [ForkJoinPool-2-worker-6] INFO  Net.NetRun.lambda$main$0 - [初始化伺服器] 已加載 7 / 23
+2025-07-01 02:21:27.361 [ForkJoinPool-2-worker-18] INFO  Net.NetRun.lambda$main$0 - [初始化伺服器] 已加載 8 / 23
+2025-07-01 02:21:27.498 [ForkJoinPool-2-worker-2] INFO  Plugin.provider.loaders.StringData.loadItemStrings - Loaded item strings from data file in 870ms.
+2025-07-01 02:21:27.577 [ForkJoinPool-2-worker-9] INFO  Net.NetRun.lambda$main$0 - [初始化伺服器] 已加載 9 / 23
+2025-07-01 02:21:27.672 [ForkJoinPool-2-worker-2] INFO  Plugin.provider.loaders.StringData.loadSkillStrings - Loaded skill strings from data file in 174ms.
+2025-07-01 02:21:27.735 [ForkJoinPool-2-worker-2] INFO  Plugin.provider.loaders.StringData.loadMobStrings - Loaded mob strings from data file in 63ms.
+2025-07-01 02:21:27.798 [ForkJoinPool-2-worker-2] INFO  Plugin.provider.loaders.StringData.loadNpcStrings - Loaded npc strings from data file in 63ms.
+2025-07-01 02:21:27.886 [ForkJoinPool-2-worker-2] INFO  Plugin.provider.loaders.StringData.loadMapStrings - Loaded item strings from data file in 88ms.
+2025-07-01 02:21:27.886 [ForkJoinPool-2-worker-2] INFO  Net.NetRun.lambda$main$0 - [初始化伺服器] 已加載 10 / 23
+2025-07-01 02:21:28.019 [ForkJoinPool-2-worker-23] INFO  Net.NetRun.lambda$main$0 - [初始化伺服器] 已加載 11 / 23
+2025-07-01 02:21:28.241 [ForkJoinPool-2-worker-11] INFO  Net.NetRun.lambda$main$0 - [初始化伺服器] 已加載 12 / 23
+2025-07-01 02:21:28.255 [ForkJoinPool-2-worker-14] INFO  Net.NetRun.lambda$main$0 - [初始化伺服器] 已加載 13 / 23
+2025-07-01 02:21:28.281 [ForkJoinPool.commonPool-worker-13] INFO  Server.login.LoginServer.initServerConnection - Login server listening on port: 8484
+2025-07-01 02:21:28.311 [ForkJoinPool.commonPool-worker-13] INFO  Server.login.LoginServer.initServerConnection - Login server listening on port: 5000
+2025-07-01 02:21:28.334 [ForkJoinPool-2-worker-12] INFO  Net.NetRun.lambda$main$0 - [初始化伺服器] 已加載 14 / 23
+2025-07-01 02:21:28.541 [ForkJoinPool-2-worker-13] INFO  Net.NetRun.lambda$main$0 - [初始化伺服器] 已加載 15 / 23
+2025-07-01 02:21:29.682 [ForkJoinPool-2-worker-15] INFO  Net.NetRun.lambda$main$0 - [初始化伺服器] 已加載 16 / 23
+2025-07-01 02:21:29.730 [ForkJoinPool-2-worker-3] INFO  Net.NetRun.lambda$main$0 - [初始化伺服器] 已加載 17 / 23
+2025-07-01 02:21:29.777 [ForkJoinPool-2-worker-7] INFO  Net.NetRun.lambda$main$0 - [初始化伺服器] 已加載 18 / 23
+2025-07-01 02:21:29.813 [ForkJoinPool-2-worker-8] INFO  Net.NetRun.lambda$main$0 - [初始化伺服器] 已加載 19 / 23
+2025-07-01 02:21:29.908 [main] INFO  Net.NetRun.main - 所有數據加載任務均已完成。總共耗時：4 秒。
+2025-07-01 02:21:30.383 [main] INFO  Server.channel.ChannelServer.run_startup_configurations - CHANNEL 1 listening on port: 7575
+2025-07-01 02:21:30.525 [main] INFO  Server.channel.ChannelServer.run_startup_configurations - CHANNEL 2 listening on port: 7576
+2025-07-01 02:21:30.613 [main] INFO  Server.channel.ChannelServer.run_startup_configurations - CHANNEL 3 listening on port: 7577
+2025-07-01 02:21:30.636 [main] INFO  Server.channel.ChannelServer.run_startup_configurations - CHANNEL 4 listening on port: 7578
+2025-07-01 02:21:30.667 [main] INFO  Server.channel.ChannelServer.run_startup_configurations - CHANNEL 5 listening on port: 7579
+2025-07-01 02:21:30.667 [main] INFO  Server.channel.ChannelServer.startChannel_Main - 所有頻道已啟動完成.
+2025-07-01 02:21:30.667 [main] INFO  Net.NetRun.main - 頻道服務器已啟動，等待連接中。
+2025-07-01 02:21:30.701 [main] INFO  Net.NetRun.main - 怪物重生系統已啟動，等待執行中。
+2025-07-01 02:21:30.715 [main] INFO  Net.NetRun.main - 反應堆掉落系統已清除掉落資料。
+2025-07-01 02:21:30.890 [ForkJoinPool-2-worker-1] INFO  Net.NetRun.lambda$main$0 - [初始化伺服器] 已加載 20 / 23
+2025-07-01 02:21:33.190 [ForkJoinPool-2-worker-5] INFO  Net.NetRun.lambda$main$0 - [初始化伺服器] 已加載 21 / 23
+2025-07-01 02:21:37.684 [ForkJoinPool-2-worker-4] INFO  Net.NetRun.lambda$main$0 - [初始化伺服器] 已加載 22 / 23
+2025-07-01 02:21:39.974 [main] INFO  Net.NetRun.main - 服務器啟動完成，等待連接中。
+2025-07-01 02:22:11.280 [ForkJoinPool-2-worker-17] INFO  Net.NetRun.lambda$main$0 - [初始化伺服器] 已加載 23 / 23
+2025-07-01 02:22:11.281 [ForkJoinPool-2-worker-17] INFO  Net.NetRun.lambda$main$0 - [初始化伺服器] initAllData() 所有任務已完成。
+2025-07-01 02:22:11.281 [ForkJoinPool-2-worker-17] INFO  Net.server.InitializeServer.lambda$initAllData$24 - All 23 tasks completed successfully.
