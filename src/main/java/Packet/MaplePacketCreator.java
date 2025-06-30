@@ -223,6 +223,7 @@ public class MaplePacketCreator {
      * @param position
      * @return The character info packet. 42 8B 8E 0F
      */
+
     public static byte[] getWarpToMap(MapleCharacter player, MapleMap to, Point position, int spawnPoint, boolean load, boolean revive) {
         MaplePacketLittleEndianWriter mplew = new MaplePacketLittleEndianWriter();
         mplew.writeShort(OutHeader.LP_SET_FIELD.getValue());
@@ -315,14 +316,13 @@ public class MaplePacketCreator {
             mplew.writeInt(0);
         }
 
-        int i;
         if (mapId / 10 == 10520011 || mapId / 10 == 10520051 || mapId == 105200519) {
             String[] aS = new String[0];
             mplew.write(aS.length);
             String[] var14 = aS;
             int var15 = aS.length;
 
-            for(i = 0; i < var15; ++i) {
+            for(int i = 0; i < var15; ++i) {
                 String s = var14[i];
                 mplew.writeMapleAsciiString(s);
             }
@@ -363,7 +363,7 @@ public class MaplePacketCreator {
         int unkSize = 0;
         mplew.writeInt(unkSize);
 
-        for(i = 0; i < unkSize; ++i) {
+        for(int i = 0; i < unkSize; ++i) {
             mplew.writeMapleAsciiString("");
             mplew.writeInt(0);
         }
@@ -372,12 +372,168 @@ public class MaplePacketCreator {
         int size = 0;
         mplew.writeInt(size);
 
-        for(i = 0; i < size; ++i) {
+        for(int i = 0; i < size; ++i) {
             mplew.writeInt(0);
         }
 
         return mplew.getPacket();
     }
+
+    public static byte[] getWarpToMapV267(MapleCharacter player, MapleMap to, Point position, int spawnPoint, boolean load, boolean revive) {
+        MaplePacketLittleEndianWriter mplew = new MaplePacketLittleEndianWriter();
+        mplew.writeShort(OutHeader.LP_SET_FIELD.getValue());
+         mplew.writeLong(PacketHelper.getTime(System.currentTimeMillis()));
+        mplew.writeInt(player.getClient().getChannel() - 1);
+        mplew.write(0);
+        mplew.writeInt(0);
+        mplew.write(load ? 1 : 2);
+        mplew.writeInt(load ? 0 : to.getFieldType());
+        mplew.writeInt(Math.abs(to.getBottom() - to.getTop()));
+        mplew.writeInt(Math.abs(to.getRight() - to.getLeft()));
+        mplew.writeBool(load);
+        int nNotifierCheck = 0;
+        mplew.writeShort(nNotifierCheck);
+        int mapId;
+
+        mapId = to.getId();
+        if (load) {
+            int WarpToMapCrc = Randomizer.nextInt();
+            int WarpToMapCrc2 = Randomizer.nextInt();
+            int WarpToMapCrc3 = Randomizer.nextInt();
+            mplew.writeInt(WarpToMapCrc);
+            mplew.writeInt(WarpToMapCrc2);
+            mplew.writeInt(WarpToMapCrc3);
+            PacketHelper.addCharacterInfo(mplew, player, -1L);
+            boolean bUnk = true;
+            mplew.writeBool(bUnk);
+            if (bUnk) {
+                bUnk = false;
+                mplew.writeBool(bUnk);
+                if (bUnk) {
+                    mplew.writeInt(0);
+                }
+
+                mplew.writeLong(PacketHelper.getTime(-2L));
+
+                // 官方
+                mplew.write(0);
+                mplew.writeLong(PacketHelper.getTime(-2L));
+                mplew.writeLong(0L);
+                mplew.writeLong(0L);
+            }
+        } else {
+            mplew.writeBool(revive);
+            mplew.writeInt(mapId);
+            mplew.write(spawnPoint);
+            mplew.writeInt(player.getStat().getHp());
+            mplew.writeInt(0);
+            mplew.write(position != null);
+            if (position != null) {
+                mplew.writeInt(position.x);
+                mplew.writeInt(position.y);
+            }
+        }
+
+        boolean bUnk = false;
+        mplew.write(bUnk);
+        if (bUnk) {
+            mplew.writeInt(0);
+            mplew.writeInt(0);
+        }
+
+        mplew.write(2);
+        mplew.writeBool(to.getFieldType() >= 182 && to.getFieldType() <= 184);
+        mplew.writeInt(100);
+        boolean bCFieldCustom = false;
+        mplew.writeBool(bCFieldCustom);
+        if (bCFieldCustom) {
+            mplew.writeInt(0);
+            mplew.writeMapleAsciiString("");
+            mplew.writeInt(0);
+        }
+
+        mplew.writeBool(false);
+        // 怪怪卡
+        int buffersize_familiar = 4;
+        mplew.writeInt(buffersize_familiar);
+        mplew.write(new byte[buffersize_familiar]);
+
+
+        mplew.writeBool(JobConstants.isSeparatedSpJob(player.getJob()));
+        mplew.writeLong(0L);
+        mplew.writeInt(-1);
+
+        boolean v88 = false;
+        mplew.writeBool(v88);
+        if (v88) {
+            mplew.writeInt(0);
+        }
+
+        if (mapId / 10 == 10520011 || mapId / 10 == 10520051 || mapId == 105200519) {
+            String[] aS = new String[0];
+            mplew.write(aS.length);
+            for (String s : aS) {
+                mplew.writeMapleAsciiString(s);
+            }
+        }
+
+        mplew.writeInt(0);
+        mplew.write(0);
+        mplew.writeInt(0);
+        mplew.writeInt(0);
+        boolean setChrMenuItem = true;
+        mplew.writeBool(setChrMenuItem);
+        if (setChrMenuItem) {
+            mplew.writeInt(-1);
+            mplew.writeInt(0);
+            mplew.writeInt(0);
+            mplew.writeInt(999999999);
+            mplew.writeInt(999999999);
+            mplew.writeMapleAsciiString("");
+        }
+
+        mplew.writeInt(0);
+        mplew.writeMapleAsciiString("");
+        mplew.writeMapleAsciiString("");
+
+        // 星期天
+        boolean bSundayMaple = Calendar.getInstance().get(Calendar.DAY_OF_WEEK) == 1;
+        mplew.writeBool(bSundayMaple);
+        if (bSundayMaple) {
+            mplew.writeMapleAsciiString("UI/UIWindowEvent.img/sundayMaple");
+            mplew.writeMapleAsciiString("#sunday# #fnNanum Gothic ExtraBold##fs20##fc0xFFFFFFFF#完成怪物公園經驗值新增#fc0xFFFFD800#50%！\\r\\n#sunday# #fs20##fc0xFFFFFFFF#烈焰戰狼消滅經驗值#fc0xFFFFD800#2倍！\\r\\n#sunday# #fnNanum Gothic ExtraBold##fs20##fc0xFFFFFFFF#大波斯菊花瓣獲得量即可獲得量#fc0xFFFFD800#2倍！");
+            mplew.writeMapleAsciiString("#fn???? ExtraBold##fs15##fc0xFFB7EC00#2023年10月22日星期天");
+            mplew.writeInt(60);
+            mplew.writeInt(210);
+        }
+
+        mplew.writeInt(0);
+        mplew.writeInt(0);
+        mplew.write(1);
+        mplew.writeInt(0);
+        int unkSize = 0;
+        mplew.writeInt(unkSize);
+
+
+        for(int i = 0; i < unkSize; ++i) {
+            mplew.writeMapleAsciiString("");
+            mplew.writeInt(0);
+        }
+
+        
+        mplew.write(0);
+        
+        
+        int size = 0;
+        mplew.writeInt(size);
+
+        for(int i = 0; i < size; ++i) {
+            mplew.writeInt(0);
+        }
+
+        return mplew.getPacket();
+    }
+
     public static byte[] enableActions(MapleCharacter chr, boolean useTriggerForUI) {
         return updatePlayerStats(EMPTY_STATUPDATE, useTriggerForUI, chr);
     }
@@ -4237,6 +4393,45 @@ public class MaplePacketCreator {
         mplew.writeInt(n);
         mplew.writeMapleAsciiString(sUOL);
         mplew.writeMapleAsciiString(sURL);
+        return mplew.getPacket();
+    }
+
+    public static byte[] updateInnerSkillV267(MapleCharacter player, InnerSkillEntry ise1, InnerSkillEntry ise2, InnerSkillEntry ise3) {
+        MaplePacketLittleEndianWriter mplew = new MaplePacketLittleEndianWriter();
+        // 封包頭與固定欄位 (依照原有封包格式)
+        mplew.writeShort(OutHeader.LP_CharacterPotentialSet.getValue());
+        mplew.write(1);
+        mplew.write(0);
+        mplew.write(3);
+        mplew.write(0);
+
+        InnerSkillEntry[] skills = { ise1, ise2, ise3 };
+        for (InnerSkillEntry ise : skills) {
+            if (ise != null) {
+                mplew.write(ise.getPosition());
+                mplew.writeInt(ise.getSkillId());
+                mplew.write(ise.getSkillLevel());
+                mplew.write(ise.getRank());
+            }
+        }
+        try (Connection con = DatabaseConnectionEx.getConnection()) {
+            try (PreparedStatement ps = con.prepareStatement(
+                    "REPLACE INTO innerskills (skillid, characterid, skilllevel, position, rank) VALUES (?, ?, ?, ?, ?)")) {
+                for (InnerSkillEntry ise : skills) {
+                    if (ise != null) {
+                        ps.setInt(1, ise.getSkillId());
+                        ps.setInt(2, player.getId());
+                        ps.setInt(3, ise.getSkillLevel());
+                        ps.setInt(4, ise.getPosition());
+                        ps.setInt(5, ise.getRank());
+                        ps.addBatch();
+                    }
+                }
+                ps.executeBatch();
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
         return mplew.getPacket();
     }
 

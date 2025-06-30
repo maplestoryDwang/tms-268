@@ -1,0 +1,49 @@
+2025-06-30 23:40:56.681 [main] INFO  Net.NetRun.main - 啟動遊戲版本:TMS-268..
+2025-06-30 23:40:57.214 [main] INFO  connection.netty.ChannelHandler.initHandlers - Initialized 42 handlers in 412ms.
+2025-06-30 23:40:57.539 [main] INFO  Net.NetRun.main - OutHeader包頭反射已啟動，等待連接中。
+2025-06-30 23:40:57.540 [main] INFO  Net.NetRun.main - InHeader包頭反射已啟動，等待連接中。
+2025-06-30 23:40:57.569 [Timer-1] INFO  Opcode.Headler.InHeader.checkForChanges - [InHeader]已套用新的資訊。
+2025-06-30 23:40:57.569 [Timer-0] INFO  Opcode.Headler.OutHeader.checkForChanges - [OutHeader]已套用新的資訊。
+2025-06-30 23:40:57.818 [ForkJoinPool-2-worker-1] WARN  c.alibaba.druid.pool.DruidDataSource.initCheck - removeAbandoned is true, not use in production.
+2025-06-30 23:40:57.889 [ForkJoinPool-2-worker-1] INFO  c.alibaba.druid.pool.DruidDataSource.init - {dataSource-1} inited
+2025-06-30 23:40:58.018 [ForkJoinPool-3-worker-16] INFO  Net.NetRun.lambda$main$0 - [初始化伺服器] 已加載 1 / 23
+2025-06-30 23:40:58.575 [ForkJoinPool.commonPool-worker-1] INFO  Server.cashshop.CashShopServer.run_startup_configurations - [CASH SHOP] Start CashShopServer。
+2025-06-30 23:40:58.587 [ForkJoinPool-3-worker-19] INFO  Net.NetRun.lambda$main$0 - [初始化伺服器] 已加載 2 / 23
+2025-06-30 23:40:58.607 [ForkJoinPool-3-worker-10] INFO  Net.NetRun.lambda$main$0 - [初始化伺服器] 已加載 3 / 23
+2025-06-30 23:40:58.611 [ForkJoinPool-3-worker-21] INFO  Net.NetRun.lambda$main$0 - [初始化伺服器] 已加載 4 / 23
+2025-06-30 23:40:58.621 [ForkJoinPool-3-worker-22] INFO  Net.NetRun.lambda$main$0 - [初始化伺服器] 已加載 5 / 23
+2025-06-30 23:40:58.624 [ForkJoinPool-3-worker-6] INFO  Net.NetRun.lambda$main$0 - [初始化伺服器] 已加載 6 / 23
+2025-06-30 23:40:58.663 [ForkJoinPool-3-worker-20] INFO  Net.NetRun.lambda$main$0 - [初始化伺服器] 已加載 7 / 23
+2025-06-30 23:40:58.901 [ForkJoinPool-3-worker-2] INFO  Plugin.provider.loaders.StringData.loadItemStrings - Loaded item strings from data file in 965ms.
+2025-06-30 23:40:59.079 [ForkJoinPool-3-worker-18] INFO  Net.NetRun.lambda$main$0 - [初始化伺服器] 已加載 8 / 23
+2025-06-30 23:40:59.102 [ForkJoinPool-3-worker-2] INFO  Plugin.provider.loaders.StringData.loadSkillStrings - Loaded skill strings from data file in 201ms.
+2025-06-30 23:40:59.175 [ForkJoinPool-3-worker-2] INFO  Plugin.provider.loaders.StringData.loadMobStrings - Loaded mob strings from data file in 73ms.
+2025-06-30 23:40:59.262 [ForkJoinPool-3-worker-2] INFO  Plugin.provider.loaders.StringData.loadNpcStrings - Loaded npc strings from data file in 86ms.
+2025-06-30 23:40:59.277 [ForkJoinPool-3-worker-9] INFO  Net.NetRun.lambda$main$0 - [初始化伺服器] 已加載 9 / 23
+2025-06-30 23:40:59.373 [ForkJoinPool-3-worker-2] INFO  Plugin.provider.loaders.StringData.loadMapStrings - Loaded item strings from data file in 110ms.
+2025-06-30 23:40:59.373 [ForkJoinPool-3-worker-2] INFO  Net.NetRun.lambda$main$0 - [初始化伺服器] 已加載 10 / 23
+2025-06-30 23:40:59.489 [ForkJoinPool-3-worker-23] INFO  Net.NetRun.lambda$main$0 - [初始化伺服器] 已加載 11 / 23
+2025-06-30 23:40:59.789 [ForkJoinPool-3-worker-11] INFO  Net.NetRun.lambda$main$0 - [初始化伺服器] 已加載 12 / 23
+2025-06-30 23:40:59.823 [ForkJoinPool.commonPool-worker-11] INFO  Server.login.LoginServer.initServerConnection - Login server listening on port: 8484
+2025-06-30 23:40:59.855 [ForkJoinPool.commonPool-worker-11] INFO  Server.login.LoginServer.initServerConnection - Login server listening on port: 5000
+2025-06-30 23:40:59.866 [ForkJoinPool-3-worker-12] INFO  Net.NetRun.lambda$main$0 - [初始化伺服器] 已加載 13 / 23
+2025-06-30 23:41:00.165 [ForkJoinPool-3-worker-13] INFO  Net.NetRun.lambda$main$0 - [初始化伺服器] 已加載 14 / 23
+2025-06-30 23:41:00.187 [ForkJoinPool-3-worker-14] INFO  Net.NetRun.lambda$main$0 - [初始化伺服器] 已加載 15 / 23
+2025-06-30 23:41:01.187 [ForkJoinPool-3-worker-15] INFO  Net.NetRun.lambda$main$0 - [初始化伺服器] 已加載 16 / 23
+2025-06-30 23:41:01.243 [ForkJoinPool-3-worker-3] INFO  Net.NetRun.lambda$main$0 - [初始化伺服器] 已加載 17 / 23
+2025-06-30 23:41:01.273 [ForkJoinPool-3-worker-7] INFO  Net.NetRun.lambda$main$0 - [初始化伺服器] 已加載 18 / 23
+2025-06-30 23:41:01.360 [main] INFO  Net.NetRun.main - 所有數據加載任務均已完成。總共耗時：5 秒。
+2025-06-30 23:41:01.748 [ForkJoinPool-3-worker-8] INFO  Net.NetRun.lambda$main$0 - [初始化伺服器] 已加載 19 / 23
+2025-06-30 23:41:01.922 [main] INFO  Server.channel.ChannelServer.run_startup_configurations - CHANNEL 1 listening on port: 7575
+2025-06-30 23:41:02.057 [main] INFO  Server.channel.ChannelServer.run_startup_configurations - CHANNEL 2 listening on port: 7576
+2025-06-30 23:41:02.084 [main] INFO  Server.channel.ChannelServer.run_startup_configurations - CHANNEL 3 listening on port: 7577
+2025-06-30 23:41:02.106 [main] INFO  Server.channel.ChannelServer.run_startup_configurations - CHANNEL 4 listening on port: 7578
+2025-06-30 23:41:02.128 [main] INFO  Server.channel.ChannelServer.run_startup_configurations - CHANNEL 5 listening on port: 7579
+2025-06-30 23:41:02.128 [main] INFO  Server.channel.ChannelServer.startChannel_Main - 所有頻道已啟動完成.
+2025-06-30 23:41:02.128 [main] INFO  Net.NetRun.main - 頻道服務器已啟動，等待連接中。
+2025-06-30 23:41:02.163 [main] INFO  Net.NetRun.main - 怪物重生系統已啟動，等待執行中。
+2025-06-30 23:41:02.175 [main] INFO  Net.NetRun.main - 反應堆掉落系統已清除掉落資料。
+2025-06-30 23:41:02.360 [ForkJoinPool-3-worker-1] INFO  Net.NetRun.lambda$main$0 - [初始化伺服器] 已加載 20 / 23
+2025-06-30 23:41:08.409 [ForkJoinPool-3-worker-5] INFO  Net.NetRun.lambda$main$0 - [初始化伺服器] 已加載 21 / 23
+2025-06-30 23:41:11.293 [ForkJoinPool-3-worker-4] INFO  Net.NetRun.lambda$main$0 - [初始化伺服器] 已加載 22 / 23
+2025-06-30 23:41:12.122 [main] INFO  Net.NetRun.main - 服務器啟動完成，等待連接中。

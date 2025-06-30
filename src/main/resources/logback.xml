@@ -297,6 +297,7 @@
 
     <!-- 数据包错误日志 -->
     <logger name="PacketErrorLog" level="ERROR" additivity="false">
+        <appender-ref ref="控制面板"/>
         <appender-ref ref="數據包日誌"/>
     </logger>
 
@@ -380,5 +381,8 @@
     <root level="INFO">
         <appender-ref ref="控制面板"/>
         <appender-ref ref="伺服端日誌"/>
+        <appender-ref ref="數據包處理異常日誌"/>
+        <appender-ref ref="調試視窗"/>
+        <appender-ref ref="數據包日誌"/>
     </root>
 </configuration>
