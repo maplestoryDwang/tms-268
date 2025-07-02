@@ -112,9 +112,9 @@ public class NetRun {
         List<CompletableFuture<Void>> loadTasks = new ArrayList<>();
         CompletableFuture<Void> initAllDataFuture = CompletableFuture.runAsync(() -> {
             try {
-                InitializeServer.initAllData((now, total) -> {
+                InitializeServer.initAllData((now, total,msg) -> {
                     if (total.get() > 0) {
-                        log.info("[初始化伺服器] 已加載 {} / {}", now, total.get());
+                        log.info("[初始化伺服器] 已加載 {} / {}   [{}]加载完成", now, total.get(), msg);
                     }
                     if (now == total.get()) {
                         log.info("[初始化伺服器] initAllData() 所有任務已完成。");

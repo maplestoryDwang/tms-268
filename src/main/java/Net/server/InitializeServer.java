@@ -201,7 +201,7 @@ public class InitializeServer {
             } catch (Exception e) {
                 log.error("[TASK] runItems() error:", e);
             } finally {
-                listener.next(count.incrementAndGet(), total);
+                listener.next(count.incrementAndGet(), total, "runItems");
             }
         }, executor));
 
@@ -212,7 +212,7 @@ public class InitializeServer {
             } catch (Exception e) {
                 log.error("[TASK] StringData.load() error:", e);
             } finally {
-                listener.next(count.incrementAndGet(), total);
+                listener.next(count.incrementAndGet(), total, "StringData.load()");
             }
         }, executor));
 
@@ -223,7 +223,7 @@ public class InitializeServer {
             } catch (Exception e) {
                 log.error("[TASK] loadSetItemData() error:", e);
             } finally {
-                listener.next(count.incrementAndGet(), total);
+                listener.next(count.incrementAndGet(), total, "loadSetItemData()");
             }
         }, executor));
 
@@ -234,7 +234,7 @@ public class InitializeServer {
             } catch (Exception e) {
                 log.error("[TASK] loadFamiliarItems() error:", e);
             } finally {
-                listener.next(count.incrementAndGet(), total);
+                listener.next(count.incrementAndGet(), total, "loadFamiliarItems()");
             }
         }, executor));
 
@@ -245,7 +245,7 @@ public class InitializeServer {
             } catch (Exception e) {
                 log.error("[TASK] runEtc() error:", e);
             } finally {
-                listener.next(count.incrementAndGet(), total);
+                listener.next(count.incrementAndGet(), total, "run戒指佩戴等信息");
             }
         }, executor));
 
@@ -256,7 +256,7 @@ public class InitializeServer {
             } catch (Exception e) {
                 log.error("[TASK] MapleForceFactory.initialize() error:", e);
             } finally {
-                listener.next(count.incrementAndGet(), total);
+                listener.next(count.incrementAndGet(), total, "MapleForceFactory.initialize()");
             }
         }, executor));
 
@@ -267,7 +267,7 @@ public class InitializeServer {
             } catch (Exception e) {
                 log.error("[TASK] loadPotentialData() error:", e);
             } finally {
-                listener.next(count.incrementAndGet(), total);
+                listener.next(count.incrementAndGet(), total, "loadPotentialData()");
             }
         }, executor));
 
@@ -278,7 +278,7 @@ public class InitializeServer {
             } catch (Exception e) {
                 log.error("[TASK] MapleShopFactory.loadShopData() error:", e);
             } finally {
-                listener.next(count.incrementAndGet(), total);
+                listener.next(count.incrementAndGet(), total, "MapleShopFactory.loadShopData()");
             }
         }, executor));
 
@@ -289,7 +289,7 @@ public class InitializeServer {
             } catch (Exception e) {
                 log.error("[TASK] MobSkillFactory.initialize() error:", e);
             } finally {
-                listener.next(count.incrementAndGet(), total);
+                listener.next(count.incrementAndGet(), total, "MobSkillFactory.initialize()");
             }
         }, executor));
 
@@ -300,7 +300,7 @@ public class InitializeServer {
             } catch (Exception e) {
                 log.error("[TASK] MapleUnionData.init() error:", e);
             } finally {
-                listener.next(count.incrementAndGet(), total);
+                listener.next(count.incrementAndGet(), total, "MapleUnionData");
             }
         }, executor));
 
@@ -311,7 +311,7 @@ public class InitializeServer {
             } catch (Exception e) {
                 log.error("[TASK] MapleMapFactory.loadAllLinkNpc() error:", e);
             } finally {
-                listener.next(count.incrementAndGet(), total);
+                listener.next(count.incrementAndGet(), total, "MapleMapFactory.loadAllLinkNpc()");
             }
         }, executor));
 
@@ -322,7 +322,7 @@ public class InitializeServer {
             } catch (Exception e) {
                 log.error("[TASK] MapleMapFactory.loadAllMapName() error:", e);
             } finally {
-                listener.next(count.incrementAndGet(), total);
+                listener.next(count.incrementAndGet(), total, "MapleMapFactory.loadAllMapName()");
             }
         }, executor));
 
@@ -333,7 +333,7 @@ public class InitializeServer {
             } catch (Exception e) {
                 log.error("[TASK] CashItemFactory.initialize() error:", e);
             } finally {
-                listener.next(count.incrementAndGet(), total);
+                listener.next(count.incrementAndGet(), total, "CashItemFactory.initialize()");
             }
         }, executor));
 
@@ -344,7 +344,7 @@ public class InitializeServer {
             } catch (Exception e) {
                 log.error("[TASK] MapleLifeFactory.initEliteMonster() error:", e);
             } finally {
-                listener.next(count.incrementAndGet(), total);
+                listener.next(count.incrementAndGet(), total, "MapleLifeFactory.initEliteMonster()");
             }
         }, executor));
 
@@ -355,7 +355,7 @@ public class InitializeServer {
             } catch (Exception e) {
                 log.error("[TASK] MapleMonsterInformationProvider.load() error:", e);
             } finally {
-                listener.next(count.incrementAndGet(), total);
+                listener.next(count.incrementAndGet(), total , "MapleMonsterInformationProvider");
             }
         }, executor));
 
@@ -366,7 +366,7 @@ public class InitializeServer {
             } catch (Exception e) {
                 log.error("[TASK] ReactorManager.loadDrops() error:", e);
             } finally {
-                listener.next(count.incrementAndGet(), total);
+                listener.next(count.incrementAndGet(), total, "ReactorManager.loadDrops()");
             }
         }, executor));
 
@@ -377,7 +377,7 @@ public class InitializeServer {
             } catch (Exception e) {
                 log.error("[TASK] MapleLifeFactory.loadQuestCounts() error:", e);
             } finally {
-                listener.next(count.incrementAndGet(), total);
+                listener.next(count.incrementAndGet(), total, "MapleLifeFactory.loadQuestCounts()");
             }
         }, executor));
 
@@ -388,7 +388,7 @@ public class InitializeServer {
             } catch (Exception e) {
                 log.error("[TASK] MapleQuestDumper.loadQuest() error:", e);
             } finally {
-                listener.next(count.incrementAndGet(), total);
+                listener.next(count.incrementAndGet(), total, "MapleQuestDumper");
             }
         }, executor));
 
@@ -399,7 +399,7 @@ public class InitializeServer {
             } catch (Exception e) {
                 log.error("[TASK] BossWillField.init() error:", e);
             } finally {
-                listener.next(count.incrementAndGet(), total);
+                listener.next(count.incrementAndGet(), total, "BossWillField.init()");
             }
         }, executor));
 
@@ -410,7 +410,7 @@ public class InitializeServer {
             } catch (Exception e) {
                 log.error("[TASK] BossLucidField.init() error:", e);
             } finally {
-                listener.next(count.incrementAndGet(), total);
+                listener.next(count.incrementAndGet(), total, "BossLucidField.init()");
             }
         }, executor));
 
@@ -421,7 +421,7 @@ public class InitializeServer {
             } catch (Exception e) {
                 log.error("[TASK] ActionBarField.init() error:", e);
             } finally {
-                listener.next(count.incrementAndGet(), total);
+                listener.next(count.incrementAndGet(), total, "ActionBarField.init()");
             }
         }, executor));
 
@@ -432,7 +432,7 @@ public class InitializeServer {
             } catch (Exception e) {
                 log.error("[TASK] HexaFactory.loadAllHexaSkill() error:", e);
             } finally {
-                listener.next(count.incrementAndGet(), total);
+                listener.next(count.incrementAndGet(), total, "HexaFactory.loadAllHexaSkill()");
             }
         }, executor));
 
@@ -443,7 +443,7 @@ public class InitializeServer {
             } catch (Exception e) {
                 log.error("[TASK] SkillData.loadAllSkills() error:", e);
             } finally {
-                listener.next(count.incrementAndGet(), total);
+                listener.next(count.incrementAndGet(), total, "SkillData.loadAllSkills()");
             }
         }, executor));
 
@@ -462,10 +462,12 @@ public class InitializeServer {
     /**
      * Listener 介面，用於在每完成一項任務時更新進度。
      * 例如：listener.next(5, total) => "5 / 23"
+     *
+     * update :通知哪一项加载完成
      */
     @FunctionalInterface
     public interface DataCacheListener {
-        void next(int now, AtomicInteger total);
+        void next(int now, AtomicInteger total, String msg);
     }
 
     /**

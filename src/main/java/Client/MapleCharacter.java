@@ -12284,13 +12284,29 @@ public class MapleCharacter extends AnimatedMapleMapObject implements Serializab
      * 檢測角色是否有內在技能
      * 如果沒有自動給予
      */
+//    public void checkInnerSkill() {
+//        if (level >= 50 && (innerSkills[0] == null || innerSkills[1] == null || innerSkills[2] == null)) {
+//            changeInnerSkill(new InnerSkillEntry(70000000, 1, (byte) 1, (byte) 0, false));
+//            changeInnerSkill(new InnerSkillEntry(70000001, 3, (byte) 2, (byte) 0, false));
+//            changeInnerSkill(new InnerSkillEntry(70000002, 5, (byte) 3, (byte) 0, true));
+//        }
+//    }
     public void checkInnerSkill() {
-        if (level >= 50 && (innerSkills[0] == null || innerSkills[1] == null || innerSkills[2] == null)) {
-            changeInnerSkill(new InnerSkillEntry(70000000, 1, (byte) 1, (byte) 0, false));
-            changeInnerSkill(new InnerSkillEntry(70000001, 3, (byte) 2, (byte) 0, false));
-            changeInnerSkill(new InnerSkillEntry(70000002, 5, (byte) 3, (byte) 0, true));
+        if (this.level >= 50 && (this.innerSkills[0] == null || this.innerSkills[1] == null || this.innerSkills[2] == null)) {
+            this.newPlayerInnerSkill(new InnerSkillEntry(70000000, 1, (byte)1, (byte)0, false));
+            this.newPlayerInnerSkill(new InnerSkillEntry(70000001, 3, (byte)2, (byte)0, false));
+            this.newPlayerInnerSkill(new InnerSkillEntry(70000002, 5, (byte)3, (byte)0, true));
         }
+
     }
+    public void newPlayerInnerSkill(InnerSkillEntry ise) {
+        this.changed_innerSkills = true;
+        this.innerSkills[ise.getPosition() - 1] = ise;
+        this.client.announce(MaplePacketCreator.updateInnerSkill(this, (byte)0, ise, ise, ise));
+        this.client.announce(MaplePacketCreator.updateInnerSkill(this, (byte)0, ise, ise, ise));
+        this.client.announce(MaplePacketCreator.updateInnerSkill(this, (byte)0, ise, ise, ise));
+    }
+
 
     /**
      * 改變角色內在能力的技能

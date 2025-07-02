@@ -10,6 +10,7 @@ import Opcode.Headler.InHeader;
 import Packet.LoginPacket;
 import Server.cashshop.CashShopServer;
 import Server.channel.ChannelServer;
+import Server.channel.handler.UnknownHandler;
 import Server.login.LoginServer;
 import Server.netty.MaplePacketDecoder;
 import Server.world.World;
@@ -209,8 +210,10 @@ public final class MapleServerHandler extends ChannelInboundHandlerAdapter {
 
         short packetId = slea.readShort();
         InHeader opcode = lookupRecv(packetId);
-        if (opcode == null) {
+//        if (opcode == null) {
+        if (opcode == InHeader.UNKNOWN) {
             System.err.printf("[In] %d(0x%s)%n", packetId, Integer.toHexString(packetId));
+            UnknownHandler.handle(packetId, slea, client);
         } else {
             System.out.printf("[In] %d(0x%s)   opcode %s  %n", packetId, Integer.toHexString(packetId), opcode);
             PacketProcessor.getProcessor(opcode, slea, type, client);

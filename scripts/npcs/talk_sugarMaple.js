@@ -14,7 +14,7 @@ var selection = npc.askMenu(text)
 
 switch (selection) {
     case 0:
-        if (!player.hasItem(2436058)) {
+        if (!player.hasItem(2436058) && !player.hasItem(2437007)) {
             player.gainItem(2437007, 1); /* 領取主選單 */
         } else {
             npc.say(pic.楷體 + "您已經具有主選單。");
@@ -27,7 +27,7 @@ switch (selection) {
             player.gainInventorySlots(2, 48);
             player.gainInventorySlots(3, 48);
             player.gainInventorySlots(4, 48);
-            player.changeMap(104020000);
+            player.changeMap(100000000);
         } else {
             player.changeMap(104020000);
             npc.say(pic.楷體 + "您等級已經超出10等了,無法進行此操作。");
